@@ -1,0 +1,113 @@
+﻿body {
+}
+.loader
+{
+    position:absolute;
+    width:40vh;
+    height:40vh;
+    box-shadow:rgba(0,0,0,0.25) 1px 1px 10px,
+               rgba(0,0,0,0.25) 1px -1px 10px,
+               rgba(0,0,0,0.25) -1px -1px 10px,
+               rgba(0,0,0,0.25) -1px 1px 10px;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+
+}
+.loaderTitle{
+    text-align:center;
+    margin:5px;
+}
+.heading{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size:larger;
+    font-stretch:expanded;
+}
+.rotateBox {
+  position: absolute;
+  background: #f00;
+  border-radius: 4000px;
+  width: 20vh;
+  height: 20vh;
+  margin: auto;
+  z-index: 1;
+}
+.rotateBox_inner{
+  width:10px;
+  height:100%;
+  background:#0f0;
+  z-index: 0;
+  transform: translateX(-50%) translateY(-50%) skewX(10deg); 
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+.piece{
+    width:50%;
+    height:50%;
+    border-radius:0 100% 0 0;
+    position:absolute;
+    left:50%;
+    bottom:50%;
+    background:#f00;
+    transform:scale(1.05);
+}
+.piece+.piece{
+    background:#00f;
+    transform: rotateZ(30deg) scale(1.05);
+    transform-origin: 0% 100%;
+}
+.topBar{
+    width:100%;
+    height:10vh;
+    transition:all linear 1s;
+    background-color:#00ba76;
+}
+
+
+.sliderBox {
+    width: 100vw;
+    height: 30vh;
+    background: #000;
+}
+
+
+
+
+#rotator {
+  position: absolute;
+  margin: 10%;
+  background: #fff;
+  border-radius: 200px;
+  z-index: 999;
+  height: 80%;
+  width: 80%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+@keyframes dialog_down{
+    from{
+       top:-50%;
+    }
+    to{
+        top:50%;
+    }
+}
+@keyframes dialog_up{
+    from{
+       top:50%;
+    }
+    to{
+        top:-50%;
+    }
+}
+@keyframes topBar_moveRight{
+    from{
+        right:100vw;
+    }
+    to{
+        right:0vw;
+    }
+}

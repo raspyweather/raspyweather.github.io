@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <style>
+        div {
+            width: 100px;
+            height: 100px;
+            margin: 20px;
+            display: block;
+            background-size: contain;
+            background-repeat: no-repeat;
+        } 
+    </style>
+    <script src="startup.js"></script>
+    <script src="JSExtensionsjs.js"></script>
+</head>
+<body>
+    <div id="conti"></div>
+    <script>
+        function startSlider() {
+            var el = window.document.getElementById("conti");
+            var li = {};
+            for (var i = 0; i < Imagery.ImagesCount; i++) {
+                li[i] = Imagery.GetImageURLByIndex(i);
+            }
+            Slider = createSlider(el, li);
+        }
+        var Slider;
+        function createSlider(containerDiv, ImageLinks) {
+            var slider = {
+                Images: ImageLinks,
+                Parent: containerDiv,
+                ShownIndex: 0,
+                PreLoadImages: 10,
+                Direction: true
+            };
+            slider.getImageControls = function () {
+                var dl = {};
+                for (var i = 0; i < this.PreLoadImages; i++) {
+                    dl[i] = document.createElement("div");
+                    dl[i].classList.add("sliderItem");
+                    dl[i].style = "background-image: url(\"" + this.Images[this.ShownIndex + i] + "\")";
+                }
+                return dl;
+            };
+            slider.load = function () {
+                var res = this.getImageControls();
+                for (var i in res) {
+                    this.Parent.appendChild(res[i]);
+                }
+                /*  for (var i = 0; i < res.length; i++) {
+                      this.Parent.appendChild(res[i]);
+                  }*/
+                console.log("slider loaded");
+            };
+            slider.load();
+            return slider;
+        }
+        window.document.body.onload = function () {
+            loadAllData();
+            this.OnDataProcessed = startSlider;
+        };
+    </script>
+</body>
+</html>
