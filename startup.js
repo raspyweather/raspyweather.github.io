@@ -119,7 +119,7 @@ function createStartBox() {
     var newData = Imagery.Data[newestDate];
     var preferedModes = ["therm", "msa"];
     var links = [];
-    for (var i in o) {
+    for (var i in preferedModes) {
         var iidx = Imagery.ImageModes.indexOf(i);
         if (Imagery.Data[newestDate].ModeIds.indexOf(iidx) != -1) {
             links.push(Imagery.GetImageByDate(newestDate, i));
@@ -127,6 +127,7 @@ function createStartBox() {
     }
 
 }
+
 //function createSlider() {
 //    if (docBox != null) {
 //        docBox.remove();
