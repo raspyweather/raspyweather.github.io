@@ -120,11 +120,13 @@ function createStartBox() {
     var preferedModes = ["therm", "msa"];
     var links = [];
     for (var i in preferedModes) {
-        var iidx = Imagery.ImageModes.indexOf(i);
+        var iidx = Imagery.ImageModes.indexOf(preferedModes[i]);
         if (Imagery.Data[newestDate].ModeIds.indexOf(iidx) != -1) {
-            links.push(Imagery.GetImageByDate(newestDate, i));
+            links.push(Imagery.GetImageByDate(newestDate, preferedModes[i]));
         }
     }
+
+
 
 }
 
