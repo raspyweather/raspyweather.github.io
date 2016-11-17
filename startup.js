@@ -115,6 +115,7 @@ function createMainUI() {
     document.body.appendChild(topBar);
 }
 function createStartBox() {
+    docBo = createElement("div", "");
     var newestDate = Imagery.GetNewestDate();
     var newData = Imagery.Data[newestDate];
     var preferedModes = ["therm", "msa"];
@@ -125,8 +126,12 @@ function createStartBox() {
             links.push(Imagery.GetImageByDate(newestDate, preferedModes[i]));
         }
     }
-
-
+    var thermImg = createElement("div", "ThermImg");
+    var msaImg = createElement("div", "MsaImg");
+    thermImg.style.backgroundImage = "url('" + links[0] + "')";
+    msaImg.style.backgroundImage = "url('" + links[1] + "')";
+    docBo.appendChild(thermImg);
+    docBo.appendChild(msaImg);
 
 }
 
