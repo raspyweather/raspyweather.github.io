@@ -113,6 +113,8 @@ function createMainUI() {
     topBar = createElement("div", "topBar");
     topBar.style.animation = "topBar_moveRight 1s linear 1";
     document.body.appendChild(topBar);
+    createStartBox();
+    document.body.appendChild(docBo);
 }
 function createStartBox() {
     docBo = createElement("div", "");
@@ -132,7 +134,6 @@ function createStartBox() {
     msaImg.style.backgroundImage = "url('" + links[1] + "')";
     docBo.appendChild(thermImg);
     docBo.appendChild(msaImg);
-
 }
 
 //function createSlider() {
