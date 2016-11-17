@@ -126,8 +126,8 @@ function createStartBox() {
             links.push(Imagery.GetImageByDate(newestDate, preferedModes[i]));
         }
     }
-    var thermImg = createElement("div", "ThermImg");
-    var msaImg = createElement("div", "MsaImg");
+    var thermImg = createElement("div", "Img");
+    var msaImg = createElement("div", "Img");
     thermImg.style.backgroundImage = "url('" + links[0] + "')";
     msaImg.style.backgroundImage = "url('" + links[1] + "')";
     docBo.appendChild(thermImg);
