@@ -92,9 +92,12 @@
 }
 
 .Img {
-    width: 100px;
-    height: 100px;
+    margin:auto;
+    width: 40vw;
+    height: 40vh;
+    background-size:contain;
     background-repeat: no-repeat;
+
 }
 
 @keyframes dialog_down {
