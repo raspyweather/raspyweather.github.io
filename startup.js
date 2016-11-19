@@ -82,6 +82,18 @@ function processData(data) {
           + Imagery.DateToString(Imagery.Dates[idx]) + "-"
           + Imagery.ImageModes[Imagery.Data[Imagery.Dates[idx]].ModeId] + ".jpg";
     };
+Imagery.GetNewestDate=function(oldDate)
+{
+ var newestdate=Imagery.Dates[0];
+for(var i in Imagery.Dates)
+{
+      if ( i> newestdate && i < oldDate )
+      {
+      newestdate= i;
+      }
+}
+return newestdate;
+};
     Imagery.GetNewestDate = function () {
         var newestDate = Imagery.Dates[0];
         for (var i in Imagery.Dates) {
