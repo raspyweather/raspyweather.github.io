@@ -137,20 +137,20 @@ function createStartBox() {
     var links=[];
     for(var date in newestDates)
     {
-        var newData=Imagery.Data[date];
+        var newData=Imagery.Data[newestDates[date]];
         for(var modeStr in preferedModes)
         {
-            var idx=Imagery.ImageModes.indexOf(modeStr);
-            if(newData.ModeIds.indexOf(modeStr))
+            var idx=Imagery.ImageModes.indexOf(preferedModes[modeStr]);
+            if(newData.ModeIds.indexOf(preferedModes[modeStr]))
             {
-                links.push(Imagery.GetImageByDate(date, idx));
+                links.push(Imagery.GetImageByDate(newestDates[date], idx));
             }
         }
     }
     for( var link in links)
     {
         var thermImg = createElement("div", "Img");
-        thermImg.style.backgroundImage = "url('" + link + "')";
+        thermImg.style.backgroundImage = "url('" + links[link] + "')";
         docBo.appendChild(thermImg);
     }
 }
