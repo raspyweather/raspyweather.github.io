@@ -147,7 +147,7 @@ function createStartBox() {
             var idx=Imagery.ImageModes.indexOf(preferedModes[modeStr]);
             if(newData.ModeIds.indexOf(preferedModes[modeStr]))
             {
-                links.push(Imagery.GetImageByDate(newestDates[date], modeStr));
+                links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));
             }
         }
     }
