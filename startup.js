@@ -163,7 +163,7 @@ function createStartBox() {
         for(var modeStr in preferedModes)
         {
             var idx=Imagery.ImageModes.indexOf(preferedModes[modeStr]);
-            if(newData.ModeIds.indexOf(preferedModes[modeStr])>-1)
+            if(newData.ModeIds.indexOf(idx)>-1)
             {
                 links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));
             }
