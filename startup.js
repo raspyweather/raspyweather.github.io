@@ -137,17 +137,16 @@ function createStartBox() {
     var links=[];
     for(var date in newestDates)
     {
-        var newData=Imagery.Data[newData];
+        var newData=Imagery.Data[date];
         for(var modeStr in preferedModes)
         {
             var idx=Imagery.ImageModes.indexOf(modeStr);
-            if(Imagery.Data[date].ModeIds.indexOf(modeStr))
+            if(newData.ModeIds.indexOf(modeStr))
             {
                 links.push(Imagery.GetImageByDate(date, idx));
             }
         }
     }
-    var newData = Imagery.Data[newestDate];
     for( var link in links)
     {
         var thermImg = createElement("div", "Img");
