@@ -151,7 +151,7 @@ function createStartBox() {
     for( var link in links)
     {
         var thermImg = createElement("div", "Img");
-        thermImg.style.backgroundImage = "url('" + links + "')";
+        thermImg.style.backgroundImage = "url('" + link + "')";
         docBo.appendChild(thermImg);
     }
 }
