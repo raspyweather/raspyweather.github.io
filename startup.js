@@ -136,6 +136,9 @@ function getDatesWithMode(modeStr)
     for( var dateIdx in sortDates)
     {
         var data=Imagery.Data[sortDates[dateIdx]];
+        if(data==undefined){
+            continue;
+        }
         if( data.ModeIds.indexOf(modeIdx)>-1)
         {
             dates.push(sortDates[dateIdx]);
