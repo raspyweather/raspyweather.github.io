@@ -128,12 +128,27 @@ function createMainUI() {
     createStartBox();
     document.body.appendChild(docBo);
 }
+function getDatesWithMode(modeStr)
+{
+    var dates=[];
+    var sortDates=Imagery.Dates.sort();
+    var modeIdx=Imagery.ImageModes.indexOf(modeStr);
+    for( var dateIdx in sortDates)
+    {
+        var data=Imagery.Data[sortDates[dateIdx]];
+        if( data.ModeIds.contains(modeIdx))
+        {
+            dates.push(sortDates[dateIdx]);
+        }
+    }
+    return dates;
+}
 function createStartBox() {
     
     var preferedModes = ["therm", "msa"];
     docBo = createElement("div", "");
-    var newestDates=Imagery.Dates.sort();
-    newestDates=newestDates.slice(newestDates.length-5);
+    var newestDates=getDatesWithMode("therm");
+    //newestDates=newestDates.slice(newestDates.length-5);
     var links=[];
     for(var date in newestDates)
     {
@@ -145,10 +160,14 @@ function createStartBox() {
         for(var modeStr in preferedModes)
         {
             var idx=Imagery.ImageModes.indexOf(preferedModes[modeStr]);
-            if(newData.ModeIds.indexOf(preferedModes[modeStr]))
+            if(newData.ModeIds.indexOf(preferedModes[modeStr])>-1)
             {
                 links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));
             }
+        }
+        if(links.length==5)
+        { 
+           break;
         }
     }
     for( var link in links)
