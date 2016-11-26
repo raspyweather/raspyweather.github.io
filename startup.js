@@ -143,7 +143,7 @@ function createStartBox() {
             var idx=Imagery.ImageModes.indexOf(modeStr);
             if(Imagery.Data[date].ModeIds.indexOf(modeStr))
             {
-                links.push(Imagery.GetImageByDate(date, idx);
+                links.push(Imagery.GetImageByDate(date, idx));
             }
         }
     }
