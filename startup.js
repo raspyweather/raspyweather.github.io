@@ -138,6 +138,10 @@ function createStartBox() {
     for(var date in newestDates)
     {
         var newData=Imagery.Data[newestDates[date]];
+        if(newData == undefined)
+        {
+            continue;
+        }
         for(var modeStr in preferedModes)
         {
             var idx=Imagery.ImageModes.indexOf(preferedModes[modeStr]);
