@@ -129,23 +129,31 @@ function createMainUI() {
     document.body.appendChild(docBo);
 }
 function createStartBox() {
-    docBo = createElement("div", "");
-    var newestDate = Imagery.GetNewestDate();
-    var newData = Imagery.Data[newestDate];
+    
     var preferedModes = ["therm", "msa"];
-    var links = [];
-    for (var i in preferedModes) {
-        var iidx = Imagery.ImageModes.indexOf(preferedModes[i]);
-        if (Imagery.Data[newestDate].ModeIds.indexOf(iidx) != -1) {
-            links.push(Imagery.GetImageByDate(newestDate, preferedModes[i]));
+    docBo = createElement("div", "");
+    var newestDates=Imagery.Dates.sort();
+    newestDates=newestDates.slice(newestDates.length-5);
+    var links=[];
+    for(var date in newestDates)
+    {
+        var newData=Imagery.Data[newData];
+        for(var modeStr in preferedModes)
+        {
+            var idx=Imagery.ImageModes.indexOf(modeStr);
+            if(Imagery.Data[date].ModeIds.indexOf(modeStr))
+            {
+                links.push(Imagery.GetImageByDate(date, idx);
+            }
         }
     }
-    var thermImg = createElement("div", "Img");
-    var msaImg = createElement("div", "Img");
-    thermImg.style.backgroundImage = "url('" + links[0] + "')";
-    msaImg.style.backgroundImage = "url('" + links[1] + "')";
-    docBo.appendChild(thermImg);
-    docBo.appendChild(msaImg);
+    var newData = Imagery.Data[newestDate];
+    for( var link in links)
+    {
+        var thermImg = createElement("div", "Img");
+        thermImg.style.backgroundImage = "url('" + links[ + "')";
+        docBo.appendChild(thermImg);
+    }
 }
 
 //function createSlider() {
