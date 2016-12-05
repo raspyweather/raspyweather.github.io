@@ -156,6 +156,7 @@ function createStartBox() {
     for(var date in newestDates)
     {
         var newData=Imagery.Data[newestDates[date]];
+        var DateContainer = new [];
         if(newData == undefined)
         {
             continue;
@@ -165,8 +166,13 @@ function createStartBox() {
             var idx=Imagery.ImageModes.indexOf(preferedModes[modeStr]);
             if(newData.ModeIds.indexOf(idx)>-1)
             {
-                links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));
+                DataContainer.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));
+                /*links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));*/
             }
+        }
+        if(DataContainer.lenght>0)
+        {
+            links.push(DataContainer);
         }
         if(links.length==5)
         { 
@@ -175,9 +181,14 @@ function createStartBox() {
     }
     for( var link in links)
     {
-        var thermImg = createElement("div", "Img");
-        thermImg.style.backgroundImage = "url('" + links[link] + "')";
-        docBo.appendChild(thermImg);
+        var imageContainer=createElement("div","img");
+        for(var lnk in link)
+        {
+            var thermImg = createElement("div", "Img");
+            imageContainer.appendChild(thermImg);
+            thermImg.style.backgroundImage = "url('" + links[link] + "')";
+        }
+        docBo.appendChild(imageContainer);
     }
 }
 
