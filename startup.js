@@ -170,7 +170,7 @@ function createStartBox() {
                 /*links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));*/
             }
         }
-        if(DataContainer.lenght>0)
+        if(DataContainer.length>0)
         {
             links.push(DataContainer);
         }
@@ -182,31 +182,16 @@ function createStartBox() {
     for( var link in links)
     {
         var imageContainer=createElement("div","img");
-        for(var lnk in link)
+        for(var lnk in links[link])
         {
             var thermImg = createElement("div", "Img");
+            thermImg.style.backgroundImage = "url('" + links[link][lnk] + "')";
             imageContainer.appendChild(thermImg);
-            thermImg.style.backgroundImage = "url('" + links[link] + "')";
+            
         }
         docBo.appendChild(imageContainer);
     }
 }
-
-//function createSlider() {
-//    if (docBox != null) {
-//        docBox.remove();
-//    }
-//    docBox = createElement("div", "documentBox");
-//    document.body.appendChild(docBox);
-//    var el = createElement("div", "sliderBox");
-//    docBox.appendChild(el);
-//    var slider = {
-//        Images: null,
-//        RecentItems: null,
-//        ScrollPosition: 0
-//        //        Container: 
-//    };
-//}
 
 function createElement(tag, className) {
     var el = document.createElement(tag);
