@@ -156,7 +156,7 @@ function createStartBox() {
     for(var date in newestDates)
     {
         var newData=Imagery.Data[newestDates[date]];
-        var DateContainer = [];
+        var DataContainer = [];
         if(newData == undefined)
         {
             continue;
