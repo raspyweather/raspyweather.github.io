@@ -126,7 +126,8 @@ function createLoaderUI() {
     getLog();
 }
 function createTopBarIndex(name,shownBox) {
-    var box=topBar.appendChild(createElement("topBarEntry",topBar.children.length));
+    var box=topBar.appendChild(createElement("div","topBarEntry"));
+    docBo.appendChild(box);
     boxes.push(box);
     box.innerHTML=name;
     box.shownBox=shownBox;
@@ -167,13 +168,13 @@ function getDatesWithMode(modeStr)
 }
 
 function createStartBox() {
-    docBo = createElement("div", "");
     createFirstBox();
 }
 function createFirstBox() {
-    
+
+    var firstBox=createElement("div","box");
     var preferedModes = ["therm", "msa"];
-    createTopBarIndex("Latest Images",docBo);
+    createTopBarIndex("Latest Images",firstBox);
     var newestDates=getDatesWithMode("therm");
     //newestDates=newestDates.slice(newestDates.length-5);
     var links=[];
@@ -216,7 +217,7 @@ function createFirstBox() {
         }
         if(imageContainer.childElementCount>0)
         {
-                docBo.appendChild(imageContainer);
+                firstBox.appendChild(imageContainer);
         }
     }
 }
@@ -231,5 +232,6 @@ function  getLog() {
     httpGetAsync(url,createLog);
 }
 function createLog(text) {
+     var box=createElement("div","box");
 
 }
