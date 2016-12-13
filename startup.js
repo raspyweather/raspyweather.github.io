@@ -88,7 +88,7 @@ function processData(data) {
 Imagery.GetNewestDate=function(oldDate)
 {
  var newestdate=Imagery.Dates[0];
-for(var i in Imagery.Dates)
+for(var i of Imagery.Dates)
 {
       if ( i> newestdate && i < oldDate )
       {
@@ -99,7 +99,7 @@ return newestdate;
 };
     Imagery.GetNewestDate = function () {
         var newestDate = Imagery.Dates[0];
-        for (var i in Imagery.Dates) {
+        for (var i of Imagery.Dates) {
             if (i > newestDate) {
                 newestDate = i;
             }
@@ -127,10 +127,11 @@ function createLoaderUI() {
 }
 function createTopBarIndex(name,shownBox) {
     var box=topBar.appendChild(createElement("topBarEntry",topBar.children.length));
+    box.innerHTML=name;
     box.shownBox=shownBox;
     box.onclick=function () {
         this.shownBox.style.visibility="visible";
-        for(var i in boxes){
+        for(var i of boxes){
             if(i!=this.shownBox){continue;}
             i.style.visibility="hidden";
         }
@@ -150,7 +151,7 @@ function getDatesWithMode(modeStr)
     var dates=[];
     var sortDates=Imagery.Dates.sort();
     var modeIdx=Imagery.ImageModes.indexOf(modeStr);
-    for( var dateIdx in sortDates)
+    for( var dateIdx of sortDates)
     {
         var data=Imagery.Data[sortDates[dateIdx]];
         if(data==undefined){
@@ -163,28 +164,32 @@ function getDatesWithMode(modeStr)
     }
     return dates;
 }
+
 function createStartBox() {
+    docBo = createElement("div", "");
+    createFirstBox();
+}
+function createFirstBox() {
     
     var preferedModes = ["therm", "msa"];
-    docBo = createElement("div", "");
-    createTopBarIndex("Latest Images",docBo)
+    createTopBarIndex("Latest Images",docBo);
     var newestDates=getDatesWithMode("therm");
     //newestDates=newestDates.slice(newestDates.length-5);
     var links=[];
-    for(var date in newestDates)
+    for(var date of newestDates)
     {
-        var newData=Imagery.Data[newestDates[parseInt(date)]];
+        var newData=Imagery.Data[newestDates[(date)]];
         var DataContainer = [];
         if(newData == undefined)
         {
             continue;
         }
-        for(var modeStr in preferedModes)
+        for(var modeStr of preferedModes)
         {
-            var idx=Imagery.ImageModes.indexOf(preferedModes[(parseInt(modeStr))]);
+            var idx=Imagery.ImageModes.indexOf(preferedModes[((modeStr))]);
             if(newData.ModeIds.indexOf(idx)>-1)
             {
-                DataContainer.push(Imagery.GetImageByDate(newestDates[parseInt(date)], preferedModes[parseInt(modeStr)]));
+                DataContainer.push(Imagery.GetImageByDate(newestDates[(date)], preferedModes[(modeStr)]));
                 /*links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));*/
             }
         }
@@ -197,15 +202,12 @@ function createStartBox() {
            break;
         }
     }
-    for( var link in links)
+    for( var link of links)
     {
         var imageContainer=createElement("div","ImgContainer");
-        for(var lnk in links[link])
+        if(link===undefined){continue;}
+        for(var lnk of links[link])
         {
-            if(lnk==undefined || lnk=="")
-            {
-                continue;
-            }
             var thermImg = createElement("div", "Img");
             thermImg.style.backgroundImage = "url('" + links[link][lnk] + "')";
             imageContainer.appendChild(thermImg);
