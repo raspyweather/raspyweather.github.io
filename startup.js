@@ -181,15 +181,22 @@ function createStartBox() {
     }
     for( var link in links)
     {
-        var imageContainer=createElement("div","img");
+        var imageContainer=createElement("div","ImgContainer");
         for(var lnk in links[link])
         {
+            if(lnk==undefined || lnk=="")
+            {
+                continue;
+            }
             var thermImg = createElement("div", "Img");
             thermImg.style.backgroundImage = "url('" + links[link][lnk] + "')";
             imageContainer.appendChild(thermImg);
             
         }
-        docBo.appendChild(imageContainer);
+        if(imageContainer.childElementCount>0)
+        {
+                docBo.appendChild(imageContainer);
+        }
     }
 }
 
