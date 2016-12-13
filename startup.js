@@ -145,7 +145,7 @@ function createMainUI() {
     topBar.style.animation = "topBar_moveRight 1s linear 1";
     document.body.appendChild(topBar);
     createStartBox();
-
+    docBo=createElement("div","mainBox");
     document.body.appendChild(docBo);
 }
 function getDatesWithMode(modeStr)
