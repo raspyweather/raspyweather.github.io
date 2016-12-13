@@ -113,7 +113,7 @@ return newestdate;
 var loader;
 var topBar;
 var docBo;
-var boxes=new Array(5);
+var boxes=new Array();
 function createLoaderUI() {
     loader = createElement("div", "loader");
     document.body.appendChild(loader);
@@ -127,6 +127,7 @@ function createLoaderUI() {
 }
 function createTopBarIndex(name,shownBox) {
     var box=topBar.appendChild(createElement("topBarEntry",topBar.children.length));
+    boxes.push(box);
     box.innerHTML=name;
     box.shownBox=shownBox;
     box.onclick=function () {
