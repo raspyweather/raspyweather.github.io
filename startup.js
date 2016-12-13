@@ -143,7 +143,7 @@ function createTopBarIndex(name,shownBox) {
 }
 function createMainUI() {
     loader.remove();
-    topBar = createElement("div", "topBar");
+
     docBo=createElement("div","mainBox");
     topBar.style.animation = "topBar_moveRight 1s linear 1";
     document.body.appendChild(topBar);
@@ -231,6 +231,7 @@ function createElement(tag, className) {
 }
 function  getLog() {
     var url="https://www.googleapis.com/drive/v3/files/0B-HW4voEJgOgdmVtSFhBd0NCUm8?alt=media&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA";
+    topBar = createElement("div", "topBar");
     httpGetAsync(url,createLog);
 }
 function createLog(text) {
