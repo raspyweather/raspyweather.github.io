@@ -121,6 +121,7 @@ function createLoaderUI() {
     el.innerText = "Loading ...";
     loader.appendChild(el);
     setTimeout(createMainUI, 3000);
+    setTimeout(createLog(logText),3000);
     docBo=createElement("div","mainBox");
     topBar = createElement("div", "topBar");
     loader.style.animation = "dialog_down 1s cubic-bezier(.16,.27,.09,1.05) 1 , dialog_up 1s cubic-bezier(.47,0,.74,.71) 2s 1";
@@ -145,8 +146,6 @@ function createTopBarIndex(name,shownBox) {
 }
 function createMainUI() {
     loader.remove();
-
-
     topBar.style.animation = "topBar_moveRight 1s linear 1";
     document.body.appendChild(topBar);
     document.body.appendChild(docBo);
@@ -175,7 +174,6 @@ function createStartBox() {
     createFirstBox();
 }
 function createFirstBox() {
-
     var firstBox=createElement("div","box");
     var preferedModes = ["therm", "msa"];
     createTopBarIndex("Latest Images",firstBox);
@@ -233,9 +231,12 @@ function createElement(tag, className) {
 }
 function  getLog() {
     var url="https://www.googleapis.com/drive/v3/files/0B-HW4voEJgOgdmVtSFhBd0NCUm8?alt=media&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA";
-
-    httpGetAsync(url,createLog);
+    httpGetAsync(url,setLogTxt);
 }
+function setLogTxt(txt) {
+    logText=txt;
+}
+var logText;
 function createLog(text) {
      var box=createElement("div","box");
     box.innerText=text;
