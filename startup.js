@@ -142,10 +142,10 @@ function createTopBarIndex(name,shownBox) {
 function createMainUI() {
     loader.remove();
     topBar = createElement("div", "topBar");
+    docBo=createElement("div","mainBox");
     topBar.style.animation = "topBar_moveRight 1s linear 1";
     document.body.appendChild(topBar);
     createStartBox();
-    docBo=createElement("div","mainBox");
     document.body.appendChild(docBo);
 }
 function getDatesWithMode(modeStr)
