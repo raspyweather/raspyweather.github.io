@@ -127,7 +127,8 @@ function createLoaderUI() {
 }
 function createTopBarIndex(name,shownBox) {
     var box=topBar.appendChild(createElement("div","topBarEntry"));
-    docBo.appendChild(box);
+    topBar.appendChild(box);
+    docBo.appendChild(shownBox);
     boxes.push(box);
     box.innerHTML=name;
     box.shownBox=shownBox;
@@ -145,8 +146,8 @@ function createMainUI() {
     docBo=createElement("div","mainBox");
     topBar.style.animation = "topBar_moveRight 1s linear 1";
     document.body.appendChild(topBar);
-    createStartBox();
     document.body.appendChild(docBo);
+    createStartBox();
 }
 function getDatesWithMode(modeStr)
 {
