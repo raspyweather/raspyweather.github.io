@@ -30,6 +30,9 @@ function processData(data) {
     var parsedData = JSON.parse(data);
     for (var i = 0; i < parsedData.files.length; i++) {
         var nam = parsedData.files[i].name;
+        if(nam.endsWith(".log")){
+            continue;
+        }
         var sat = parseInt(nam.substring(5, 7));
         var dat = new Date(nam.substring(8, 12) + "/" +
                            nam.substring(12, 14) + "/" +
@@ -110,6 +113,7 @@ return newestdate;
 var loader;
 var topBar;
 var docBo;
+var boxes=new [5];
 function createLoaderUI() {
     loader = createElement("div", "loader");
     document.body.appendChild(loader);
@@ -119,6 +123,18 @@ function createLoaderUI() {
     setTimeout(createMainUI, 3000);
     loader.style.animation = "dialog_down 1s cubic-bezier(.16,.27,.09,1.05) 1 , dialog_up 1s cubic-bezier(.47,0,.74,.71) 2s 1";
     loadAllData();
+    getLog();
+}
+function createTopBarIndex(name,shownBox) {
+    var box=topBar.appendChild(createElement("topBarEntry",topBar.children.length));
+    box.shownBox=shownBox;
+    box.onclick=function () {
+        this.shownBox.style.visibility="visible";
+        for(var i in boxes){
+            if(i!=this.shownBox){continue;}
+            i.style.visibility="hidden";
+        }
+    };
 }
 function createMainUI() {
     loader.remove();
@@ -126,6 +142,7 @@ function createMainUI() {
     topBar.style.animation = "topBar_moveRight 1s linear 1";
     document.body.appendChild(topBar);
     createStartBox();
+
     document.body.appendChild(docBo);
 }
 function getDatesWithMode(modeStr)
@@ -150,12 +167,13 @@ function createStartBox() {
     
     var preferedModes = ["therm", "msa"];
     docBo = createElement("div", "");
+    createTopBarIndex("Latest Images",docBo)
     var newestDates=getDatesWithMode("therm");
     //newestDates=newestDates.slice(newestDates.length-5);
     var links=[];
     for(var date in newestDates)
     {
-        var newData=Imagery.Data[newestDates[date]];
+        var newData=Imagery.Data[newestDates[parseInt(date)]];
         var DataContainer = [];
         if(newData == undefined)
         {
@@ -163,10 +181,10 @@ function createStartBox() {
         }
         for(var modeStr in preferedModes)
         {
-            var idx=Imagery.ImageModes.indexOf(preferedModes[modeStr]);
+            var idx=Imagery.ImageModes.indexOf(preferedModes[(parseInt(modeStr))]);
             if(newData.ModeIds.indexOf(idx)>-1)
             {
-                DataContainer.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));
+                DataContainer.push(Imagery.GetImageByDate(newestDates[parseInt(date)], preferedModes[parseInt(modeStr)]));
                 /*links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));*/
             }
         }
@@ -204,4 +222,11 @@ function createElement(tag, className) {
     var el = document.createElement(tag);
     el.className = className;
     return el;
+}
+function  getLog() {
+    var url="https://www.googleapis.com/drive/v3/files/0B-HW4voEJgOgdmVtSFhBd0NCUm8?alt=media&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA";
+    httpGetAsync(url,createLog);
+}
+function createLog(text) {
+
 }
