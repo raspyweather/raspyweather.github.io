@@ -127,6 +127,7 @@ function createLoaderUI() {
 }
 function createTopBarIndex(name,shownBox) {
     var box=topBar.appendChild(createElement("div","topBarEntry"));
+    console.log(shownBox);
     topBar.appendChild(box);
     docBo.appendChild(shownBox);
     boxes.push(box);
@@ -234,5 +235,6 @@ function  getLog() {
 }
 function createLog(text) {
      var box=createElement("div","box");
-
+    box.innerText=text;
+    createTopBarIndex("Log",box);
 }
