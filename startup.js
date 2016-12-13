@@ -121,6 +121,8 @@ function createLoaderUI() {
     el.innerText = "Loading ...";
     loader.appendChild(el);
     setTimeout(createMainUI, 3000);
+    docBo=createElement("div","mainBox");
+    topBar = createElement("div", "topBar");
     loader.style.animation = "dialog_down 1s cubic-bezier(.16,.27,.09,1.05) 1 , dialog_up 1s cubic-bezier(.47,0,.74,.71) 2s 1";
     loadAllData();
     getLog();
@@ -144,7 +146,7 @@ function createTopBarIndex(name,shownBox) {
 function createMainUI() {
     loader.remove();
 
-    docBo=createElement("div","mainBox");
+
     topBar.style.animation = "topBar_moveRight 1s linear 1";
     document.body.appendChild(topBar);
     document.body.appendChild(docBo);
@@ -231,7 +233,7 @@ function createElement(tag, className) {
 }
 function  getLog() {
     var url="https://www.googleapis.com/drive/v3/files/0B-HW4voEJgOgdmVtSFhBd0NCUm8?alt=media&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA";
-    topBar = createElement("div", "topBar");
+
     httpGetAsync(url,createLog);
 }
 function createLog(text) {
