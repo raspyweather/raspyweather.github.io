@@ -95,7 +95,10 @@
     box-shadow: #000 1px 10px 10px;
     background-size:contain;
     background-repeat: no-repeat;
-
+}
+.ImgContainer{
+    display:flex;
+    padding-bottom:5px;
 }
 
 @keyframes dialog_down {
