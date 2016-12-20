@@ -13,12 +13,41 @@
             background-repeat: no-repeat;
         } 
     </style>
-    <script src="startup.js"></script>
-    <script src="JSExtensionsjs.js"></script>
+  <!--  <script src="startup.js"></script>
+    <script src="JSExtensionsjs.js"></script>-->
 </head>
 <body>
-    <div id="conti"></div>
-    <script>
+<script>
+    function nextLevel(){
+        var url="https://www.googleapis.com/drive/v3/files?pageSize=1&q=%270B-HW4voEJgOgeEdIZHFPQTYtNW8%27+in+parents&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA&pageToken="
+        if(nextPageToken){
+        url+=nextPageToken;}
+        httpGetAsync(url,returnResult);
+    }
+    function returnResult(jsonSTR)
+    {
+        document.getElementById("log").innerHTML+="\n\n"+jsonSTR+"<br/>";
+        nextPageToken=JSON.parse(jsonSTR).nextPageToken;
+    }
+    var nextPageToken="";
+    function httpGetAsync(theUrl, callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", theUrl, true); // true for asynchronous
+        xmlHttp.send(null);
+    }
+
+</script>
+    <div id="log" style="width:99vw;height:80vh;overflow-y: scroll;"></div>
+    <div id="bt" style="width:99vw;height: 19vh;background:#888;" onclick="nextLevel()"></div>
+
+
+
+ <!--   <div id="conti"></div>-->
+  <!--  <script>
         function startSlider() {
             var el = window.document.getElementById("conti");
             var li = {};
@@ -62,6 +91,6 @@
             loadAllData();
             this.OnDataProcessed = startSlider;
         };
-    </script>
+    </script>-->
 </body>
 </html>

@@ -5,10 +5,10 @@
     position: absolute;
     width: 40vh;
     height: 40vh;
-    box-shadow: rgba(0,0,0,0.25) 1px 1px 10px, rgba(0,0,0,0.25) 1px -1px 10px, rgba(0,0,0,0.25) -1px -1px 10px, rgba(0,0,0,0.25) -1px 1px 10px;
+    box-shadow: rgba(0, 0, 0, 0.25) 1px 1px 10px, rgba(0, 0, 0, 0.25) 1px -1px 10px, rgba(0, 0, 0, 0.25) -1px -1px 10px, rgba(0, 0, 0, 0.25) -1px 1px 10px;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
 }
 
 .loaderTitle {
@@ -54,25 +54,32 @@
     transform: scale(1.05);
 }
 
-    .piece + .piece {
-        background: #00f;
-        transform: rotateZ(30deg) scale(1.05);
-        transform-origin: 0% 100%;
-    }
+.piece + .piece {
+    background: #00f;
+    transform: rotateZ(30deg) scale(1.05);
+    transform-origin: 0% 100%;
+}
 
 .topBar {
     width: 100%;
     height: 10vh;
     transition: all linear 1s;
     background-color: #00ba76;
+    display: flex;
+    align-items: center;
 }
 
+.topBarEntry {
+    height: 100%;
+
+}
 
 .sliderBox {
     width: 100vw;
     height: 30vh;
     background: #000;
 }
+
 #rotator {
     position: absolute;
     margin: 10%;
@@ -88,17 +95,19 @@
 }
 
 .Img {
-    margin:auto;
+    margin: auto;
     width: 40vw;
     height: 40vh;
-    padding: 5px;
+    padding: 10px;
     box-shadow: #000 1px 10px 10px;
-    background-size:contain;
+    background-size: contain;
     background-repeat: no-repeat;
+    background-position: center;
 }
-.ImgContainer{
-    display:flex;
-    padding-bottom:5px;
+
+.ImgContainer {
+    display: flex;
+    padding-bottom: 5px;
 }
 
 @keyframes dialog_down {

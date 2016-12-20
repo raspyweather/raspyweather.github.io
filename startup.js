@@ -1,53 +1,106 @@
 ﻿var Imagery;
+var files = [];
+var loader;
+var boxes = [];
+var defaultShownBox;
+Array.prototype.pushIfNotExist = function (element) {
+    if (this.indexOf(element) == -1) {
+        this.push(element);
+    }
+};
+String.prototype.padLeft = function (n, chr) {
+    var res = this;
+    while (n > res.length) {
+        res = chr + res;
+    }
+    return res;
+}
+
 function httpGetAsync(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function () {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
             callback(xmlHttp.responseText);
     }
-    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous
     xmlHttp.send(null);
 }
-function loadAllData() {
-    var url = "https://www.googleapis.com/drive/v3/files?q=%270B-HW4voEJgOgamFpanhnVlVwRzA%27+in+parents&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA";
-    httpGetAsync(url, processData);
+function createQuery(pageTokenValue="") {
+    var query = {
+        baseURL: "https://www.googleapis.com/drive/v3/files?",
+        parameters: {
+            pageSize: 1000,
+            q: "%270B-HW4voEJgOgamFpanhnVlVwRzA%27+in+parents",
+            key: "AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA",
+            pageToken: pageTokenValue
+        }
+    };
+    query.getURL = function () {
+        var query = "";
+        for (var z in this.parameters) {
+            query += "&" + z + "=" + this.parameters[z];
+            //console.log(z+"["+this.parameters[z]+"]");
+        }
+        query = this.baseURL + query.substring(1);
+        console.log(query + "\n\n");
+        return query;
+    };
+    return query.getURL();
+    //var query= baseURL+"&"+"maxSize";
 }
-function processData(data) {
-
+function getFileList(jsonSTR="") {
+    var nextPageToken = "";
+    if (jsonSTR) {
+        var doc = JSON.parse(jsonSTR);
+        nextPageToken = doc.nextPageToken;
+        for (var z in doc.files) {
+            files.push(doc.files[z]);
+        }
+        if (!nextPageToken) {
+            console.log(files.length + " files loaded");
+            onFilesLoaded();
+            return;
+        }
+    }
+    httpGetAsync(createQuery(nextPageToken), getFileList);
+}
+function processData() {
     Imagery = {
         Dates: [],
         ImageModes: [],
         Satellites: [],
         Data: [],
         BaseURL: "https://docs.google.com/uc?id=",
-        ImagesCount: 0
+        ImagesCount: 0,
+        LogFileId: ""
     };
     //Data per file:
     // unique stuff: Dates,ImageModes,Satellites,ID
     // get ID by Date, Data contains ref to imageMode & satellites
     //path
-    //
-    var parsedData = JSON.parse(data);
-    for (var i = 0; i < parsedData.files.length; i++) {
-        var nam = parsedData.files[i].name;
-        if(nam.endsWith(".log")){
+    for (var i = 0; i < files.length; i++) {
+        var nam = files[i].name;
+        if (nam.endsWith(".log")) {
+            Imagery.LogFileId = files[i].id;
+            onLogLoad();
             continue;
         }
+        var id = files[i].id;
         var sat = parseInt(nam.substring(5, 7));
-        var dat = new Date(nam.substring(8, 12) + "/" +
-                           nam.substring(12, 14) + "/" +
-                           nam.substring(14, 16) + "/" +
-                           nam.substring(16, 18) + ":" +
-                           nam.substring(18, 20));
+        var sat = parseInt(nam.substring(5, 7));
         var mod = nam.substring(21, nam.length - 4);
-        var id = parsedData.files[i].id;
+        var dat = new Date(nam.substring(8, 12) + "/" +
+            nam.substring(12, 14) + "/" +
+            nam.substring(14, 16) + "/" +
+            nam.substring(16, 18) + ":" +
+            nam.substring(18, 20));
         Imagery.Satellites.pushIfNotExist(sat);
         Imagery.ImageModes.pushIfNotExist(mod);
         if (Imagery.Data[dat] == undefined) {
             Imagery.Dates.push(dat);
             Imagery.Data[dat] = {
-                ModeIds: [Imagery.ImageModes.indexOf(mod)],
                 Sat: sat,
+                ModeIds: [Imagery.ImageModes.indexOf(mod)],
                 IDs: {}
             };
             Imagery.Data[dat].IDs[Imagery.ImageModes.indexOf(mod)] = id;
@@ -58,187 +111,136 @@ function processData(data) {
         }
         Imagery.ImagesCount++;
     }
+    Imagery.Dates.sort();
     Imagery.DateToString = function (dat) {
         return dat.getUTCFullYear().toString().padLeft(4, "0")
-                + (dat.getUTCMonth() + 1).toString().padLeft(2, "0")
-                + dat.getUTCDate().toString().padLeft(2, "0")
-                + dat.getUTCHours().toString().padLeft(2, "0")
-                + dat.getUTCMinutes().toString().padLeft(2, "0");
-    }
-    Imagery.GetImageByDate = function (dat, mode) {
-        return this.BaseURL + Imagery.Data[dat].IDs[Imagery.ImageModes.indexOf(mode)];
+            + (dat.getUTCMonth() + 1).toString().padLeft(2, "0")
+            + dat.getUTCDate().toString().padLeft(2, "0")
+            + dat.getUTCHours().toString().padLeft(2, "0")
+            + dat.getUTCMinutes().toString().padLeft(2, "0");
     };
-    Imagery.GetImageURLByIndex = function (idx) {
-        var ctr = 0;
-        for (var i = 0; i < Imagery.Data.length; i++) {
-            ctr = ctr + Imagery.Data[i].length;
-            if (ctr > idx) {
-                ctr = ctr - Imagery.Data[i].length;
-                return Imagery.BaseURL + Imagery.Data[Imagery.Dates[idx - ctr]].ID;
+    Imagery.GetImageURLByDate = function (dat, modeStr) {
+        return this.BaseURL + this.Data[dat].IDs[this.ImageModes.indexOf(modeStr)];
+    };
+    Imagery.GetImageURLFromData = function (data, modeStr) {
+        return this.BaseURL + data.IDs[this.ImageModes.indexOf(modeStr)];
+    };
+    Imagery.GetDatesWithMode = function (modeStr) {
+        var modeIdx = this.ImageModes.indexOf(modeStr);
+        var resultDates = [];
+        for (var z = 0; z < this.Dates.length; z++) {
+            if (this.Data[this.Dates[z]].ModeIds.indexOf(modeIdx) > -1) {
+                resultDates.push(this.Dates[z]);
             }
         }
-        return Imagery.BaseURL + Imagery.Data[Imagery.Dates[idx]].ID;
+        return resultDates;
     };
-    Imagery.GetImageNameByIndex = function (idx) {
-        return "noaa-" +
-            Imagery.Data[Imagery.Dates[idx]].Sat + "-"
-          + Imagery.DateToString(Imagery.Dates[idx]) + "-"
-          + Imagery.ImageModes[Imagery.Data[Imagery.Dates[idx]].ModeId] + ".jpg";
-    };
-Imagery.GetNewestDate=function(oldDate)
-{
- var newestdate=Imagery.Dates[0];
-for(var i of Imagery.Dates)
-{
-      if ( i> newestdate && i < oldDate )
-      {
-      newestdate= i;
-      }
+    onDataProcessed();
 }
-return newestdate;
-};
-    Imagery.GetNewestDate = function () {
-        var newestDate = Imagery.Dates[0];
-        for (var i of Imagery.Dates) {
-            if (i > newestDate) {
-                newestDate = i;
+function onLoadStart() {
+    getFileList();
+    createLoaderUI();
+}
+function onLogLoad() {
+    var url = "https://www.googleapis.com/drive/v3/files/0B-HW4voEJgOgdmVtSFhBd0NCUm8?alt=media&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA";
+    httpGetAsync(url, createLogBox);
+}
+function onFilesLoaded() {
+    processData();
+}
+function onDataProcessed() {
+    createMainUI();
+    createStartBox();
+}
+function createElement(tag, className) {
+    var el = document.createElement(tag);
+    el.className = className;
+    return el;
+}
+function createLogBox(logContent) {
+    var firstBox = createElement("div", "box");
+    firstBox.innerHTML = logContent;
+    createTopBarIndex("Upload log", firstBox);
+}
+function createMainUI() {
+    loader.style.animation = "1s cubic-bezier(0.47, 0, 0.74, 0.71) normal none 1 running dialog_up";
+    setTimeout(function () {
+        loader.remove();
+        topBar.style.animation = "topBar_moveRight 1s linear 1";
+        document.body.appendChild(topBar);
+        document.body.appendChild(docBo);
+    },1000);
+
+}
+function createStartBox() {
+    var firstBox = createElement("div", "box");
+    var preferedModes = ["therm", "msa"];
+    defaultShownBox = firstBox;
+    createTopBarIndex("Latest Images", firstBox);
+    var newestDates = Imagery.GetDatesWithMode("therm");
+    //newestDates=newestDates.slice(newestDates.length-5);
+    var links = [];
+    for (var date of newestDates) {
+        var newData = Imagery.Data[(date)];
+        var DataContainer = [];
+        if (newData == undefined || date == undefined) {
+            continue;
+        }
+        for (var modeStr of preferedModes) {
+            var idx = Imagery.ImageModes.indexOf(modeStr);
+            if (newData.ModeIds.indexOf(idx) > -1) {
+                DataContainer.push(Imagery.GetImageURLByDate(date, modeStr));
+                /*links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));*/
             }
         }
-        return newestDate;
-    };
-    if (this.OnDataProcessed != null) {
-        this.OnDataProcessed();
+        if (DataContainer.length > 0) {
+            links.push(DataContainer);
+        }
+        if (links.length == 5) {
+            break;
+        }
+    }
+    for (var link of links) {
+        var imageContainer = createElement("div", "ImgContainer");
+        if (link === undefined) {
+            continue;
+        }
+        for (var lnk of link) {
+            var thermImg = createElement("div", "Img");
+            thermImg.style.backgroundImage = "url('" + lnk + "')";
+            imageContainer.appendChild(thermImg);
+
+        }
+        if (imageContainer.childElementCount > 0) {
+            firstBox.appendChild(imageContainer);
+        }
     }
 }
-var loader;
-var topBar;
-var docBo;
-var boxes=new Array();
 function createLoaderUI() {
     loader = createElement("div", "loader");
     document.body.appendChild(loader);
     var el = createElement("div", "loaderTitle heading");
     el.innerText = "Loading ...";
     loader.appendChild(el);
-    setTimeout(createMainUI, 3000);
-    setTimeout(createLog(logText),3000);
-    docBo=createElement("div","mainBox");
+    docBo = createElement("div", "mainBox");
     topBar = createElement("div", "topBar");
-    loader.style.animation = "dialog_down 1s cubic-bezier(.16,.27,.09,1.05) 1 , dialog_up 1s cubic-bezier(.47,0,.74,.71) 2s 1";
-    loadAllData();
-    getLog();
+    loader.style.animation="1s cubic-bezier(0.16, 0.27, 0.09, 1.05) 0s normal none 1 running dialog_down";
 }
-function createTopBarIndex(name,shownBox) {
-    var box=topBar.appendChild(createElement("div","topBarEntry"));
-    console.log(shownBox);
-    topBar.appendChild(box);
-    docBo.appendChild(shownBox);
+function createTopBarIndex(title, box) {
+    var vr = createElement("div", "topBarEntry");
+    vr.innerHTML = title;
+    topBar.appendChild(vr);
+    docBo.appendChild(box);
     boxes.push(box);
-    box.innerHTML=name;
-    box.shownBox=shownBox;
-    box.onclick=function () {
-        this.shownBox.style.visibility="visible";
-        for(var i of boxes){
-            if(i!=this.shownBox){continue;}
-            i.style.visibility="hidden";
-        }
-    };
-}
-function createMainUI() {
-    loader.remove();
-    topBar.style.animation = "topBar_moveRight 1s linear 1";
-    document.body.appendChild(topBar);
-    document.body.appendChild(docBo);
-    createStartBox();
-}
-function getDatesWithMode(modeStr)
-{
-    var dates=[];
-    var sortDates=Imagery.Dates.sort();
-    var modeIdx=Imagery.ImageModes.indexOf(modeStr);
-    for( var dateIdx of sortDates)
-    {
-        var data=Imagery.Data[sortDates[dateIdx]];
-        if(data==undefined){
-            continue;
-        }
-        if( data.ModeIds.indexOf(modeIdx)>-1)
-        {
-            dates.push(sortDates[dateIdx]);
-        }
+    vr.shownBox = box;
+    for (var z of boxes) {
+        z.style.display = "none";
     }
-    return dates;
-}
-
-function createStartBox() {
-    createFirstBox();
-}
-function createFirstBox() {
-    var firstBox=createElement("div","box");
-    var preferedModes = ["therm", "msa"];
-    createTopBarIndex("Latest Images",firstBox);
-    var newestDates=getDatesWithMode("therm");
-    //newestDates=newestDates.slice(newestDates.length-5);
-    var links=[];
-    for(var date of newestDates)
-    {
-        var newData=Imagery.Data[newestDates[(date)]];
-        var DataContainer = [];
-        if(newData == undefined)
-        {
-            continue;
+    defaultShownBox.style.display = "initial";
+    vr.onclick = function () {
+        for (var z of boxes) {
+            z.style.display = "none";
         }
-        for(var modeStr of preferedModes)
-        {
-            var idx=Imagery.ImageModes.indexOf(preferedModes[((modeStr))]);
-            if(newData.ModeIds.indexOf(idx)>-1)
-            {
-                DataContainer.push(Imagery.GetImageByDate(newestDates[(date)], preferedModes[(modeStr)]));
-                /*links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));*/
-            }
-        }
-        if(DataContainer.length>0)
-        {
-            links.push(DataContainer);
-        }
-        if(links.length==5)
-        { 
-           break;
-        }
+        this.shownBox.style.display = "initial";
     }
-    for( var link of links)
-    {
-        var imageContainer=createElement("div","ImgContainer");
-        if(link===undefined){continue;}
-        for(var lnk of links[link])
-        {
-            var thermImg = createElement("div", "Img");
-            thermImg.style.backgroundImage = "url('" + links[link][lnk] + "')";
-            imageContainer.appendChild(thermImg);
-            
-        }
-        if(imageContainer.childElementCount>0)
-        {
-                firstBox.appendChild(imageContainer);
-        }
-    }
-}
-
-function createElement(tag, className) {
-    var el = document.createElement(tag);
-    el.className = className;
-    return el;
-}
-function  getLog() {
-    var url="https://www.googleapis.com/drive/v3/files/0B-HW4voEJgOgdmVtSFhBd0NCUm8?alt=media&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA";
-    httpGetAsync(url,setLogTxt);
-}
-function setLogTxt(txt) {
-    logText=txt;
-}
-var logText;
-function createLog(text) {
-     var box=createElement("div","box");
-    box.innerText=text;
-    createTopBarIndex("Log",box);
 }
