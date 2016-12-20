@@ -76,6 +76,11 @@
     padding-left: 5px;
     padding-right: 5px;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    transition: 0.2s all ease-in-out;
+    cursor: pointer;
+}
+.topBarEntry:focus{
+    background-color: rgba(255,255,255,0.5);
 }
 
 .sliderBox {
