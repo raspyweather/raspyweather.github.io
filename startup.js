@@ -89,9 +89,9 @@ function processData() {
         var sat = parseInt(nam.substring(5, 7));
         var sat = parseInt(nam.substring(5, 7));
         var mod = nam.substring(21, nam.length - 4);
-        var dat = new Date(nam.substring(8, 12) + "/" +
-            nam.substring(12, 14) + "/" +
-            nam.substring(14, 16) + "/" +
+        var dat = new Date(nam.substring(8, 12) + "-" +
+            nam.substring(12, 14) + "-" +
+            nam.substring(14, 16) + " " +
             nam.substring(16, 18) + ":" +
             nam.substring(18, 20));
         Imagery.Satellites.pushIfNotExist(sat);
