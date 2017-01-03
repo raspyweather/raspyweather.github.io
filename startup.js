@@ -111,8 +111,11 @@ function processData() {
         }
         Imagery.ImagesCount++;
     }
-    Imagery.Dates.sort();
-    Imagery.DateToString = function (dat) {
+    
+  
+  
+Imagery.Dates.sort(function(a,b){ return a-b;}); 
+	   Imagery.DateToString = function (dat) {
         return dat.getUTCFullYear().toString().padLeft(4, "0")
             + (dat.getUTCMonth() + 1).toString().padLeft(2, "0")
             + dat.getUTCDate().toString().padLeft(2, "0")
