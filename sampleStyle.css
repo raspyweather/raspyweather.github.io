@@ -120,9 +120,17 @@ body {
 }
 .FilterRow {
     display: flex;
+    height:20vh;
 }
 .FilterImage{
     background-repeat: no-repeat;
+    background-position: 0 0,50% 0;
+    background-size: contain,contain;
+    min-height:100%;
+    width:50%;
+}
+.title.FilterRow {
+    height: initial;
 }
 
 @keyframes dialog_down {
