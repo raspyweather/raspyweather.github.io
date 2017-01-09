@@ -180,6 +180,10 @@ function createFilterExplanation(){
 	createTopBarIndex("Filters",firstBox);
 	for(var filter of Imagery.ImageModes)
 	{
+		if(!filter)
+		{
+			continue;
+		}
 		var row= createElement("div","FilterRow");
 		var title=createElement("h2","title");
 		var text=createElement("div","FilterText");
