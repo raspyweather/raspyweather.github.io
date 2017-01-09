@@ -1,4 +1,4 @@
-﻿var Imagery;
+var Imagery;
 var files = [];
 var loader;
 var boxes = [];
@@ -114,7 +114,7 @@ function processData() {
     
   
   
-Imagery.Dates.sort(function(a,b){ return a-b;}); 
+Imagery.Dates=Imagery.Dates.sort(function(a,b){ return b-a;}); 
 	   Imagery.DateToString = function (dat) {
         return dat.getUTCFullYear().toString().padLeft(4, "0")
             + (dat.getUTCMonth() + 1).toString().padLeft(2, "0")
@@ -136,6 +136,7 @@ Imagery.Dates.sort(function(a,b){ return a-b;});
                 resultDates.push(this.Dates[z]);
             }
         }
+	resultDates=resultDates.sort(function(a,b){ return b-a;}); 
         return resultDates;
     };
     onDataProcessed();
