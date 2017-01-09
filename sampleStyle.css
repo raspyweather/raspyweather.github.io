@@ -1,4 +1,4 @@
-﻿body {
+body {
 }
 
 .loader {
@@ -117,6 +117,12 @@
 .ImgContainer {
     display: flex;
     padding-bottom: 5px;
+}
+.FilterRow {
+    display: flex;
+}
+.FilterImage{
+    background-repeat: no-repeat;
 }
 
 @keyframes dialog_down {
