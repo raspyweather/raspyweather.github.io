@@ -162,7 +162,7 @@ function createElement(tag, className) {
     return el;
 }
 function createLogBox(logContent) {
-    var firstBox = createElement("div", "box");
+    var firstBox = createElement("pre", "box");
     firstBox.innerHTML = logContent;
     createTopBarIndex("Upload log", firstBox);
 }
