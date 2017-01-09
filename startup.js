@@ -186,8 +186,8 @@ function createFilterExplanation(){
 		var title=createElement("h2","title");
 		var text=createElement("div","FilterText");
 		var img = createElement("div","FilterImage");
-		title=filter;
-		text="sampleText";
+		title.innerHTML=filter;
+		text.innerHTML="sampleText";
 		row.appendChild(title);
 		row.appendChild(text);
 		row.appendChild(img);
