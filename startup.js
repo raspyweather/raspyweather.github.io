@@ -155,6 +155,7 @@ function onFilesLoaded() {
 function onDataProcessed() {
     createMainUI();
     createStartBox();
+    createFilterExplanation();
 }
 function createElement(tag, className) {
     var el = document.createElement(tag);
@@ -175,6 +176,24 @@ function createMainUI() {
         document.body.appendChild(docBo);
     },1000);
 
+}
+function createFilterExplanation(){
+	var firstBox=createElement("div","box");
+	createTopBarIndex("Filters",firstBox);
+	for(var filter of Imagery.ImageModes)
+	{
+		var row= createElement("div","FilterRow");
+		var title=createElement("h2","title");
+		var text=createElement("div","FilterText");
+		var img = createElement("div","FilterImage");
+		title=filter;
+		text="sampleText";
+		row.appendChild(title);
+		row.appendChild(text);
+		row.appendChild(img);
+		firstBox.appendChild(row);
+	}
+	
 }
 function createStartBox() {
     var firstBox = createElement("div", "box");
