@@ -112,8 +112,6 @@ function processData() {
         Imagery.ImagesCount++;
     }
     
-  
-  
 Imagery.Dates=Imagery.Dates.sort(function(a,b){ return b-a;}); 
 	   Imagery.DateToString = function (dat) {
         return dat.getUTCFullYear().toString().padLeft(4, "0")
@@ -186,6 +184,8 @@ function createFilterExplanation(){
 		var title=createElement("h2","title");
 		var text=createElement("div","FilterText");
 		var img = createElement("div","FilterImage");
+		var sampleImages=Imagery.GetDatesWithMode(filter);
+		img.style.backgroundImage = "url('" +Imagery.GetImageURLByDate(sampleImages[0],filter) + "') , url('" +Imagery.GetImageURLByDate(sampleImages[1],filter) + "')";
 		title.innerHTML=filter;
 		text.innerHTML="sampleText";
 		row.appendChild(title);
