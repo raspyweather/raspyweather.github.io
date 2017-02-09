@@ -1,4 +1,5 @@
 ﻿body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .loader {
@@ -68,6 +69,7 @@
     display: flex;
     align-items: center;
 }
+
 .topBarEntry {
     height: 100%;
     justify-content: center;
@@ -75,12 +77,13 @@
     display: flex;
     padding-left: 5px;
     padding-right: 5px;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    transition: 0.2s  all ease-in-out;
-    cursor:   pointer;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    transition: 0.2s all ease-in-out;
+    cursor: pointer;
 }
-.topBarEntry:focus{
-    background-color: rgba(255,255,255,0.50);
+
+.topBarEntry:focus {
+    background-color: rgba(255, 255, 255, 0.50);
 }
 
 .sliderBox {
@@ -112,11 +115,97 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    text-shadow: 0px 0px 2px black, 0px 0px 2px black, 0px 0px 2px black;
+    color: #fff;
 }
 
 .ImgContainer {
     display: flex;
     padding-bottom: 5px;
+}
+
+.checkBox {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    top: -3px;
+    *overflow: hidden;
+    margin-right: 10px;
+}
+
+.checkBoxLabel {
+    /*width:100%;*/
+    display: block;
+    padding-left: 20px;
+    padding-bottom: 5px;
+    text-indent: -15px;
+    border-bottom: 1px solid black;
+}
+
+.checkBox, .checkBoxLabel {
+    transition: background-color 0.33s linear;
+    vertical-align: middle;
+}
+
+.checkBox:hover, .checkBoxLabel:hover {
+    background-color: #00ffa2;
+}
+
+.hidden {
+    visibility: hidden;
+    height: 0;
+    width: 0;
+}
+
+.button {
+    float: right;
+    background: #00bb0a;
+    color: #fff;
+    border: none;
+    margin: 5px;
+    padding: 3px;
+    font-weight: bold;
+}
+
+.button:hover {
+    background: #00dd00;
+}
+
+.button:active {
+    background: #0f0;
+}
+
+.checkboxWrapper {
+    border-radius: 10px;
+    background: #00ba76;
+    padding: 10px;
+    z-index: 2;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 100%;
+}
+
+.inputWrapper {
+    background: #00ba76;
+    border-radius: 20px;
+    margin:5px;
+    padding:10px;
+    display: inline-block;
+}
+.inputDescription{
+    font-weight:bold;
+}
+.invalidInput{
+    border:#ff0000 1px solid;
+    box-shadow: #ff0000 1px 1px 1px;
+}
+.elementWrapper {
+    display: inline-block;
+    position: relative;
+    margin:5px;
 }
 
 @keyframes dialog_down {
