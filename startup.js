@@ -25,7 +25,7 @@ function httpGetAsync(theUrl, callback) {
     xmlHttp.open("GET", theUrl, true); // true for asynchronous
     xmlHttp.send(null);
 }
-function createQuery(pageTokenValue="") {
+function createQuery(pageTokenValue = "") {
     var query = {
         baseURL: "https://www.googleapis.com/drive/v3/files?",
         parameters: {
@@ -48,7 +48,7 @@ function createQuery(pageTokenValue="") {
     return query.getURL();
     //var query= baseURL+"&"+"maxSize";
 }
-function getFileList(jsonSTR="") {
+function getFileList(jsonSTR = "") {
     var nextPageToken = "";
     if (jsonSTR) {
         var doc = JSON.parse(jsonSTR);
@@ -111,7 +111,10 @@ function processData() {
         }
         Imagery.ImagesCount++;
     }
-    Imagery.Dates.sort();
+    Imagery.Dates.sort((x, y) => {
+        return y > x;
+    })
+    ;
     Imagery.DateToString = function (dat) {
         return dat.getUTCFullYear().toString().padLeft(4, "0")
             + (dat.getUTCMonth() + 1).toString().padLeft(2, "0")
@@ -135,6 +138,11 @@ function processData() {
         }
         return resultDates;
     };
+    Imagery.GetImagesByDay = function (year, month, day) {
+        var res = this.Dates.filter(x => {
+            return (x.getFullYear() == year) && (x.getDate() == day) && (x.getMonth() + 1 == month);
+        });
+    };
     onDataProcessed();
 }
 function onLoadStart() {
@@ -151,11 +159,7 @@ function onFilesLoaded() {
 function onDataProcessed() {
     createMainUI();
     createStartBox();
-}
-function createElement(tag, className) {
-    var el = document.createElement(tag);
-    el.className = className;
-    return el;
+    createSearchGUI();
 }
 function createLogBox(logContent) {
     var firstBox = createElement("div", "box");
@@ -169,9 +173,126 @@ function createMainUI() {
         topBar.style.animation = "topBar_moveRight 1s linear 1";
         document.body.appendChild(topBar);
         document.body.appendChild(docBo);
-    },1000);
+    }, 1000);
 
 }
+function createSearchGUI() {
+    var box = createElement("div", "box");
+    var queryForm = createElement("div", "inputWrapper");
+    createTopBarIndex("Search", box);
+    var dropDownListOperator = createDropDownList(["LIST", "SHOW"], true);
+    var dropDownListModes = createDropDownList(Imagery.ImageModes.filter(x => x), false);
+    var lb = createElement("div", "inputDescription");
+    queryForm.appendChild(lb);
+    lb.innerHTML = "Search operator:";
+    queryForm.appendChild(dropDownListOperator);
+    lb = createElement("div", "inputDescription");
+    lb.innerHTML = "Image Modes:";
+    queryForm.appendChild(lb);
+    queryForm.appendChild(dropDownListModes);
+    lb = createElement("div", "inputDescription");
+    lb.innerHTML = "Start date:";
+    queryForm.appendChild(lb);
+    var startDateInput = createElement("input", "inputDate");
+    startDateInput.onblur = function () {
+        var stDate = new Date(this.value);
+        if (isNaN(stDate)) {
+            this.classList.add("invalidInput");
+        }
+        else {
+            this.classList.remove("invalidInput");
+        }
+    };
+
+    queryForm.appendChild(startDateInput);
+    lb = createElement("div", "inputDescription");
+    lb.innerHTML = "End date:";
+    queryForm.appendChild(lb);
+    var endDateInput = createElement("input", "inputDate");
+    endDateInput.onblur = startDateInput.onblur;
+    queryForm.append(endDateInput);
+    box.appendChild(queryForm);
+    /*Input's
+     * -> LIST or SHOW
+     * -> ImageModes done
+     * -> Start Date
+     * -> End Date
+     * -> Satellite
+     * */
+
+
+}
+function createElement(tag, className) {
+    var el = document.createElement(tag);
+    el.className = className;
+    return el;
+}
+function createDropDownList(inputStuff, radioButton) {
+    var elemWrapper = createElement("div", "elementWrapper");
+    elemWrapper.Values = [];
+    var shownInput = createElement("input", "shownInputBox");
+    var checkBoxWrapper = createElement("div", "checkboxWrapper");
+    checkBoxWrapper.classList.add("hidden");
+    shownInput.onclick = function () {
+        shownInput.value = elemWrapper.Values.map(function (x) {
+            //console.log(document.getElementById(x.CheckBox).checked +" "+x.CheckBox+ " " + x.Value);
+            return (document.getElementById(x.CheckBox).checked) ? x.Value : "";
+        }).filter(n => n
+        ).join();
+        if (checkBoxWrapper.classList.contains("hidden")) {
+            checkBoxWrapper.classList.remove("hidden");
+            return;
+        }
+        checkBoxWrapper.classList.add("hidden");
+    };
+    var closeButton = createElement("input", "button");
+    closeButton.setAttribute("type", "button");
+    closeButton.setAttribute("value", "Close");
+    closeButton.onclick = function () {
+        shownInput.click();
+    };
+    var randName = Math.random().toString(36).substring(7);
+    for (var k of inputStuff) {
+
+        let id = Math.random().toString(36).substring(7);
+        var checkBox = createElement("input", "checkBox");
+        checkBox.setAttribute("type", (radioButton) ? "radio" : "checkbox");
+        checkBox.setAttribute("name", randName);
+        checkBox.setAttribute("id", id);
+
+        let p = document.createElement("p");
+        let label = createElement("label", "checkBoxLabel");
+        label.ValueIndex = checkBox.ValueIndex = -1 + elemWrapper.Values.push(
+                {
+                    Value: k,
+                    CheckBox: checkBox.id
+                });
+        label.appendChild(checkBox);
+        if (radioButton) {
+            checkBox.parentElement.onclick = function () {
+                // console.log("radioCLick");
+                var radios = document.getElementsByName(this.getAttribute("name"));
+                for (var z of radios) {
+                    if (this != z) {
+                        z.checked = false;
+                    }
+                }
+                this.checked = true;
+            };
+        }
+
+        label.setAttribute("for", id);
+        label.innerHTML += k;
+        label.CheckBox = checkBox;
+        label.setAttribute("title", k);
+        checkBoxWrapper.appendChild(label);
+    }
+    checkBoxWrapper.appendChild(closeButton);
+    elemWrapper.appendChild(shownInput);
+    elemWrapper.appendChild(checkBoxWrapper);
+    return elemWrapper;
+}
+
 function createStartBox() {
     var firstBox = createElement("div", "box");
     var preferedModes = ["therm", "msa"];
@@ -182,18 +303,24 @@ function createStartBox() {
     var links = [];
     for (var date of newestDates) {
         var newData = Imagery.Data[(date)];
-        var DataContainer = [];
+        var DataContainer = {
+            Date: date,
+            Links: []
+        };
         if (newData == undefined || date == undefined) {
             continue;
         }
         for (var modeStr of preferedModes) {
             var idx = Imagery.ImageModes.indexOf(modeStr);
             if (newData.ModeIds.indexOf(idx) > -1) {
-                DataContainer.push(Imagery.GetImageURLByDate(date, modeStr));
+                DataContainer.Links.push({
+                    Link: Imagery.GetImageURLByDate(date, modeStr),
+                    Mode: modeStr
+                });
                 /*links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));*/
             }
         }
-        if (DataContainer.length > 0) {
+        if (DataContainer.Links.length > 0) {
             links.push(DataContainer);
         }
         if (links.length == 5) {
@@ -202,12 +329,13 @@ function createStartBox() {
     }
     for (var link of links) {
         var imageContainer = createElement("div", "ImgContainer");
-        if (link === undefined) {
+        if (link.Links === undefined || link.Links.length == 0) {
             continue;
         }
-        for (var lnk of link) {
+        for (var lnk of link.Links) {
             var thermImg = createElement("div", "Img");
-            thermImg.style.backgroundImage = "url('" + lnk + "')";
+            thermImg.style.backgroundImage = "url('" + lnk.Link + "')";
+            thermImg.innerHTML = lnk.Mode + " " + ('0' + link.Date.getHours()).slice(-2) + ":" + ('0' + link.Date.getMinutes()).slice(-2) + " " + ('0' + link.Date.getDate()).slice(-2) + "-" + ('0' + (link.Date.getMonth() + 1)).slice(-2) + "-" + link.Date.getFullYear();
             imageContainer.appendChild(thermImg);
 
         }
@@ -224,7 +352,7 @@ function createLoaderUI() {
     loader.appendChild(el);
     docBo = createElement("div", "mainBox");
     topBar = createElement("div", "topBar");
-    loader.style.animation="1s cubic-bezier(0.16, 0.27, 0.09, 1.05) 0s normal none 1 running dialog_down";
+    loader.style.animation = "1s cubic-bezier(0.16, 0.27, 0.09, 1.05) 0s normal none 1 running dialog_down";
 }
 function createTopBarIndex(title, box) {
     var vr = createElement("div", "topBarEntry");
