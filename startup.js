@@ -490,8 +490,8 @@ function createThermalTemperatureView(){
     var queryForm=createElement("div","inputWrapper fixedInputWrapper");
     createTopBarIndex("Thermal Analysis",box);
     var label=document.createElement("label");
-    var outputTemp=createElement("div","tmpViewer");
-    var inputDateLabel=createElement("div","lb");
+    var outputTemp=createElement("div","inputDescription");
+    var inputDateLabel=createElement("div","inputDescription");
     inputDateLabel.innerHTML="Select Date:";
     queryForm.appendChild(inputDateLabel);
     var sel=document.createElement("select");
