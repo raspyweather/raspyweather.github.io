@@ -1,4 +1,4 @@
-﻿var Imagery;
+var Imagery;
 var files = [];
 var loader;
 var boxes = [];
