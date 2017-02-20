@@ -3,7 +3,110 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
-    <script>
+    <style>
+        .checkBox {
+            width: 13px;
+            height: 13px;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            top: -3px;
+            *overflow: hidden;
+            margin-right: 10px;
+        }
+
+        .checkBoxLabel {
+            /*width:100%;*/
+            display: block;
+            padding-left: 20px;
+            padding-bottom: 5px;
+            text-indent: -15px;
+            border-bottom: 1px solid black;
+        }
+
+        .checkBox, .checkBoxLabel {
+            transition: background-color 0.33s linear;
+            vertical-align: middle;
+        }
+
+        .checkBox:hover, .checkBoxLabel:hover {
+            background-color: #00ffa2;
+        }
+
+        .hidden {
+            visibility: hidden;
+            height: 0;
+            width: 0;
+        }
+
+        .button {
+            float: right;
+            background: #00bb0a;
+            color: #fff;
+            border: none;
+            margin: 5px;
+            padding: 3px;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #00dd00;
+        }
+
+        .button:active {
+            background: #0f0;
+        }
+
+        .checkboxWrapper {
+            border-radius: 10px;
+            background: #00ba76;
+            padding: 10px;
+            z-index: 2;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 100%;
+        }
+
+        .elementWrapper {
+            display: inline-block;
+            position: relative;
+        }
+        .datePickerShowBox {
+            visibility: visible;
+            width: 350px;
+            height: 266px;
+            background: #eee;
+            display:flex;
+        }
+        .datePickerButton {
+            height: 100%;
+            width: 20%;
+            background: #efe;
+        }
+        .datePickerDateBox{
+                width:80%;
+        }
+        .datePickerDayBox{
+            width:12.5%;
+            height:15.5%;
+            border:1px solid red;
+            float:left;
+            color:#000;
+        }
+        .datePickerDayBox.sunday{
+            color:#ff0000;
+        }
+        .datePickerDayBox.otherMonth{
+            color: #666666;
+        }
+        /*.dropDownItem:not(.dropDownItem:last-child){
+            border-bottom:#000 2px solid;
+        }*/
+    </style>
+
+
+    <!--<script>
         var Imagery;
         var files = [];
         var loader;
@@ -251,14 +354,138 @@
             }
         }
 
-    </script>
+    </script>-->
 </head>
-<body onload="onLoadStart()">
+<body> <!--onload="onLoadStart()"-->
 <!--<script src="startup.js" type="text/javascript"></script>
 <!--<script src="JSExtensionsjs.js" type="text/javascript"></script>->
 <script src="https://docs.google.com/uc?id=0B-HW4voEJgOgQ3ZtNjJ0SmlQSWM" type="text/html">
 </script>-->
+<script>
+    function createElement(tag, className) {
+        var el = document.createElement(tag);
+        el.className = className;
+        return el;
+    }
+    function createDatePicker(initialDate)
+    {
+        var wrapperBox=createElement("div","datePicker");
+        var inputBox=createElement("input","dateInput");
+        var showBox=createElement("div","datePickerShowBox");
+        var leftButton=createElement("div","datePickerButton");
+        var rightButton=createElement("div","datePickerButton");
+        var dateBox=createElement("div","datePickerDateBox");
 
+        wrapperBox.appendChild(inputBox);
+        wrapperBox.appendChild(showBox);
+        showBox.appendChild(leftButton);
+        showBox.appendChild(dateBox);
+        showBox.appendChild(rightButton);
+
+        inputBox.showBox=showBox;
+        inputBox.onclick=function () {
+            console.log("toggle");
+            if(this.showBox.style.visibility=="visible")
+            {
+                this.showBox.style.visibility="hidden";
+            }
+            else{
+                this.showBox.style.visibility="visible";
+            }
+        }
+        var yearLeftButton=createElement("div","yearDecrement");
+        var yearRightButton=createElement("div","yearIncrement");
+
+        var yearDisplay=createElement("div","yearDisplay");
+
+        var daysOfMonth=new Date(initialDate.getFullYear(),initialDate.getMonth(),0).getDate();
+
+        var dateToIterate=new Date(initialDate.getFullYear(),initialDate.getMonth(),1);
+        var dayOfWeek=dateToIterate.getDay();
+        for(var z=0;z<7;z++)
+        {
+            for(var zz=0;zz<6;zz++)
+            {
+                var dayBox=createElement("div","datePickerDayBox");
+                dateBox.appendChild(dayBox);
+                if(dayOfWeek==dateToIterate.getDay()){
+                    dayBox.innerHTML=dateToIterate.getDate();
+                    dateToIterate.setDate(dateToIterate.getDate()+1);
+                    dayOfWeek=dateToIterate.getDay();
+                }
+            }
+        }
+        return wrapperBox;
+    }
+
+    document.body.appendChild(createDatePicker(new Date()));
+   /* function createDropDownList(inputStuff,radioButton) {
+        var elemWrapper = createElement("div", "elementWrapper");
+        elemWrapper.Values = [];
+        var shownInput = createElement("input", "shownInputBox");
+        var checkBoxWrapper = createElement("div", "checkboxWrapper");
+        checkBoxWrapper.classList.add("hidden");
+        shownInput.onclick = function () {
+            shownInput.value = elemWrapper.Values.map(function (x) {
+                    console.log(document.getElementById(x.CheckBox).checked +" "+x.CheckBox+ " " + x.Value);
+                    return (document.getElementById(x.CheckBox).checked) ? x.Value : "";
+                }).filter(n => n).join();
+            if (checkBoxWrapper.classList.contains("hidden")) {
+                checkBoxWrapper.classList.remove("hidden");
+                return;
+            }
+            checkBoxWrapper.classList.add("hidden");
+        };
+        var closeButton = createElement("input", "button");
+        closeButton.setAttribute("type", "button");
+        closeButton.setAttribute("value", "Close");
+        closeButton.onclick = function () {
+            shownInput.click();
+        };
+        var randName=Math.random().toString(36).substring(7);
+        for (var k of inputStuff) {
+
+            let id = Math.random().toString(36).substring(7);
+            var checkBox = createElement("input", "checkBox");
+            checkBox.setAttribute("type",(radioButton)?"radio": "checkbox");
+            checkBox.setAttribute("name", randName);
+            checkBox.setAttribute("id", id);
+
+            let p = document.createElement("p");
+            let label = createElement("label", "checkBoxLabel");
+            label.ValueIndex = checkBox.ValueIndex = -1 + elemWrapper.Values.push(
+                    {
+                        Value: k,
+                        CheckBox: checkBox.id
+                    });
+            label.appendChild(checkBox);
+            if(radioButton){
+                checkBox.parentElement.onclick=   function(){
+                    console.log("radioCLick");
+                    var radios=document.getElementsByName(this.getAttribute("name"));
+                    for(var z of radios)
+                    {
+                        if(this!=z){
+                        z.checked=false;}
+                    }
+                    this.checked=true;
+                };
+            }
+
+            label.setAttribute("for", id);
+            label.innerHTML += k;
+            label.CheckBox = checkBox;
+            label.setAttribute("title", k);
+            checkBoxWrapper.appendChild(label);
+        }
+        checkBoxWrapper.appendChild(closeButton);
+        elemWrapper.appendChild(shownInput);
+        elemWrapper.appendChild(checkBoxWrapper);
+        return elemWrapper;
+    }
+    document.body.appendChild(createDropDownList([1, 2, 3, 4],false));
+    document.body.appendChild(createDropDownList(['a','b','c'],true));*/
+</script>
 <link href="sampleStyle.css" rel="stylesheet"/>
 </body>
 </html>

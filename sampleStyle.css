@@ -194,6 +194,7 @@
     margin:5px;
     padding:10px;
     display: inline-block;
+    float: left;
 }
 .inputDescription{
     font-weight:bold;
