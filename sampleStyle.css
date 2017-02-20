@@ -197,6 +197,10 @@
     float: left;
     min-width: 21ch;
 }
+.fixedInputWrapper{
+    position: absolute;
+    top:12.5vh;
+}
 .inputDescription{
     font-weight:bold;
 }

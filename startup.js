@@ -487,7 +487,7 @@ function createDatePicker(initialDate) {
 
 function createThermalTemperatureView(){
     var box=createElement("div","box");
-    var queryForm=createElement("div","inputWrapper");
+    var queryForm=createElement("div","inputWrapper fixedInputWrapper");
     createTopBarIndex("Thermal Analysis",box);
     var label=document.createElement("label");
     var outputTemp=createElement("div","tmpViewer");
