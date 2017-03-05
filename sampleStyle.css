@@ -1,4 +1,4 @@
-﻿body {
+﻿                            body {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
@@ -197,9 +197,11 @@
     float: left;
     min-width: 21ch;
 }
-.fixedInputWrapper{
-    position: absolute;
-    top:12.5vh;
+    .fixedInputWrapper {
+    position: fixed;
+    top: 12.5vh;
+    z-index: 1;
+    left: 2vw;
 }
 .inputDescription{
     font-weight:bold;
@@ -217,7 +219,12 @@ canvas{
     margin:auto;
     display: flex;
 }
-
+.collapseBox{
+    transition:all 0.2s linear;
+}
+.modalsWrapper{width:20vw;
+background:#00bb0a;
+}
 @keyframes dialog_down {
     from {
         top: -50%;
