@@ -1,0 +1,86 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="sampleStyle.css" />
+
+</head>
+
+<body>
+    <div id="box"></div>
+    <script>
+        var chunksCount = 8;
+        var workersCount = 4;
+        var mainBox = document.getElementById("box");
+        function createElement(tag, className) {
+            var el = document.createElement(tag);
+            el.className = className;
+            return el;
+        }
+
+        function createModal(title) {
+            var wrappingBox = createElement("div", "wrappingBox");
+            var titlelabel = createElement("div", "heading titleLabel");
+            var collapseBox = createElement("div", "collapseBox");
+            collapseBox.isCollapsed = false;
+            collapseBox.toggle = function () {
+                if (this.isCollapsed) {
+                    this.style.height = "";
+                }
+                else {
+                    this.style.height = "0";
+                }
+                this.isCollapsed = !this.isCollapsed;
+            };
+            titlelabel.collapseBox = collapseBox;
+            titlelabel.onclick = function () {
+                this.collapseBox.toggle();
+            };
+            titlelabel.innerHTML = title;
+            wrappingBox.appendChild(titlelabel);
+            wrappingBox.appendChild(collapseBox);
+            wrappingBox.titleLabel = titlelabel;
+            wrappingBox.collapseBox = collapseBox;
+            return wrappingBox;
+        }
+        function createModals() {
+            var containingBox = createElement("div", "modalsWrapper");
+            createRenderSettingBox(containingBox);
+            var layerControl = createModal("Layers");
+            var thermFilter = createModal("Thermal Filter");
+            var saveImg = createModal("Save...");
+            containingBox.appendChild(layerControl);
+            containingBox.appendChild(thermFilter);
+            containingBox.appendChild(saveImg);
+            mainBox.appendChild(containingBox);
+        }
+        function createRenderSettingBox(parentBox) {
+            var renderSetting = createModal("Render setting");
+            createNumericUpDown(1, 20, 1, workersCount, "workersCountInput", "Workers:", renderSetting.collapseBox);
+            createNumericUpDown(1, 20, 1, chunksCount, "BlocksCountInput", "Blocks:", renderSetting.collapseBox);
+            var okButton = createElement("div", "button");
+            okButton.innerHTML = "Apply";
+            renderSetting.appendChild(okButton);
+            parentBox.appendChild(renderSetting);
+        }
+        function createLabelFor(title, forId) {
+            var lb = createElement("label", "heading");
+            lb.innerHTML = title;
+            lb.setAttribute("for", forId);
+            return lb;
+        }
+        function createNumericUpDown(min, max, step, value, id, title, parent) {
+            var input = createElement("input", "numericUpDown");
+            input.setAttribute("step", step);
+            input.setAttribute("min", min);
+            input.setAttribute("max", max);
+            input.id = id;
+            parent.appendChild(input.label = createLabelFor(title, id));
+            parent.appendChild(input);
+            return input;
+        }
+        createModals();
+    </script>
+
+</body>
+
+</html>

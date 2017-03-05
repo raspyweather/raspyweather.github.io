@@ -33,6 +33,8 @@ function createCanvasImgCont(parent)
     var img = document.createElement("img");
     img.style.display="none";
     parent.appendChild(img);
+    canv.img=img;
+    canv.cont=cont;
     return{canv:canv,cont:cont,img:img};
 }
 function loadImageToCanvas(imgId,canv,cont,img, callback) {
