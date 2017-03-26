@@ -1,29 +1,48 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
     <style>
+        .noselect {
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+        }
+        
         .datePickerWrapperBox {
             width: 300px;
             height: 300px;
-            border: 1px solid yellow;
         }
-
+        
         .datePickerYearRow {
             border-bottom: 1px solid green;
-            background: #eee;
+            background: #dfd;
             width: 100%;
             height: 20%;
             display: flex;
         }
+        
         .datePickerYearButton {
             width: 20%;
-            background: #bbb;
+            background: #0b0;
             height: 100%;
-            position:relative;
+            position: relative;
             display: flex;
+            cursor: pointer;
         }
+        
         .datePickerYearButtonDisplay {
             height: 16pt;
             font-size: 16pt;
@@ -31,49 +50,60 @@
             margin: auto;
             font-weight: 900;
         }
-        .datePickerYearDisplay{
-            width:80%;
+        
+        .datePickerYearDisplay {
+            width: 80%;
             justify-content: center;
-            align-self:center;
+            align-self: center;
             display: flex;
         }
+        
         .datePickerMonthButton {
             height: 100%;
             width: 10%;
             background: #0f0;
             position: relative;
         }
+        
         .datePickerMonthDisplay {
             width: 100%;
-            background: #ccc;
+            background: #0b0;
             top: 0;
             height: 10%;
         }
+        
         .datePickerMonthBox {
             width: 80%;
-            background: #bfb;
+            background: #dfd;
         }
+        
         .datePickerBox {
             position: relative;
             width: 100%;
             height: 100%;
         }
+        
         .datePickerMonthRow {
             position: relative;
             height: 70%;
             display: flex;
         }
+        
         .datePickerMonthButtonDisplay {
             height: 66pt;
             font-size: 66pt;
             line-height: 50pt;
+            cursor: pointer;
         }
+        
         .datePickerDayBox {
             width: 12.9%;
             height: 15.4%;
             float: left;
             margin: 1px;
+            cursor: pointer;
         }
+        
         .datePickerMonthButton {
             height: 100%;
             width: 10%;
@@ -81,156 +111,35 @@
             font-size: 100%;
             font-weight: 800;
             display: flex;
+            cursor: pointer;
         }
+        
         .datePickerMonthButtonDisplay {
             display: flex;
             position: relative;
             margin: auto;
             font-size: 66pt;
         }
-        .datePickerDayBox:hover {
-            background: #4f4;
+        
+        .datePickerDayBox:not(:empty):hover {
+            background: #4b4;
             border-radius: 10px;
         }
-        .centerFlexBox{
+        
+        .centerFlexBox {
             align-content: center;
-            justify-content:center;;
-            align-self:center;
+            justify-content: center;
+            ;
+            align-self: center;
             position: relative;
             display: flex;
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         }
-
-
     </style>
-    <!--   <style>
-           body {
-               background: #888;
-           }
-
-           #spinObject {
-               position: relative;
-           }
-
-           #spinWrapper {
-               background: #666;
-               position: relative;
-               width: 20vh;
-               height: 20vh;
-               margin-left: auto;
-               margin-right: auto;
-               margin-top: 40vh;
-               margin-bottom: 40vh;
-               animation:10s linear normal infinite running spininganimation;
-               border-width:50px;
-               border-color:transparent;
-           }
-
-           @keyframes spininganimation {
-               0% {
-                   /*//transform: rotateZ(0deg);*/
-                   border-left-color:#0f0;
-               }
-
-               100% {
-                   border-color:transparent;
-               }
-           }
-
-           /*
-           div {
-               width: 100px;
-               height: 100px;
-               margin: 20px;
-               display: block;
-               background-size: contain;
-               background-repeat: no-repeat;
-           } */
-       </style>
-       <!--  <script src="startup.js"></script>
-         <script src="JSExtensionsjs.js"></script>-->
 </head>
+
 <body onload="document.body.appendChild(createDatePicker(new Date()))">
-<script src="startup.js"></script>
-
-<!--
-<div id="spinWrapper">
-    <div id="spinObject"></div>
-</div>
-<!--<script>
-    function nextLevel(){
-        var url="https://www.googleapis.com/drive/v3/files?pageSize=1&q=%270B-HW4voEJgOgeEdIZHFPQTYtNW8%27+in+parents&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA&pageToken="
-        if(nextPageToken){
-        url+=nextPageToken;}
-        httpGetAsync(url,returnResult);
-    }
-    function returnResult(jsonSTR)
-    {
-        document.getElementById("log").innerHTML+="\n\n"+jsonSTR+"<br/>";
-        nextPageToken=JSON.parse(jsonSTR).nextPageToken;
-    }
-    var nextPageToken="";
-    function httpGetAsync(theUrl, callback) {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function () {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                callback(xmlHttp.responseText);
-        }
-        xmlHttp.open("GET", theUrl, true); // true for asynchronous
-        xmlHttp.send(null);
-    }
-
-</script>
-    <div id="log" style="width:99vw;height:80vh;overflow-y: scroll;"></div>
-    <div id="bt" style="width:99vw;height: 19vh;background:#888;" onclick="nextLevel()"></div>
-
-
-
- <!--   <div id="conti"></div>-->
-<!--  <script>
-      function startSlider() {
-          var el = window.document.getElementById("conti");
-          var li = {};
-          for (var i = 0; i < Imagery.ImagesCount; i++) {
-              li[i] = Imagery.GetImageURLByIndex(i);
-          }
-          Slider = createSlider(el, li);
-      }
-      var Slider;
-      function createSlider(containerDiv, ImageLinks) {
-          var slider = {
-              Images: ImageLinks,
-              Parent: containerDiv,
-              ShownIndex: 0,
-              PreLoadImages: 10,
-              Direction: true
-          };
-          slider.getImageControls = function () {
-              var dl = {};
-              for (var i = 0; i < this.PreLoadImages; i++) {
-                  dl[i] = document.createElement("div");
-                  dl[i].classList.add("sliderItem");
-                  dl[i].style = "background-image: url(\"" + this.Images[this.ShownIndex + i] + "\")";
-              }
-              return dl;
-          };
-          slider.load = function () {
-              var res = this.getImageControls();
-              for (var i in res) {
-                  this.Parent.appendChild(res[i]);
-              }
-              /*  for (var i = 0; i < res.length; i++) {
-                    this.Parent.appendChild(res[i]);
-                }*/
-              console.log("slider loaded");
-          };
-          slider.load();
-          return slider;
-      }
-      window.document.body.onload = function () {
-          loadAllData();
-          this.OnDataProcessed = startSlider;
-      };
-  </script>-->
+    <script src="startup.js"></script>
 </body>
+
 </html>

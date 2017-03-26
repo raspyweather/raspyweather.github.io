@@ -1,15 +1,29 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
     <style>
 
     </style>
 </head>
-<body onload="onLoadStart()">
-<script src="startup.js" type="text/javascript"></script>
-<!--<script src="JSExtensionsjs.js" type="text/javascript"></script>-->
-<link href="sampleStyle.css" rel="stylesheet"/>
+
+<body>
+
+    <!--<script src="JSExtensionsjs.js" type="text/javascript"></script>-->
+    <link href="sampleStyle.css" rel="stylesheet" />
+    <script src="startup.js" type="text/javascript">
+
+    </script>
+    <script defer type="text/javascript">
+        console.log(document.onLoadStart);
+        console.log(document.onLoadStart==undefined);
+        console.log(document.onLoadStart.dispatchEvent==undefined);
+        createMainPageEvents();
+        document.onLoadStart.dispatchEvent();
+
+    </script>
 </body>
+
 </html>

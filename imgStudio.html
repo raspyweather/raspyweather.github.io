@@ -2,12 +2,14 @@
 
 <head>
     <link rel="stylesheet" href="sampleStyle.css" />
-
+    <script src="startup.js"></script>
 </head>
 
 <body>
     <div id="box"></div>
     <script>
+        onDataProcessed = function () { };
+        getFileList();
         var chunksCount = 8;
         var workersCount = 4;
         var mainBox = document.getElementById("box");
@@ -23,11 +25,11 @@
             var collapseBox = createElement("div", "collapseBox");
             collapseBox.isCollapsed = false;
             collapseBox.toggle = function () {
-                if (this.isCollapsed) {
-                    this.style.height = "";
+                if (!this.isCollapsed) {
+                    this.classList.add("scrollHidden");
                 }
                 else {
-                    this.style.height = "0";
+                    this.classList.remove("scrollHidden");
                 }
                 this.isCollapsed = !this.isCollapsed;
             };
@@ -45,22 +47,40 @@
         function createModals() {
             var containingBox = createElement("div", "modalsWrapper");
             createRenderSettingBox(containingBox);
-            var layerControl = createModal("Layers");
-            var thermFilter = createModal("Thermal Filter");
+            createThermalFilterBox(containingBox);
+            createLayerControl(containingBox);
             var saveImg = createModal("Save...");
-            containingBox.appendChild(layerControl);
-            containingBox.appendChild(thermFilter);
             containingBox.appendChild(saveImg);
             mainBox.appendChild(containingBox);
         }
         function createRenderSettingBox(parentBox) {
-            var renderSetting = createModal("Render setting");
+            var renderSetting = createModal("Render settings");
             createNumericUpDown(1, 20, 1, workersCount, "workersCountInput", "Workers:", renderSetting.collapseBox);
             createNumericUpDown(1, 20, 1, chunksCount, "BlocksCountInput", "Blocks:", renderSetting.collapseBox);
             var okButton = createElement("div", "button");
             okButton.innerHTML = "Apply";
-            renderSetting.appendChild(okButton);
+            renderSetting.collapseBox.appendChild(okButton);
             parentBox.appendChild(renderSetting);
+        }
+        function createThermalFilterBox(parentBox) {
+            var thermalFilter = createModal("Thermal Filter");
+            createNumericUpDown(-100, 60, 1, -100, "thermalFilterMin", "Min. Temperature", thermalFilter.collapseBox).label.classList.add("inlineElement");
+            createNumericUpDown(-100, 60, 1, -60, "thermalFilterax", "Max. Temperature", thermalFilter.collapseBox).label.classList.add("inlineElement");
+            var okButton = createElement("div", "button");
+            okButton.innerHTML = "Run Filter";
+            thermalFilter.collapseBox.appendChild(okButton);
+            parentBox.appendChild(thermalFilter);
+        }
+        function createLayerControl(parentBox) {
+            var layerControl = createModal("Layers");
+            layerControl.collapseBox.classList.add("scrollHidden");
+            layerControl.collapseBox.isCollapsed = true;
+            layerControl.collapseBox.style.height = "100px";
+            var okButton= createElement("div","button");
+            okButton.innerHTML="Add Layer";
+            okButton.onclick=createSelectImagePopup;
+            layerControl.collapseBox.appendChild(okButton);
+            parentBox.appendChild(layerControl);
         }
         function createLabelFor(title, forId) {
             var lb = createElement("label", "heading");
@@ -73,11 +93,50 @@
             input.setAttribute("step", step);
             input.setAttribute("min", min);
             input.setAttribute("max", max);
+            input.setAttribute("type", "number");
+
+            input.value = value;
             input.id = id;
             parent.appendChild(input.label = createLabelFor(title, id));
             parent.appendChild(input);
             return input;
         }
+        function createSelectImagePopup() {
+            console.log("popup");
+            var wrapper = createElement("div", "popup");
+            var title = createElement("div", "heading inlineElement");
+            title.innerHTML = "Select an Image for a new layer:";
+            wrapper.appendChild(title);
+            var contentBox = createElement("div", "wrappingBox");
+
+            var buttonSelectByDate = createElement("div", "button bigButton");
+            buttonSelectByDate.innerHTML = "Select by Date";
+            contentBox.appendChild(buttonSelectByDate);
+
+            var buttonSelectByMode = createElement("div", "button bigButton");
+            buttonSelectByMode.innerHTML = "Select by Mode";
+            contentBox.appendChild(buttonSelectByMode);
+
+            wrapper.appendChild(contentBox);
+
+            buttonSelectByDate.onclick = function () {
+                clearChildren(this.parent);
+                var contentBox = this.parent;
+                //show DatePicker
+            };
+            buttonSelectByMode.onclick = function () {
+                clearChildren(this.parent);
+                var contentBox = this.parent;
+                // show all modes
+            }
+        }
+        function clearChildren(parent) {
+            var children = parent.ChildNodes;
+            for (var i of children) {
+                parent.removeChild(i);
+            }
+        }
+
         createModals();
     </script>
 

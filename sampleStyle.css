@@ -158,10 +158,16 @@
     height: 0;
     width: 0;
 }
-
+.scrollHidden{
+    max-height: 0px !important;
+}
+.inlineElement{
+    position: relative;
+    width: 99%;
+}
 .button {
     float: right;
-    background: #00bb0a;
+    background: rgba(128,0,128, 0.2);
     color: #fff;
     border: none;
     margin: 5px;
@@ -221,9 +227,19 @@ canvas{
 }
 .collapseBox{
     transition:all 0.2s linear;
+    overflow:hidden;
+    margin: 5px;
+    max-height: 99999px;
+
 }
-.modalsWrapper{width:20vw;
+
+.modalsWrapper{
+     width:20vw;
 background:#00bb0a;
+min-width: 200px;
+}
+.wrappingBox{
+    padding: 10px 10px 0px 10px;
 }
 @keyframes dialog_down {
     from {
