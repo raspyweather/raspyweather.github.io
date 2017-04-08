@@ -239,8 +239,8 @@ function createMainUI() {
     setTimeout(function () {
         loader.remove();
         topBar.style.animation = "topBar_moveRight 1s linear 1";
-        document.body.appendChild(topBar);
-        document.body.appendChild(docBo);
+        document.parent.appendChild(topBar);
+        document.parent.appendChild(docBo);
     }, 1000);
 }
 function createSearchGUI() {
@@ -543,6 +543,7 @@ function createThermalTemperatureView() {
                 console.log("loaded");
                 box.appendChild(canv);
                 canv.onmousemove = function (mouseEvent) {
+
                     var offset = canv.getBoundingClientRect();
                     var point = { x: mouseEvent.clientX - offset.left, y: mouseEvent.clientY - offset.top };
                     var rgbv = cont.getImageData(point.x, point.y, 1, 1);
@@ -558,18 +559,18 @@ function createStartBox() {
     var preferedModes = ["therm", "msa"];
     defaultShownBox = firstBox;
     createTopBarIndex("Latest Images", firstBox);
-    firstBox.preLoadImagesCount = 4;
-
+    firstBox.preLoadImagesCount = 5;
     firstBox.loadImages = function () {
-        var newestDates = Imagery.GetDatesWithMode("therm");
+        this.newestDates = Imagery.GetDatesWithMode("therm");
         var links = [];
-        this.preLoadImagesCount++;
-        for (var date of newestDates) {
+        if (this.startIdx == undefined) { this.startIdx = 0; }
+        for (var idx = this.startIdx; idx < this.newestDates.length; idx++) {// date of this.newestDates) {
+            var date = this.newestDates[idx];
+            console.log("Z:" + this.newestDates.indexOf(date));
             var newData = Imagery.Data[(date)];
-            if (newData == undefined || date == undefined) {
+            if (newData == undefined || date == undefined || date >= firstBox.oldestDate) {
                 continue;
             }
-            if (date >= firstBox.oldestDate) { continue; }
             var DataContainer = {
                 Date: date,
                 Links: []
@@ -589,10 +590,14 @@ function createStartBox() {
                 links.push(DataContainer);
             }
             if (links.length == this.preLoadImagesCount) {
+                if (this.preLoadImagesCount>1) { this.preLoadImagesCount = 1; }
+                this.startIdx = idx;
                 break;
             }
         }
+        console.log(links.length);
         for (var link of links) {
+            
             var imageContainer = createElement("div", "ImgContainer");
             if (link.Links === undefined || link.Links.length == 0) {
                 continue;
@@ -604,8 +609,7 @@ function createStartBox() {
                 imageContainer.appendChild(thermImg);
             }
             if (firstBox.childElementCount > 10) {
-                for (var z = 0; z < 5; z++)
-                { firstBox.removeChild(firstBox.children[0]); }
+                firstBox.removeChild(firstBox.children[0]);
             }
             if (imageContainer.childElementCount > 0) {
                 firstBox.appendChild(imageContainer);
@@ -616,7 +620,7 @@ function createStartBox() {
     firstBox.loadImages();
     window.onscroll = function () {
         // if scroll to bottom is only 
-        if (window.scrollMaxY - window.scrollY < window.innerHeight * 0.2 && firstBox.isVisible == true && document.isLoading == false) {
+        if ((window.scrollMaxY - window.scrollY )<document.documentElement.offsetHeight* 0.95 && firstBox.isVisible == true && document.isLoading == false) {
             console.log("add!");
             document.isLoading = true;
             firstBox.loadImages();
@@ -625,7 +629,7 @@ function createStartBox() {
 }
 function createLoaderUI() {
     loader = createElement("div", "loader");
-    document.body.appendChild(loader);
+    document.parent.appendChild(loader);
     var el = createElement("div", "loaderTitle heading");
     el.innerText = "Loading ...";
     loader.appendChild(el);

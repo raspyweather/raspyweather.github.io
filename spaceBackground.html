@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html {
+            background: #000;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+        
+        #Earth {
+            margin: 5%;
+            width: 100%;
+            height: 100%;
+            border-radius: 100% 0 0 0;
+        }
+        
+        #EarthFlare {
+            background: #45f;
+            position: absolute;
+            bottom: 0vmin;
+            right: 0vmin;
+            width: 60vmin;
+            height: 60vmin;
+            border-radius: 60vmin 0 0 0;
+            box-shadow: #45F -2vmin -1vmin 2vmin;
+            z-index: 1;
+        }
+        
+        #redSun {
+            border-radius: 100%;
+            position: absolute;
+            left: 30vmin;
+            top: 30vmin;
+            width: 40vmin;
+            height: 40vmin;
+            background: radial-gradient(rgba(137, 52, 21, 1) 0%, rgba(137, 52, 21, 0) 50%);
+        }
+        
+        .sun {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+        
+        #whiteSun {
+            background: radial-gradient(rgba(255, 255, 255, 1) 0%, rgba(253, 254, 248, 1) 10%, rgba(0, 0, 0, 0) 20%);
+        }
+        
+        #yellowSun {
+            background: radial-gradient(rgba(200, 113, 46, 1) 0%, rgba(200, 113, 46, 0) 30%);
+        }
+        
+        #organeSun {
+            background: radial-gradient(rgba(165, 70, 26, 1) 0%, rgba(165, 70, 26, 0) 40%);
+        }
+        
+        .sunFlare {
+            position: absolute;
+            width: 60vmin;
+            height: 4vmin;
+            transform-origin: 50% 50%;
+            top: 45%;
+            right: -26%;
+        }
+        
+        #orangeSun>.sunFlare {
+            background: radial-gradient( rgba(255, 255, 255, 1) 0%, rgba(253, 254, 248, 1) 10%, rgba(200, 113, 46, 0) 30%, rgba(165, 70, 26, 0) 45%, rgba(137, 52, 21, 0) 50%, rgba(87, 26, 8, 0) 60%, rgba(0, 0, 0, 0) 70%);
+        }
+        
+        #redSun>.sunFlare {
+            background: radial-gradient(rgba(200, 113, 46, 1) 0%, rgba(200, 113, 46, 0) 30%);
+        }
+        
+        .sun1 {
+            transform: rotate(60deg);
+        }
+        
+        .sun2 {
+            transform: rotate(120deg);
+        }
+        
+        .sun3 {
+            transform: rotate(180deg);
+        }
+        
+        .sun4 {
+            transform: rotate(240deg);
+        }
+        
+        .sun5 {
+            transform: rotate(300deg);
+        }
+        
+        #sunFlareWrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .star {
+            position: absolute;
+            border-radius: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        var white = { r: 255, b: 255, g: 255 };
+        var blue = { r: 80, g: 175, b: 255 };
+        var orange={ r: 255, g: 125, b: 0 };
+        var ls = [
+            { r: 12, g: 29, b: 60 },
+            { r: 58, g: 11, b: 43 },
+            { r: 12, g: 49, b: 43 }
+
+        ];
+        for (var z = 0; z < 10 + Math.random() * 30; z++) {
+            var back = document.createElement("div");
+            var idx1 = Math.floor(Math.random() * (ls.length));
+            var idx2 = Math.floor(Math.random() * (ls.length));
+            var clr = colorBetween(ls[idx1], ls[idx2], Math.random());
+            back.style.background = "radial-gradient(ellipse at center, rgba(" + clr.r + "," + clr.g + "," + clr.b + "," + Math.random() + ") 0%,rgba(0,0,0,0) 70%)";
+            back.style.position = "absolute";
+            back.style.left = (-50 + Math.random() * 100) + "%";
+            back.style.top = (-50 + Math.random() * 100) + "%";
+            back.style.width = (40 + Math.random() * 60) + "%";
+            back.style.height = (40 + Math.random() * 60) + "%";
+            back.style.transform = "rotate(" + 180 * Math.random() + "deg)";
+            document.body.appendChild(back);
+        }
+        var starsCount = 100 + Math.floor(Math.random() * 50);
+        function colorBetween(color1, color2, value) {
+            var rDif = color1.r - color2.r;
+            var bDif = color1.b - color2.b;
+            var gDif = color1.g - color2.g;
+            return {
+                r: (color2.r + rDif * value),
+                g: (color2.g + gDif * value),
+                b: (color2.b + bDif * value)
+            };
+        }
+
+        for (var i = 0; i < starsCount; i++) {
+            var star = document.createElement("div");
+            star.classList.add("star");
+            star.style.left = Math.random() * 100 + "%";
+            star.style.top = Math.random() * 100 + "%";
+            var clr = (Math.random() > 0.5) ? colorBetween(white, blue, Math.random()) : colorBetween(white, orange, Math.random());
+            star.style.background = "radial-gradient(rgb(255,255,255) 40%,rgb(" + clr.r + "," + clr.g + "," + clr.b + ") 60%,transparent 90%)";
+            star.style.height = star.style.width = Math.random() * 1 + "vmin";
+            document.body.appendChild(star);
+        }
+    </script>
+    <div id="redSun">
+        <div class="sunFlare sun1"></div>
+        <div class="sunFlare sun2"></div>
+        <div class="sunFlare sun3"></div>
+        <div class="sunFlare sun4"></div>
+        <div class="sunFlare sun5"></div>
+        <div class="sunFlare sun6"></div>
+        <div id="orangeSun" class="sun">
+            <div class="sunFlare sun1"></div>
+            <div class="sunFlare sun2"></div>
+            <div class="sunFlare sun3"></div>
+            <div class="sunFlare sun4"></div>
+            <div class="sunFlare sun5"></div>
+            <div class="sunFlare sun6"></div>
+            <div id="yellowSun" class="sun">
+                <div id="whiteSun" class="sun">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="EarthFlare">
+        <div id="Earth"></div>
+    </div>
+</body>
+
+</html>
