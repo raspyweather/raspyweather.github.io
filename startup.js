@@ -3,6 +3,9 @@ var files = [];
 var loader;
 var boxes = [];
 var defaultShownBox;
+
+
+
 Array.prototype.pushIfNotExist = function (element) {
     if (this.indexOf(element) == -1) {
         this.push(element);
@@ -15,35 +18,49 @@ String.prototype.padLeft = function (n, chr) {
     }
     return res;
 }
+function createEventHandler(name, element) {
+    return element[name] = {
+        functions: [],
+        addEventListener: function (call) { this.functions.push(call); },
+        dispatchEvent: function (event) {
+            for (var handler of this.functions) { handler(event); }
+        }
+    };
+}
 function getBase64Content(url, callback) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         var reader = new FileReader();
-        reader.onloadend = function () {callback(reader.result);}
+        reader.onloadend = function () { callback(reader.result); }
         reader.readAsDataURL(xhr.response);
     };
     xhr.open('GET', url);
     xhr.responseType = 'blob';
     xhr.send();
 }
-function createCanvasImgCont(parent)
-{
+function createCanvasImgCont(parent) {
     var canv = document.createElement("canvas");
     var cont = canv.getContext("2d");
     var img = document.createElement("img");
-    img.style.display="none";
+    img.style.display = "none";
     parent.appendChild(img);
+<<<<<<< HEAD
+    canv.img = img;
+    canv.cont = cont;
+    return { canv: canv, cont: cont, img: img };
+=======
     canv.img=img;
     canv.cont=cont;
     return{canv:canv,cont:cont,img:img};
+>>>>>>> origin/master
 }
-function loadImageToCanvas(imgId,canv,cont,img, callback) {
+function loadImageToCanvas(imgId, canv, cont, img, callback) {
     var url = "https://www.googleapis.com/drive/v3/files/" + imgId + "?alt=media&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA";
     getBase64Content(url, function (x) {
         img.onload = function () {
             console.log("drawing: " + x.length);
-            canv.width=img.naturalWidth;
-            canv.height=img.naturalHeight;
+            canv.width = img.naturalWidth;
+            canv.height = img.naturalHeight;
             cont.drawImage(img, 0, 0, img.width, img.height);
         };
         img.src = x;
@@ -67,9 +84,9 @@ function getTemp(color) {
     return temps[oIdx];
 }
 function colorComparision(color1, color2) {
-    return (Math.abs(color1[0]- color2[0]) * Math.abs(color1[0] - color2[0]) +
+    return (Math.abs(color1[0] - color2[0]) * Math.abs(color1[0] - color2[0]) +
         Math.abs(color1[1] - color2[1]) * Math.abs(color1[1] - color2[1]) +
-        Math.abs(color1[2]- color2[2]) * Math.abs(color1[2]- color2[2])) / (3 * 255 * 255);
+        Math.abs(color1[2] - color2[2]) * Math.abs(color1[2] - color2[2])) / (3 * 255 * 255);
 }
 function httpGetAsync(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
@@ -94,10 +111,9 @@ function createQuery(pageTokenValue = "") {
         var query = "";
         for (var z in this.parameters) {
             query += "&" + z + "=" + this.parameters[z];
-            //console.log(z+"["+this.parameters[z]+"]");
         }
         query = this.baseURL + query.substring(1);
-        console.log(query + "\n\n");
+        console.log(query);
         return query;
     };
     return query.getURL();
@@ -113,7 +129,7 @@ function getFileList(jsonSTR = "") {
         }
         if (!nextPageToken) {
             console.log(files.length + " files loaded");
-            onFilesLoaded();
+            document.onFilesLoaded.dispatchEvent();
             return;
         }
     }
@@ -137,7 +153,7 @@ function processData() {
         var nam = files[i].name;
         if (nam.endsWith(".log")) {
             Imagery.LogFileId = files[i].id;
-            onLogLoad();
+            document.onLogLoad.dispatchEvent();
             continue;
         }
         var id = files[i].id;
@@ -169,7 +185,7 @@ function processData() {
     Imagery.Dates.sort((x, y) => {
         return y > x;
     })
-    ;
+        ;
     Imagery.DateToString = function (dat) {
         return dat.getUTCFullYear().toString().padLeft(4, "0")
             + (dat.getUTCMonth() + 1).toString().padLeft(2, "0")
@@ -198,24 +214,26 @@ function processData() {
             return (x.getFullYear() == year) && (x.getDate() == day) && (x.getMonth() + 1 == month);
         });
     };
-    onDataProcessed();
+    document.onDataProcessed.dispatchEvent();
 }
-function onLoadStart() {
-    getFileList();
-    createLoaderUI();
-}
-function onLogLoad() {
+createEventHandler('onLoadStart', document);
+createEventHandler('onLogLoad', document);
+createEventHandler('onFilesLoaded', document);
+createEventHandler('onDataProcessed', document);
+
+document.onLoadStart.addEventListener(getFileList);
+document.onLogLoad.addEventListener(function () {
     var url = "https://www.googleapis.com/drive/v3/files/0B-HW4voEJgOgdmVtSFhBd0NCUm8?alt=media&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA";
     httpGetAsync(url, createLogBox);
-}
-function onFilesLoaded() {
-    processData();
-}
-function onDataProcessed() {
-    createMainUI();
-    createStartBox();
-    createThermalTemperatureView();
-    createSearchGUI();
+});
+document.onFilesLoaded.addEventListener(processData);
+
+function createMainPageEvents() {
+    document.onLoadStart.addEventListener(createLoaderUI);
+    document.onDataProcessed.addEventListener(createMainUI);
+    document.onDataProcessed.addEventListener(createStartBox);
+    document.onDataProcessed.addEventListener(createThermalTemperatureView);
+    document.onDataProcessed.addEventListener(createSearchGUI);
 }
 function createLogBox(logContent) {
     var firstBox = createElement("div", "box");
@@ -227,10 +245,9 @@ function createMainUI() {
     setTimeout(function () {
         loader.remove();
         topBar.style.animation = "topBar_moveRight 1s linear 1";
-        document.body.appendChild(topBar);
-        document.body.appendChild(docBo);
+        document.parent.appendChild(topBar);
+        document.parent.appendChild(docBo);
     }, 1000);
-
 }
 function createSearchGUI() {
     var box = createElement("div", "box");
@@ -249,7 +266,8 @@ function createSearchGUI() {
     lb = createElement("div", "inputDescription");
     lb.innerHTML = "Start date:";
     queryForm.appendChild(lb);
-    var startDateInput = createElement("input", "inputDate");
+    var sdPicker = createDatePicker(new Date());
+    var startDateInput = sdPicker //createElement("input", "inputDate");
     startDateInput.onblur = function () {
         var stDate = new Date(this.value);
         if (isNaN(stDate)) {
@@ -275,8 +293,6 @@ function createSearchGUI() {
      * -> End Date
      * -> Satellite
      * */
-
-
 }
 function createElement(tag, className) {
     var el = document.createElement(tag);
@@ -291,10 +307,9 @@ function createDropDownList(inputStuff, radioButton) {
     checkBoxWrapper.classList.add("hidden");
     shownInput.onclick = function () {
         shownInput.value = elemWrapper.Values.map(function (x) {
-            //console.log(document.getElementById(x.CheckBox).checked +" "+x.CheckBox+ " " + x.Value);
             return (document.getElementById(x.CheckBox).checked) ? x.Value : "";
         }).filter(n => n
-        ).join();
+            ).join();
         if (checkBoxWrapper.classList.contains("hidden")) {
             checkBoxWrapper.classList.remove("hidden");
             return;
@@ -319,14 +334,13 @@ function createDropDownList(inputStuff, radioButton) {
         let p = document.createElement("p");
         let label = createElement("label", "checkBoxLabel");
         label.ValueIndex = checkBox.ValueIndex = -1 + elemWrapper.Values.push(
-                {
-                    Value: k,
-                    CheckBox: checkBox.id
-                });
+            {
+                Value: k,
+                CheckBox: checkBox.id
+            });
         label.appendChild(checkBox);
         if (radioButton) {
             checkBox.parentElement.onclick = function () {
-                // console.log("radioCLick");
                 var radios = document.getElementsByName(this.getAttribute("name"));
                 for (var z of radios) {
                     if (this != z) {
@@ -348,36 +362,34 @@ function createDropDownList(inputStuff, radioButton) {
     elemWrapper.appendChild(checkBoxWrapper);
     return elemWrapper;
 }
-
-
 function createDatePicker(initialDate) {
-    var datePickerWrapperBox = createElement("div", "datePickerWrapperBox");
+    var datePickerWrapperBox = createElement("div", "datePickerWrapperBox noselect");
 
     var datePickerInput = createElement("input", "datePickerInput");
-    var datePickerBox = createElement("div", "datePickerBox");
-    var datePickerYearRow = createElement("div", "datePickerYearRow centerFlexBox");
-    var datePickerYearDec = createElement("div", "datePickerYearButton");
-    var datePickerYearInc = createElement("div", "datePickerYearButton ");
-    var datePickerYearDecDisplay = createElement("div", "datePickerYearButtonDisplay centerFlexBox");
-    var datePickerYearIncDisplay = createElement("div", "datePickerYearButtonDisplay centerFlexBox");
-    var datePickerYearDisplay = createElement("div", "datePickerYearDisplay centerFlexBox");
+    var datePickerBox = createElement("div", "datePickerBox noselect");
+    var datePickerYearRow = createElement("div", "datePickerYearRow centerFlexBox noselect");
+    var datePickerYearDec = createElement("div", "datePickerYearButton noselect");
+    var datePickerYearInc = createElement("div", "datePickerYearButton noselect ");
+    var datePickerYearDecDisplay = createElement("div", "datePickerYearButtonDisplay centerFlexBox noselect");
+    var datePickerYearIncDisplay = createElement("div", "datePickerYearButtonDisplay centerFlexBox noselect");
+    var datePickerYearDisplay = createElement("div", "datePickerYearDisplay centerFlexBox noselect");
 
-    var datePickerMonthBox = createElement("div", "datePickerMonthBox");
-    var datePickerMonthDisplay = createElement("div", "datePickerMonthDisplay centerFlexBox");
-    var datePickerMonthRow = createElement("div", "datePickerMonthRow");
-    var datePickerMonthDec = createElement("div", "datePickerMonthButton");
-    var datePickerMonthInc = createElement("div", "datePickerMonthButton");
+    var datePickerMonthBox = createElement("div", "datePickerMonthBox noselect");
+    var datePickerMonthDisplay = createElement("div", "datePickerMonthDisplay centerFlexBox noselect");
+    var datePickerMonthRow = createElement("div", "datePickerMonthRow noselect");
+    var datePickerMonthDec = createElement("div", "datePickerMonthButton noselect");
+    var datePickerMonthInc = createElement("div", "datePickerMonthButton noselect");
 
-    var datePickerMonthDecDisplay=createElement("div","datePickerMonthButtonDisplay centerFlexBox");
-    var datePickerMonthIncDisplay=createElement("div","datePickerMonthButtonDisplay centerFlexBox");
+    var datePickerMonthDecDisplay = createElement("div", "datePickerMonthButtonDisplay centerFlexBox noselect");
+    var datePickerMonthIncDisplay = createElement("div", "datePickerMonthButtonDisplay centerFlexBox noselect");
 
     datePickerMonthInc.appendChild(datePickerMonthIncDisplay);
     datePickerMonthDec.appendChild(datePickerMonthDecDisplay);
 
-    datePickerMonthDecDisplay.innerHTML="⟨";//"&#x2039;";// ›
-    datePickerMonthIncDisplay.innerHTML="⟩"//"&#x203A;";
-    datePickerYearIncDisplay.innerHTML="⟩";//"&#x203A;";
-    datePickerYearDecDisplay.innerHTML="⟨";//"&#x2039;";
+    datePickerMonthDecDisplay.innerHTML = "⟨";//"&#x2039;";// ›
+    datePickerMonthIncDisplay.innerHTML = "⟩"//"&#x203A;";
+    datePickerYearIncDisplay.innerHTML = "⟩";//"&#x203A;";
+    datePickerYearDecDisplay.innerHTML = "⟨";//"&#x2039;";
     datePickerYearInc.appendChild(datePickerYearIncDisplay);
     datePickerYearDec.appendChild(datePickerYearDecDisplay);
     datePickerYearRow.appendChild(datePickerYearDec);
@@ -390,55 +402,77 @@ function createDatePicker(initialDate) {
     datePickerMonthRow.appendChild(datePickerMonthBox);
     datePickerMonthRow.appendChild(datePickerMonthInc);
     datePickerBox.appendChild(datePickerMonthRow);
-
+    datePickerInput.isVisible = true;
     datePickerInput.datePickerBox = datePickerBox;
     datePickerInput.hidePicker = function () {
         this.datePickerBox.style.visibility = "hidden";
-    }
+        this.datePickerBox.style.display = "none";
+        this.isVisible = false;
+    };
     datePickerInput.showPicker = function () {
         this.datePickerBox.style.visibility = "visible";
-    }
-    datePickerYearInc.onclick=function(){
-        datePickerInput.Date.setFullYear(datePickerInput.Date.getFullYear()+1);
-        datePickerInput.update();
+        this.datePickerBox.style.display = "unset";
+        this.isVisible = true;
     };
-    datePickerYearDec.onclick=function(){
-        datePickerInput.Date.setFullYear(datePickerInput.Date.getFullYear()-1);
-        datePickerInput.update();
+    datePickerInput.togglePicker = function () {
+        if (this.isVisible) { this.hidePicker(); }
+        else { this.showPicker(); }
     };
-    datePickerMonthInc.onclick=function(){
-        datePickerInput.Date.setMonth(datePickerInput.Date.getMonth()+1);
-        datePickerInput.update();
-    };
-    datePickerMonthDec.onclick=function(){
-        datePickerInput.Date.setMonth(datePickerInput.Date.getMonth()-1);
-        datePickerInput.update();
-    };
-    datePickerInput.onfocus = datePickerInput.showPicker;
 
+    datePickerYearInc.addEventListener("click", function (e) {
+        datePickerInput.Date.setFullYear(datePickerInput.Date.getFullYear() + 1);
+        datePickerInput.update();
+        e.stopImmediatePropagation();
+    }, true);
+    datePickerYearDec.addEventListener("click", function (e) {
+        datePickerInput.Date.setFullYear(datePickerInput.Date.getFullYear() - 1);
+        datePickerInput.update();
+        e.stopImmediatePropagation();
+    }, true);
+    datePickerMonthInc.addEventListener("click", function (e) {
+        datePickerInput.Date.setMonth(datePickerInput.Date.getMonth() + 1);
+        datePickerInput.update();
+        e.stopImmediatePropagation();
+    }, true);
+    datePickerMonthDec.addEventListener("click", function (e) {
+        datePickerInput.Date.setMonth(datePickerInput.Date.getMonth() - 1);
+        datePickerInput.update();
+        e.stopImmediatePropagation();
+    }, true);
+    document.addEventListener("click", function () {
+        if (datePickerInput.isVisible) {
+            datePickerInput.hidePicker();
+        }
+    }, false);
+    datePickerInput.addEventListener("click",
+        function (e) {
+            this.togglePicker();
+            e.stopImmediatePropagation();
+        }, true);
+    datePickerWrapperBox.addEventListener("click", function (e) {
+        e.stopImmediatePropagation();
+    }, false);
     datePickerInput.Date = initialDate;
     datePickerInput.MonthDisplay = datePickerMonthDisplay;
-    datePickerInput.YearDisplay=datePickerYearDisplay;
+    datePickerInput.YearDisplay = datePickerYearDisplay;
     datePickerInput.update = function () {
-        this.MonthDisplay.innerHTML = this.Date.toLocaleString( navigator.language || navigator.userLanguage,{month:"long"})
-        this.YearDisplay.innerHTML=this.Date.getFullYear();
-        var dayBoxes=Array.slice(datePickerMonthBox.getElementsByClassName("datePickerDayBox"),[]);
+        this.MonthDisplay.innerHTML = this.Date.toLocaleString(navigator.language || navigator.userLanguage, { month: "long" })
+        this.YearDisplay.innerHTML = this.Date.getFullYear();
+        var dayBoxes = Array.slice(datePickerMonthBox.getElementsByClassName("datePickerDayBox"), []);
         var weeks = datePickerInput.getWeeks();
         for (var i = 0; i < 6; i++) {
             for (var ii = 0; ii < 7; ii++) {
-                var datePickerInputDayBox =dayBoxes.find(x=>{return x.columnIdx==i&&x.rowIdx==ii;});
+                var datePickerInputDayBox = dayBoxes.find(x => { return x.columnIdx == i && x.rowIdx == ii; });
                 datePickerMonthBox.appendChild(datePickerInputDayBox);
                 if (weeks.length > i && weeks[i].length > ii && weeks[i][ii] != undefined) {
                     datePickerInputDayBox.innerHTML = weeks[i][ii].getDate();
-                    datePickerInputDayBox.classList.remove("noday");
                 }
-                else{
+                else {
                     datePickerInputDayBox.innerHTML = "";
-                    datePickerInputDayBox.classList.add("noday");
                 }
             }
         }
-
+        datePickerInput.value = datePickerInput.Date.getDate() + "." + datePickerInput.Date.getMonth() + "." + datePickerInput.Date.getFullYear();
     };
     datePickerInput.getWeeks = function () {
         var date = new Date(this.Date.getFullYear(), this.Date.getMonth(), 1);
@@ -450,9 +484,7 @@ function createDatePicker(initialDate) {
             recentWeek.push(undefined);
         }
         while (date.getMonth() == initialMonth) {
-            if (date.getDay() == 1 && recentWeek.length > 0)
-            //if(previousDayOfWeek>date.getDay()&&recentWeek.length>0)
-            {
+            if (date.getDay() == 1 && recentWeek.length > 0) {
                 weeks.push(recentWeek);
                 recentWeek = [];
             }
@@ -468,16 +500,16 @@ function createDatePicker(initialDate) {
     var weeks = datePickerInput.getWeeks();
     for (var i = 0; i < 6; i++) {
         for (var ii = 0; ii < 7; ii++) {
-            var datePickerInputDayBox = createElement("div", "datePickerDayBox centerFlexBox");
+            var datePickerInputDayBox = createElement("div", "datePickerDayBox centerFlexBox noselect");
             datePickerInputDayBox.rowIdx = ii;
             datePickerInputDayBox.columnIdx = i;
             datePickerMonthBox.appendChild(datePickerInputDayBox);
-            if (weeks.length > i && weeks[i].length > ii && weeks[i][ii] != undefined) {
-                datePickerInputDayBox.innerHTML = weeks[i][ii].getDate();
-            }
-            else{
-                datePickerInputDayBox.classList.add("noday");
-            }
+            datePickerInputDayBox.addEventListener("click", function (e) {
+                datePickerInput.Date.setDate(this.innerHTML);
+                datePickerInput.update();
+                datePickerInput.hidePicker();
+                e.stopImmediatePropagation();
+            }, true);
         }
     }
 
@@ -486,103 +518,124 @@ function createDatePicker(initialDate) {
     datePickerWrapperBox.appendChild(datePickerInput);
     return datePickerWrapperBox;
 }
-
-function createThermalTemperatureView(){
-    var box=createElement("div","box");
-    var queryForm=createElement("div","inputWrapper fixedInputWrapper");
-    createTopBarIndex("Thermal Analysis",box);
-    var label=document.createElement("label");
-    var outputTemp=createElement("div","inputDescription");
-    var inputDateLabel=createElement("div","inputDescription");
-    inputDateLabel.innerHTML="Select Date:";
+function createThermalTemperatureView() {
+    var box = createElement("div", "box");
+    var queryForm = createElement("div", "inputWrapper fixedInputWrapper");
+    createTopBarIndex("Thermal Analysis", box);
+    var label = document.createElement("label");
+    var outputTemp = createElement("div", "inputDescription");
+    var inputDateLabel = createElement("div", "inputDescription");
+    inputDateLabel.innerHTML = "Select Date:";
     queryForm.appendChild(inputDateLabel);
-    var sel=document.createElement("select");
-    for(var k of Imagery.Dates)
-    {
-        var option=document.createElement("option");
-        option.innerHTML=k.toLocaleDateString()+" "+k.toLocaleTimeString();
-        option.date=k;
+    var sel = document.createElement("select");
+    for (var k of Imagery.Dates) {
+        var option = document.createElement("option");
+        option.innerHTML = k.toLocaleDateString() + " " + k.toLocaleTimeString();
+        option.date = k;
         sel.appendChild(option);
     }
     label.appendChild(sel);
     queryForm.appendChild(label);
     queryForm.appendChild(outputTemp);
     box.appendChild(queryForm);
-    box.DrawObjects=createCanvasImgCont(box);
-    sel.onchange=function(x){
+    box.DrawObjects = createCanvasImgCont(box);
+    sel.onchange = function (x) {
         loadImageToCanvas(
             Imagery.Data[x.explicitOriginalTarget.date].IDs[Imagery.ImageModes.indexOf("therm")],
             box.DrawObjects.canv,
             box.DrawObjects.cont,
             box.DrawObjects.img,
-            function(canv, cont, img) {
-            console.log("loaded");
-            box.appendChild(canv);
-            canv.onmousemove = function (mouseEvent) {
-                var offset = canv.getBoundingClientRect();
-                var point = {x: mouseEvent.clientX - offset.left, y: mouseEvent.clientY - offset.top};
-                var rgbv = cont.getImageData(point.x, point.y, 1, 1);
-                outputTemp.innerHTML = "Temperature:\t"+ getTemp((rgbv.data))+"°C";
-            };
-            document.addEventListener("mousemove", canv.onmousemove);
-        });
+            function (canv, cont, img) {
+                console.log("loaded");
+                box.appendChild(canv);
+                canv.onmousemove = function (mouseEvent) {
+
+                    var offset = canv.getBoundingClientRect();
+                    var point = { x: mouseEvent.clientX - offset.left, y: mouseEvent.clientY - offset.top };
+                    var rgbv = cont.getImageData(point.x, point.y, 1, 1);
+                    outputTemp.innerHTML = "Temperature:\t" + getTemp((rgbv.data)) + "°C";
+                };
+                document.addEventListener("mousemove", canv.onmousemove);
+            });
     };
-    sel.onchange({explicitOriginalTarget:sel.options[0]});
+    sel.onchange({ explicitOriginalTarget: sel.options[0] });
 }
 function createStartBox() {
     var firstBox = createElement("div", "box");
     var preferedModes = ["therm", "msa"];
     defaultShownBox = firstBox;
     createTopBarIndex("Latest Images", firstBox);
-    var newestDates = Imagery.GetDatesWithMode("therm");
-    //newestDates=newestDates.slice(newestDates.length-5);
-    var links = [];
-    for (var date of newestDates) {
-        var newData = Imagery.Data[(date)];
-        var DataContainer = {
-            Date: date,
-            Links: []
-        };
-        if (newData == undefined || date == undefined) {
-            continue;
-        }
-        for (var modeStr of preferedModes) {
-            var idx = Imagery.ImageModes.indexOf(modeStr);
-            if (newData.ModeIds.indexOf(idx) > -1) {
-                DataContainer.Links.push({
-                    Link: Imagery.GetImageURLByDate(date, modeStr),
-                    Mode: modeStr
-                });
-                /*links.push(Imagery.GetImageByDate(newestDates[date], preferedModes[modeStr]));*/
+    firstBox.preLoadImagesCount = 5;
+    firstBox.loadImages = function () {
+        this.newestDates = Imagery.GetDatesWithMode("therm");
+        var links = [];
+        if (this.startIdx == undefined) { this.startIdx = 0; }
+        for (var idx = this.startIdx; idx < this.newestDates.length; idx++) {// date of this.newestDates) {
+            var date = this.newestDates[idx];
+            console.log("Z:" + this.newestDates.indexOf(date));
+            var newData = Imagery.Data[(date)];
+            if (newData == undefined || date == undefined || date >= firstBox.oldestDate) {
+                continue;
+            }
+            var DataContainer = {
+                Date: date,
+                Links: []
+            };
+            firstBox.oldestDate = date;
+            for (var modeStr of preferedModes) {
+                var idx = Imagery.ImageModes.indexOf(modeStr);
+                if (newData.ModeIds.indexOf(idx) > -1) {
+                    DataContainer.Links.push({
+                        Link: Imagery.GetImageURLByDate(date, modeStr),
+                        Mode: modeStr
+                    });
+
+                }
+            }
+            if (DataContainer.Links.length > 0) {
+                links.push(DataContainer);
+            }
+            if (links.length == this.preLoadImagesCount) {
+                if (this.preLoadImagesCount>1) { this.preLoadImagesCount = 1; }
+                this.startIdx = idx;
+                break;
             }
         }
-        if (DataContainer.Links.length > 0) {
-            links.push(DataContainer);
+        console.log(links.length);
+        for (var link of links) {
+            
+            var imageContainer = createElement("div", "ImgContainer");
+            if (link.Links === undefined || link.Links.length == 0) {
+                continue;
+            }
+            for (var lnk of link.Links) {
+                var thermImg = createElement("div", "Img");
+                thermImg.style.backgroundImage = "url('" + lnk.Link + "')";
+                thermImg.innerHTML = lnk.Mode + " " + ('0' + link.Date.getHours()).slice(-2) + ":" + ('0' + link.Date.getMinutes()).slice(-2) + " " + ('0' + link.Date.getDate()).slice(-2) + "-" + ('0' + (link.Date.getMonth() + 1)).slice(-2) + "-" + link.Date.getFullYear();
+                imageContainer.appendChild(thermImg);
+            }
+            if (firstBox.childElementCount > 10) {
+                firstBox.removeChild(firstBox.children[0]);
+            }
+            if (imageContainer.childElementCount > 0) {
+                firstBox.appendChild(imageContainer);
+            }
         }
-        if (links.length == 5) {
-            break;
+        document.isLoading = false;
+    };
+    firstBox.loadImages();
+    window.onscroll = function () {
+        // if scroll to bottom is only 
+        if ((window.scrollMaxY - window.scrollY )<document.documentElement.offsetHeight* 0.95 && firstBox.isVisible == true && document.isLoading == false) {
+            console.log("add!");
+            document.isLoading = true;
+            firstBox.loadImages();
         }
-    }
-    for (var link of links) {
-        var imageContainer = createElement("div", "ImgContainer");
-        if (link.Links === undefined || link.Links.length == 0) {
-            continue;
-        }
-        for (var lnk of link.Links) {
-            var thermImg = createElement("div", "Img");
-            thermImg.style.backgroundImage = "url('" + lnk.Link + "')";
-            thermImg.innerHTML = lnk.Mode + " " + ('0' + link.Date.getHours()).slice(-2) + ":" + ('0' + link.Date.getMinutes()).slice(-2) + " " + ('0' + link.Date.getDate()).slice(-2) + "-" + ('0' + (link.Date.getMonth() + 1)).slice(-2) + "-" + link.Date.getFullYear();
-            imageContainer.appendChild(thermImg);
-
-        }
-        if (imageContainer.childElementCount > 0) {
-            firstBox.appendChild(imageContainer);
-        }
-    }
+    };
 }
 function createLoaderUI() {
     loader = createElement("div", "loader");
-    document.body.appendChild(loader);
+    document.parent.appendChild(loader);
     var el = createElement("div", "loaderTitle heading");
     el.innerText = "Loading ...";
     loader.appendChild(el);
@@ -599,13 +652,18 @@ function createTopBarIndex(title, box) {
     vr.shownBox = box;
     for (var z of boxes) {
         z.style.display = "none";
+        z.isVisible = false;
     }
-    defaultShownBox.style.display = "initial";
+    if (defaultShownBox != undefined) {
+        defaultShownBox.style.display = "initial";
+        defaultShownBox.isVisible = true;
+    }
     vr.onclick = function () {
         for (var z of boxes) {
             z.style.display = "none";
+            z.isVisible = false;
         }
         this.shownBox.style.display = "initial";
+        this.shownBox.isVisible = true;
     }
 }
-
