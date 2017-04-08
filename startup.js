@@ -44,15 +44,9 @@ function createCanvasImgCont(parent) {
     var img = document.createElement("img");
     img.style.display = "none";
     parent.appendChild(img);
-<<<<<<< HEAD
     canv.img = img;
     canv.cont = cont;
     return { canv: canv, cont: cont, img: img };
-=======
-    canv.img=img;
-    canv.cont=cont;
-    return{canv:canv,cont:cont,img:img};
->>>>>>> origin/master
 }
 function loadImageToCanvas(imgId, canv, cont, img, callback) {
     var url = "https://www.googleapis.com/drive/v3/files/" + imgId + "?alt=media&key=AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA";
