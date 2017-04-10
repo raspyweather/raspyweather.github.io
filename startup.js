@@ -561,7 +561,8 @@ function createStartBox() {
         this.newestDates = Imagery.GetDatesWithMode("therm");
         var links = [];
         if (this.startIdx == undefined) { this.startIdx = 0; }
-        for (var idx = this.startIdx; idx < this.newestDates.length; idx++) {// date of this.newestDates) {
+        for (var idx = this.startIdx; idx < this.newestDates.length; idx++) 
+        {
             var date = this.newestDates[idx];
             console.log("Z:" + this.newestDates.indexOf(date));
             var newData = Imagery.Data[(date)];
@@ -591,7 +592,6 @@ function createStartBox() {
                 this.startIdx = idx;
                 break;
             }
-<<<<<<< HEAD
         }
         console.log(links.length);
         for (var link of links) {
@@ -623,39 +623,6 @@ function createStartBox() {
             document.isLoading = true;
             firstBox.loadImages();
         }
-=======
-        }
-        console.log(links.length);
-        for (var link of links) {
-            
-            var imageContainer = createElement("div", "ImgContainer");
-            if (link.Links === undefined || link.Links.length == 0) {
-                continue;
-            }
-            for (var lnk of link.Links) {
-                var thermImg = createElement("div", "Img");
-                thermImg.style.backgroundImage = "url('" + lnk.Link + "')";
-                thermImg.innerHTML = lnk.Mode + " " + ('0' + link.Date.getHours()).slice(-2) + ":" + ('0' + link.Date.getMinutes()).slice(-2) + " " + ('0' + link.Date.getDate()).slice(-2) + "-" + ('0' + (link.Date.getMonth() + 1)).slice(-2) + "-" + link.Date.getFullYear();
-                imageContainer.appendChild(thermImg);
-            }
-            if (firstBox.childElementCount > 10) {
-                firstBox.removeChild(firstBox.children[0]);
-            }
-            if (imageContainer.childElementCount > 0) {
-                firstBox.appendChild(imageContainer);
-            }
-        }
-        document.isLoading = false;
-    };
-    firstBox.loadImages();
-    window.onscroll = function () {
-        // if scroll to bottom is only 
-        if ((window.scrollMaxY - window.scrollY )<document.documentElement.offsetHeight* 0.95 && firstBox.isVisible == true && document.isLoading == false) {
-            console.log("add!");
-            document.isLoading = true;
-            firstBox.loadImages();
-        }
->>>>>>> abaf9ea9a36c0c3ee1b49431e27a503e2170f6c1
     };
 }
 function createLoaderUI() {
@@ -691,8 +658,4 @@ function createTopBarIndex(title, box) {
         this.shownBox.style.display = "initial";
         this.shownBox.isVisible = true;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> abaf9ea9a36c0c3ee1b49431e27a503e2170f6c1
