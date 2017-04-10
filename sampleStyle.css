@@ -239,7 +239,6 @@ canvas{
     overflow:hidden;
     margin: 5px;
     max-height: 99999px;
-
 }
 
 .modalsWrapper{
@@ -250,8 +249,16 @@ min-width: 200px;
 .wrappingBox{
     padding: 10px 10px 0px 10px;
 }
-     .noselect {
-            -webkit-touch-callout: none;
+.modalsWrapper{
+     width:20vw;
+background:#00bb0a;
+min-width: 200px;
+}
+.wrappingBox{
+    padding: 10px 10px 0px 10px;
+}
+.noselect {
+                -webkit-touch-callout: none;
             /* iOS Safari */
             -webkit-user-select: none;
             /* Safari */
@@ -380,6 +387,7 @@ min-width: 200px;
             display: flex;
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         }
+
 @keyframes dialog_down {
     from {
         top: -50%;
