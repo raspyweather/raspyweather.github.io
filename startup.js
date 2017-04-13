@@ -258,6 +258,11 @@ function createSearchGUI() {
     lb.innerHTML = "Start date:";
     queryForm.appendChild(lb);
     var startDateInput = createDatePicker(new Date());
+    document.addEventListener("click", function () {
+        if (datePickerInput.isVisible) {
+            datePickerInput.hidePicker();
+        }
+    }, false);
     startDateInput.onblur = function () {
         var stDate = new Date(this.value);
         if (isNaN(stDate)) {
@@ -269,6 +274,9 @@ function createSearchGUI() {
     };
     queryForm.appendChild(startDateInput);
 
+    lb = createElement("div", "inputDescription");
+    lb.innerHTML = "End date:";
+    queryForm.appendChild(lb);
     var endDateInput = createDatePicker(new Date());
     endDateInput.onblur = function () {
         var endDate = new Date(this.value);
@@ -280,9 +288,7 @@ function createSearchGUI() {
         }
     };
     queryForm.appendChild(endDateInput);
-    lb = createElement("div", "inputDescription");
-    lb.innerHTML = "End date:";
-    queryForm.appendChild(lb);
+
     box.appendChild(queryForm);
     /*Input's
      * -> LIST or SHOW

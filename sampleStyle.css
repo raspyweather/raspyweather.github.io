@@ -155,7 +155,7 @@ body {
 }
 
 .checkBox:hover, .checkBoxLabel:hover {
-    background-color: #00ffa2;
+    background-color: #06204d;
 }
 
 .hidden {
@@ -194,7 +194,7 @@ body {
 
 .checkboxWrapper {
     border-radius: 10px;
-    background: #00ba76;
+    background: #05104d;
     padding: 10px;
     z-index: 2;
     position: absolute;
@@ -204,7 +204,7 @@ body {
 }
 
 .inputWrapper {
-    background: #00ba76;
+    background: #05104d;
     border-radius: 20px;
     margin:5px;
     padding:10px;
