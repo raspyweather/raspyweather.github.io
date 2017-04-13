@@ -278,8 +278,7 @@ min-width: 200px;
         }
         
         .datePickerYearRow {
-            border-bottom: 1px solid green;
-            background: #dfd;
+            background: rgba(0,0,255,0.5);
             width: 100%;
             height: 20%;
             display: flex;
@@ -287,7 +286,7 @@ min-width: 200px;
         
         .datePickerYearButton {
             width: 20%;
-            background: #0b0;
+            background: rgba(0,0,255,0.5);
             height: 100%;
             position: relative;
             display: flex;
@@ -312,22 +311,25 @@ min-width: 200px;
         .datePickerMonthButton {
             height: 100%;
             width: 10%;
-            background: #0f0;
+            background: rgba(0,255,255,0.25);
             position: relative;
         }
         
         .datePickerMonthDisplay {
             width: 100%;
-            background: #0b0;
+            align-items: center;            
+            background:rgba(0,0,255,0.25);
             top: 0;
             height: 10%;
+            border-top: #00ffff 2px solid;
+            border-bottom: #00ffff 2px solid;
         }
         
-        .datePickerMonthBox {
-            width: 80%;
-            background: #dfd;
-        }
-        
+       .datePickerMonthBox {
+    width: 80%;
+    background: rgba(0,0,255,0.2);
+    border-bottom: 1px #00f solid;
+}
         .datePickerBox {
             position:absolute;
             width:300px;

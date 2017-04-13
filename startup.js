@@ -278,6 +278,7 @@ function createSearchGUI() {
     lb.innerHTML = "End date:";
     queryForm.appendChild(lb);
     var endDateInput = createDatePicker(new Date());
+    
     endDateInput.onblur = function () {
         var endDate = new Date(this.value);
         if (isNaN(endDate)) {
@@ -462,7 +463,7 @@ function createDatePicker(initialDate) {
     datePickerInput.update = function () {
         this.MonthDisplay.innerHTML = this.Date.toLocaleString(navigator.language || navigator.userLanguage, { month: "long" })
         this.YearDisplay.innerHTML = this.Date.getFullYear();
-        var dayBoxes = Array.slice(datePickerMonthBox.getElementsByClassName("datePickerDayBox"), []);
+        var dayBoxes =Array.prototype.slice.call(datePickerMonthBox.getElementsByClassName("datePickerDayBox"), []);// Array.slice(datePickerMonthBox.getElementsByClassName("datePickerDayBox"), []);
         var weeks = datePickerInput.getWeeks();
         for (var i = 0; i < 6; i++) {
             for (var ii = 0; ii < 7; ii++) {
