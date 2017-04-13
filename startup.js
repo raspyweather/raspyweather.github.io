@@ -257,8 +257,7 @@ function createSearchGUI() {
     lb = createElement("div", "inputDescription");
     lb.innerHTML = "Start date:";
     queryForm.appendChild(lb);
-    var sdPicker = createDatePicker(new Date());
-    var startDateInput = sdPicker //createElement("input", "inputDate");
+    var startDateInput = createDatePicker(new Date());
     startDateInput.onblur = function () {
         var stDate = new Date(this.value);
         if (isNaN(stDate)) {
@@ -268,14 +267,22 @@ function createSearchGUI() {
             this.classList.remove("invalidInput");
         }
     };
-
     queryForm.appendChild(startDateInput);
+
+    var endDateInput = createDatePicker(new Date());
+    endDateInput.onblur = function () {
+        var endDate = new Date(this.value);
+        if (isNaN(endDate)) {
+            this.classList.add("invalidInput");
+        }
+        else {
+            this.classList.remove("invalidInput");
+        }
+    };
+    queryForm.appendChild(endDateInput);
     lb = createElement("div", "inputDescription");
     lb.innerHTML = "End date:";
     queryForm.appendChild(lb);
-    var endDateInput = createElement("input", "inputDate");
-    endDateInput.onblur = startDateInput.onblur;
-    queryForm.append(endDateInput);
     box.appendChild(queryForm);
     /*Input's
      * -> LIST or SHOW
@@ -561,8 +568,7 @@ function createStartBox() {
         this.newestDates = Imagery.GetDatesWithMode("therm");
         var links = [];
         if (this.startIdx == undefined) { this.startIdx = 0; }
-        for (var idx = this.startIdx; idx < this.newestDates.length; idx++) 
-        {
+        for (var idx = this.startIdx; idx < this.newestDates.length; idx++) {
             var date = this.newestDates[idx];
             console.log("Z:" + this.newestDates.indexOf(date));
             var newData = Imagery.Data[(date)];
@@ -588,14 +594,14 @@ function createStartBox() {
                 links.push(DataContainer);
             }
             if (links.length == this.preLoadImagesCount) {
-                if (this.preLoadImagesCount>1) { this.preLoadImagesCount = 1; }
+                if (this.preLoadImagesCount > 1) { this.preLoadImagesCount = 1; }
                 this.startIdx = idx;
                 break;
             }
         }
         console.log(links.length);
         for (var link of links) {
-            
+
             var imageContainer = createElement("div", "ImgContainer");
             if (link.Links === undefined || link.Links.length == 0) {
                 continue;
@@ -618,7 +624,7 @@ function createStartBox() {
     firstBox.loadImages();
     window.onscroll = function () {
         // if scroll to bottom is only 
-        if ((window.scrollMaxY - window.scrollY )<document.documentElement.offsetHeight* 0.95 && firstBox.isVisible == true && document.isLoading == false) {
+        if ((window.scrollMaxY - window.scrollY) < document.documentElement.offsetHeight * 0.95 && firstBox.isVisible == true && document.isLoading == false) {
             console.log("add!");
             document.isLoading = true;
             firstBox.loadImages();
