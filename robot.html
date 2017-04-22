@@ -100,7 +100,7 @@
         <div id="ProgrammDisplay" class="vResizeable">
             <div id="helpDisplay" class="hResizeable">
                 <div id="status"></div>
-                <input id="calcPercentage" type="checkbox" value="calculate Percentage" />
+                <input id="calcPercentage" type="checkbox" checked="unchecked" >calculate Percentage</input>
             </div>
             <div id="ProgrammContainer" class="hResizeable">
                 <div id="ProgrammEditor">
@@ -128,8 +128,8 @@
         let currentLevel = 0;
         let angularSpeed = 0.1;
         let Movespeed = 4;
-        let pushDistance = 6;
-        let minPushDistance = 2;
+        let pushDistance = 5;
+        let minPushDistance = 5;
         let robots = [];
         let colors = [
             "rgba(128,0,0,0.1)",
@@ -442,7 +442,13 @@
             return (100.0 * hitsCount) / totalCount;
         }
         function createRectWall(rect) {
-            Matter.World.add(engine.world, [Matter.Bodies.rectangle(rect.x + rect.w * 0.5, rect.y + rect.h * 0.5, rect.w, rect.h, { isStatic: true, label: "wall", isSensor: true })]);
+            Matter.World.add(engine.world, [Matter.Bodies.rectangle(rect.x + rect.w * 0.5, rect.y + rect.h * 0.5, rect.w, rect.h, {
+                isStatic: true, label: "wall", isSensor: true, render: {
+                    fillStyle: 'blue',
+                    lineWidth: 5,// = bump width
+                    strokeStyle: 'blue'
+                }
+            })]);
         }
 
         function toDegrees(angle) {
