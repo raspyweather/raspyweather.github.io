@@ -222,7 +222,8 @@
             // run the engine
             Matter.Engine.run(engine);
 
-            Matter.Events.on(engine, 'collisionStart', function (event) {
+
+            var collisionHandling = function (event) {
                 for (var z = 0; z < event.pairs.length; z++) {
                     var bodies = [];
                     if (event.pairs[z].bodyA.label == "box") { bodies.push(event.pairs[z].bodyA); }
@@ -274,49 +275,9 @@
                         robotBody.robot.collision();
                     });
                 }
-
-            });
-            Matter.Events.on(engine, 'collisionActive', function (event) {
-                for (var z = 0; z < event.pairs.length; z++) {
-                    var bodies = [];
-                    if (event.pairs[z].bodyA.label == "box") { bodies.push(event.pairs[z].bodyA); }
-                    if (event.pairs[z].bodyB.label == "box") { bodies.push(event.pairs[z].bodyB); }
-
-
-
-                    //treating robots stuck together
-                    if (bodies.length > 1) {
-                        for (var idx = 1; bodies.length > 1 && idx < bodies.length; idx++) {
-                            var pos1 = bodies[idx - 1].position;
-                            var pos2 = bodies[idx].position;
-                            var direction = { x: pos1.x - pos2.x, y: pos1.y - pos2.y };
-                            var absVal = Math.sqrt(direction.x * direction.x + direction.y * direction.y);
-                            var relDirection = { x: direction.x / absVal, y: direction.y / absVal };
-                            Matter.Body.setPosition(bodies[idx - 1], { x: pos1.x + relDirection.x, y: pos1.y + relDirection.y });
-                            Matter.Body.setPosition(bodies[idx], { x: pos2.x - relDirection.x, y: pos2.y - relDirection.y });
-                        }
-                    }
-                    else if (bodies.length == 1) {
-                        bodies.forEach(function (element) {
-                            if (element.robot.rotateFunctionFlag == true) { return; }
-                            Matter.Body.setPosition(element, {
-                                x: element.position.x - 0.5 * Math.cos(element.angle),
-                                y: element.position.y - 0.5 * Math.sin(element.angle)
-                            });
-
-                        });
-                    }
-
-                    bodies.forEach(robotBody => {
-                        Matter.Body.setVelocity(robotBody, { x: 0, y: 0 });
-                        if (robotBody.robot.rotateFunctionFlag == true) { return; }
-                        robotBody.robot.functionToCall = undefined;
-                        Matter.Body.setAngularVelocity(robotBody, 0);
-                        robotBody.robot.collision();
-                    });
-                }
-
-            });
+            };
+            Matter.Events.on(engine, 'collisionStart', collisionHandling);
+            Matter.Events.on(engine, 'collisionActive', collisionHandling);
             // run the renderer
             Matter.Render.run(render);
 
@@ -328,7 +289,7 @@
                     angle = thing.angle + angle;
                     var rotateFunction = function () {
                         let angleToMove = thing.angle - angle;
-                        if (Math.abs(angleToMove) < 0.05) {
+                        if (Math.abs(angleToMove) < Movespeed) {
                             Matter.Body.setAngle(thing, angle);
                             Matter.Body.setAngularVelocity(thing, 0);
                             Matter.Body.setVelocity(thing, { x: 0, y: 0 });
@@ -355,12 +316,13 @@
                     };
                     var moveFunction = function () {
                         context.beginPath();
-                        context.fillStyle = 'green';
-                        context.fill();
+
                         context.lineWidth = 5;
                         context.arc(thing.position.x, thing.position.y, thing.circleRadius, 0, 2 * Math.PI, false);
-                        context.strokeStyle = '#003300';
-                        context.stroke();
+                        context.fillStyle = 'green';
+                        context.fill();
+                        /*context.strokeStyle = '#003300';
+                        context.stroke();*/
 
                         let distanceToMove = Math.sqrt((startPosition.x - targetPosition.x) * (startPosition.x - targetPosition.x) + (startPosition.y - targetPosition.y) * (startPosition.y - targetPosition.y));
                         if (distanceToMove < 1) {
