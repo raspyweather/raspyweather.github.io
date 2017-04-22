@@ -123,6 +123,9 @@
         let startupMethod;
         let render;
         let currentLevel = 0;
+        let angularSpeed = 0.1;
+        let Movespeed = 4;
+        let robots = [];
 
         var canvas = document.getElementById("backgroundCanvas");
         canvas.setAttribute("width", screen.width);
@@ -162,6 +165,7 @@
         ];
         document.getElementById("nextLevel").onclick = function () {
             if (engine != undefined) {
+                robots = [];
                 Matter.World.clear(engine.world);
                 Matter.Engine.clear(engine);
                 context.clearRect(0, 0, canvas.width, canvas.height)
@@ -183,6 +187,7 @@
                 collisionMethod = collision;
                 startupMethod = startup;
                 var robot = createRobot(startupMethod, collisionMethod, Levels[currentLevel].Start);
+                robots.push(robot);
                 robot.startup(robot);
             } catch (error) {
                 var div = document.createElement("div");
@@ -242,11 +247,17 @@
                             const minPushDistance = 2;
                             let x = Math.cos(element.angle) * pushDistance;
                             let y = Math.sin(element.angle) * pushDistance;
-                            if (x < minPushDistance) {
+                            if (0 < x && x < minPushDistance) {
                                 x = minPushDistance;
                             }
-                            if (y < minPushDistance) {
+                            else if (0 > x && x > -minPushDistance) {
+                                x = -minPushDistance;
+                            }
+                            if (0 < y && y < minPushDistance) {
                                 y = minPushDistance;
+                            }
+                            else if (0 > y && y > -minPushDistance) {
+                                y = -minPushDistance;
                             }
                             Matter.Body.setPosition(element, {
                                 x: element.position.x - x,
@@ -287,13 +298,15 @@
                     }
                     else if (bodies.length == 1) {
                         bodies.forEach(function (element) {
+                            if (element.robot.rotateFunctionFlag == true) { return; }
                             Matter.Body.setPosition(element, {
-                                x: element.position.x - 2 * Math.cos(element.angle),
-                                y: element.position.y - 2 * Math.sin(element.angle)
+                                x: element.position.x - 0.5 * Math.cos(element.angle),
+                                y: element.position.y - 0.5 * Math.sin(element.angle)
                             });
 
                         });
                     }
+
                     bodies.forEach(robotBody => {
                         Matter.Body.setVelocity(robotBody, { x: 0, y: 0 });
                         if (robotBody.robot.rotateFunctionFlag == true) { return; }
@@ -324,7 +337,7 @@
                             callback(robot);
                             return;
                         }
-                        const angularSpeed = 0.1;
+
                         Matter.Body.setAngularVelocity(thing, (angleToMove < 0) ? angularSpeed : -angularSpeed);
                     };
                     thing.robot.functionToCall = rotateFunction;
@@ -359,11 +372,11 @@
                             return;
                         }
                     };
-                    const speed = 4;
+
                     Matter.Body.setVelocity(thing,
                         {
-                            x: speed * Math.cos((robot.body.angle)),
-                            y: speed * Math.sin((robot.body.angle))
+                            x: Movespeed * Math.cos((robot.body.angle)),
+                            y: Movespeed * Math.sin((robot.body.angle))
                         });
                     robot.functionToCall = moveFunction;
                     robot.rotateFunctionFlag = false;
