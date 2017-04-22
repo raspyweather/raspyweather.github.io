@@ -98,7 +98,10 @@
             </div>
         </div>
         <div id="ProgrammDisplay" class="vResizeable">
-            <div id="helpDisplay" class="hResizeable"></div>
+            <div id="helpDisplay" class="hResizeable">
+                <div id="status"></div>
+                <input id="calcPercentage" type="checkbox" value="calculate Percentage" />
+            </div>
             <div id="ProgrammContainer" class="hResizeable">
                 <div id="ProgrammEditor">
 
@@ -125,13 +128,22 @@
         let currentLevel = 0;
         let angularSpeed = 0.1;
         let Movespeed = 4;
+        let pushDistance = 6;
+        let minPushDistance = 2;
         let robots = [];
+        let colors = [
+            "rgba(128,0,0,0.1)",
+            "rgba(0,128,0,0.1)",
+            "rgba(0,0,128,0.1)",
+            "rgba(128,128,0,0.1)",
+            "rgba(128,0,128,0.1)",
+            "rgba(0,128,128,0.1)"
+        ];// ["#003300", "#330000", "#000033", "#003333", "#330033", "#333300"];
 
         var canvas = document.getElementById("backgroundCanvas");
         canvas.setAttribute("width", screen.width);
         canvas.setAttribute("height", screen.height);
         var context = canvas.getContext("2d");
-        //context.fillRect("")
         var Levels = [
             {
                 Rectangles: [
@@ -141,7 +153,7 @@
                     { x: 60, y: 300, h: 60, w: 300 }],
                 Start: { x: 150, y: 150 },
                 InnerArea: {
-                    Areas: [{ type: 'Rectangle', x: 60, y: 60, h: 300, w: 300 }]
+                    Areas: [{ type: 'Rectangle', x: 60, y: 60, h: 240, w: 240 }]
                 }
             },
             {
@@ -151,26 +163,48 @@
                     { x: 300, y: 0, h: 300, w: 60 },
                     { x: 60, y: 300, h: 60, w: 300 },
                     { x: 150, y: 150, h: 60, w: 60 }],
-                Start: { x: 80, y: 80 }
+                Start: { x: 80, y: 80 },
+                InnerArea: {
+                    Areas: [
+                        { type: 'Rectangle', x: 60, y: 60, h: 90, w: 240 },
+                        { type: 'Rectangle', x: 60, y: 150, h: 60, w: 90 },
+                        { type: 'Rectangle', x: 210, y: 150, h: 60, w: 90 },
+                        { type: 'Rectangle', x: 60, y: 210, h: 90, w: 240 }
+                    ]
+                }
             },
             {
                 Rectangles: [
-                    { x: 0, y: 0, h: 60, w: 600 },
-                    { x: 0, y: 60, h: 600, w: 60 },
-                    { x: 600, y: 0, h: 600, w: 60 },
-                    { x: 60, y: 600, h: 60, w: 600 },
-                    { x: 150, y: 150, h: 60, w: 60 }],
-                Start: { x: 80, y: 80 }
-            }
+                    { x: 0, y: 0, h: 60, w: 450 },
+                    { x: 0, y: 60, h: 450, w: 60 },
+                    { x: 450, y: 0, h: 450, w: 60 },
+                    { x: 60, y: 450, h: 60, w: 450 },
+                    { x: 150, y: 150, h: 30, w: 100 },
+                    { x: 200, y: 180, h: 100, w: 30 }],
+                Start: { x: 80, y: 80 },
+                InnerArea: {
+                    Areas: [
+                        { type: 'Rectangle', x: 60, y: 60, h: 90, w: 300 },
+                        { type: 'Rectangle', x: 60, y: 60, h: 60, w: 90 },
+                        { type: 'Rectangle', x: 60, y: 60, h: 60, w: 90 },
+                        { type: 'Rectangle', x: 60, y: 210, h: 90, w: 300 }
+                    ]
+                }
+
+            },
+
+
         ];
         document.getElementById("nextLevel").onclick = function () {
             if (engine != undefined) {
+                robots.forEach(x => { x.isAlive = false; });
                 robots = [];
                 Matter.World.clear(engine.world);
                 Matter.Engine.clear(engine);
-                context.clearRect(0, 0, canvas.width, canvas.height)
+                context.clearRect(0, 0, canvas.width, canvas.height);
                 currentLevel++;
                 createEngine();
+                context.clearRect(0, 0, canvas.width, canvas.height);
                 RunSim();
             }
         };
@@ -180,7 +214,27 @@
         document.getElementById("stop").onclick = function () {
             RunSim();
         }
+        let statusDiv = document.getElementById("status");
+        let checkBox = document.getElementById("calcPercentage");
+        let updateIntervalId;
+        checkBox.onchange = function () {
+            if (updateIntervalId == undefined) {
+                updateIntervalId = setInterval(function () {
+                    var areas = Levels[currentLevel].InnerArea.Areas;
+                    var percentages = [];
+                    for (var z of areas) {
+                        percentages.push(evaluate(z));
+                    }
+                    statusDiv.innerHTML = percentages.reduce((x, y) => { return x + y; }) / percentages.length;
+                }, 100);
+            }
+            else {
+                clearInterval(updateIntervalId);
+                updateIntervalId = undefined;
 
+            }
+
+        }
         function RunSim() {
             try {
                 eval(editor.getValue());
@@ -244,8 +298,7 @@
                     //treating wall collisions
                     else if (bodies.length == 1) {
                         bodies.forEach(function (element) {
-                            const pushDistance = 10;
-                            const minPushDistance = 2;
+
                             let x = Math.cos(element.angle) * pushDistance;
                             let y = Math.sin(element.angle) * pushDistance;
                             if (0 < x && x < minPushDistance) {
@@ -285,9 +338,11 @@
         function createRobot(startupMethod, collisionMethod, position) {
             var robot = {
                 rotate: function (callback, angle) {
+                    if (!robot.isAlive) { return; }
                     var thing = this.body;
                     angle = thing.angle + angle;
                     var rotateFunction = function () {
+                        if (!robot.isAlive) { return; }
                         let angleToMove = thing.angle - angle;
                         if (Math.abs(angleToMove) < Movespeed) {
                             Matter.Body.setAngle(thing, angle);
@@ -305,6 +360,7 @@
                     thing.robot.rotateFunctionFlag = true;
                 },
                 move: function (callback, distance) {
+                    if (!this.isAlive) { return; }
                     if (distance == undefined) {
                         distance = 999999999;
                     }
@@ -315,11 +371,12 @@
                         y: startPosition.y + Math.sin(thing.angle) * distance
                     };
                     var moveFunction = function () {
+                        if (!robot.isAlive) { return; }
                         context.beginPath();
 
                         context.lineWidth = 5;
                         context.arc(thing.position.x, thing.position.y, thing.circleRadius, 0, 2 * Math.PI, false);
-                        context.fillStyle = 'green';
+                        context.fillStyle = robot.groundColor;
                         context.fill();
                         /*context.strokeStyle = '#003300';
                         context.stroke();*/
@@ -343,8 +400,10 @@
                     robot.functionToCall = moveFunction;
                     robot.rotateFunctionFlag = false;
                 },
+                groundColor: colors[robots.length % colors.length],
                 startup: startupMethod,
                 collision: collisionMethod,
+                isAlive: true,
                 body: Matter.Bodies.circle(position.x, position.y, 20, {
                     fillStyle: 'red',
                     strokeStyle: 'blue',
@@ -367,21 +426,20 @@
         function onlyUnique(value, index, self) {
             return self.indexOf(value) === index;
         }
-        function evaluate() {
-            var ctr = 0;
-            var offsetX = 60;
-            var offsetY = 60;
-            var totalCount = 0;
-            var hitsCount = 0;
-            for (var x = 0; x < 240; x += 4) {
-                for (var y = 0; y < 240; y += 4) {
-                    var imgData = context.getImageData(offsetX + x, offsetY + y, 1, 1);
+        function evaluate(area) {
+            //{ type: 'Rectangle', x: 60, y: 60, h: 60, w: 90 },
+            if (area.type == 'Rectangle') {
+                var totalCount = 0;
+                var hitsCount = 0;
+                var imgData = context.getImageData(area.x, area.y, area.w, area.h);
+                for (let i = 0; i < imgData.data.length; i += 4) {
                     totalCount++;
-                    if (imgData.data[1] > 0) {
+                    if (imgData.data[i] > 0) {
                         hitsCount++;
                     }
                 }
             }
+            return (100.0 * hitsCount) / totalCount;
         }
         function createRectWall(rect) {
             Matter.World.add(engine.world, [Matter.Bodies.rectangle(rect.x + rect.w * 0.5, rect.y + rect.h * 0.5, rect.w, rect.h, { isStatic: true, label: "wall", isSensor: true })]);
