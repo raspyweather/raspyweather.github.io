@@ -259,7 +259,7 @@ function createSearchGUI() {
     queryForm.appendChild(lb);
     var startDateInput = createDatePicker(new Date());
     document.addEventListener("click", function () {
-        if (datePickerInput.isVisible) {
+        if (datePickerInput!=undefined&&datePickerInput.isVisible) {
             datePickerInput.hidePicker();
         }
     }, false);
@@ -278,7 +278,7 @@ function createSearchGUI() {
     lb.innerHTML = "End date:";
     queryForm.appendChild(lb);
     var endDateInput = createDatePicker(new Date());
-    
+
     endDateInput.onblur = function () {
         var endDate = new Date(this.value);
         if (isNaN(endDate)) {
@@ -305,22 +305,35 @@ function createElement(tag, className) {
     return el;
 }
 function createDropDownList(inputStuff, radioButton) {
+    if (document.hideDialogs == undefined) {
+        createEventHandler("hideDialogs", document);
+        document.addEventListener("click", function (ev) {
+            document.hideDialogs.dispatchEvent(ev);
+        });
+    }
     var elemWrapper = createElement("div", "elementWrapper");
     elemWrapper.Values = [];
     var shownInput = createElement("input", "shownInputBox");
     var checkBoxWrapper = createElement("div", "checkboxWrapper");
     checkBoxWrapper.classList.add("hidden");
-    shownInput.onclick = function () {
+    shownInput.onclick = function (ev) {
         shownInput.value = elemWrapper.Values.map(function (x) {
             return (document.getElementById(x.CheckBox).checked) ? x.Value : "";
         }).filter(n => n
             ).join();
+        document.hideDialogs.dispatchEvent(ev);
         if (checkBoxWrapper.classList.contains("hidden")) {
             checkBoxWrapper.classList.remove("hidden");
             return;
         }
-        checkBoxWrapper.classList.add("hidden");
     };
+    document.hideDialogs.addEventListener(function () {
+        if (!checkBoxWrapper.classList.contains("hidden")) {
+            checkBoxWrapper.classList.add("hidden");
+            return;
+        }
+    });
+
     var closeButton = createElement("input", "button");
     closeButton.setAttribute("type", "button");
     closeButton.setAttribute("value", "Close");
@@ -368,6 +381,12 @@ function createDropDownList(inputStuff, radioButton) {
     return elemWrapper;
 }
 function createDatePicker(initialDate) {
+    if (document.hideDialogs == undefined) {
+        createEventHandler("hideDialogs", document);
+        document.addEventListener("click", function (ev) {
+            document.hideDialogs.dispatchEvent(ev);
+        });
+    }
     var datePickerWrapperBox = createElement("div", "datePickerWrapperBox noselect");
 
     var datePickerInput = createElement("input", "datePickerInput");
@@ -444,16 +463,19 @@ function createDatePicker(initialDate) {
         datePickerInput.update();
         e.stopImmediatePropagation();
     }, true);
-    document.addEventListener("click", function () {
-        if (datePickerInput.isVisible) {
-            datePickerInput.hidePicker();
-        }
-    }, false);
+    document.hideDialogs.addEventListener(
+        function () {
+            if (datePickerInput != undefined && datePickerInput.isVisible) {
+                datePickerInput.hidePicker();
+            }
+        });
     datePickerInput.addEventListener("click",
         function (e) {
+            document.hideDialogs.dispatchEvent(e);
             this.togglePicker();
             e.stopImmediatePropagation();
         }, true);
+
     datePickerWrapperBox.addEventListener("click", function (e) {
         e.stopImmediatePropagation();
     }, false);
@@ -463,7 +485,7 @@ function createDatePicker(initialDate) {
     datePickerInput.update = function () {
         this.MonthDisplay.innerHTML = this.Date.toLocaleString(navigator.language || navigator.userLanguage, { month: "long" })
         this.YearDisplay.innerHTML = this.Date.getFullYear();
-        var dayBoxes =Array.prototype.slice.call(datePickerMonthBox.getElementsByClassName("datePickerDayBox"), []);// Array.slice(datePickerMonthBox.getElementsByClassName("datePickerDayBox"), []);
+        var dayBoxes = Array.prototype.slice.call(datePickerMonthBox.getElementsByClassName("datePickerDayBox"), []);// Array.slice(datePickerMonthBox.getElementsByClassName("datePickerDayBox"), []);
         var weeks = datePickerInput.getWeeks();
         for (var i = 0; i < 6; i++) {
             for (var ii = 0; ii < 7; ii++) {

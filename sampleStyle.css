@@ -1,5 +1,6 @@
 body {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color:#fff;
 }
 
 .loader {
@@ -211,6 +212,7 @@ body {
     display: inline-block;
     float: left;
     min-width: 21ch;
+    color:white;
 }
     .fixedInputWrapper {
     position: fixed;
@@ -278,6 +280,7 @@ min-width: 200px;
         }
         
         .datePickerYearRow {
+            border-top: 2px solid #0ff;
             background: rgba(0,0,255,0.5);
             width: 100%;
             height: 20%;
@@ -311,6 +314,7 @@ min-width: 200px;
         .datePickerMonthButton {
             height: 100%;
             width: 10%;
+            padding:2px;
             background: rgba(0,255,255,0.25);
             position: relative;
         }
@@ -331,6 +335,7 @@ min-width: 200px;
     border-bottom: 1px #00f solid;
 }
         .datePickerBox {
+            z-index: 1;
             position:absolute;
             width:300px;
             height: 300px;
@@ -342,6 +347,7 @@ min-width: 200px;
             position: relative;
             height: 70%;
             display: flex;
+            border-bottom: 2px solid #0ff;
         }
         
         .datePickerMonthButtonDisplay {
@@ -362,7 +368,6 @@ min-width: 200px;
         .datePickerMonthButton {
             height: 100%;
             width: 10%;
-            background: #0f0;
             font-size: 100%;
             font-weight: 800;
             display: flex;

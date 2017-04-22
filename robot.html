@@ -1,0 +1,414 @@
+<html>
+
+<head>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        
+        #wrapper {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        .vResizeable {
+            height: 100vh;
+            overflow: hidden;
+            width: 50vw;
+        }
+        
+        .hResizeable {
+            height: 33.3333%;
+            width: 100%;
+        }
+        
+        #robotDisplay {
+            background: orange;
+            position: relative;
+        }
+        
+        #ProgrammDisplay {
+            background: red;
+        }
+        
+        #helpDisplay {
+            background: yellow;
+        }
+        
+        #ProgrammContainer {
+            background: darkorange;
+            padding: 10px;
+        }
+        
+        #ProgrammEditor {
+            height: 100%;
+            width: 100%;
+        }
+        
+        #ProgrammConsole {
+            background: darkred;
+        }
+        
+        #simControls {
+            width: 100%;
+            bottom: 0;
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 20vmin;
+            background: #ff0;
+            display: flex;
+        }
+        
+        #roboSpace {
+            height: 80%;
+            width: 100%;
+        }
+        
+        .button {
+            height: 80%;
+            width: 25%;
+            margin: 5%;
+            background: #f00;
+            align-self: center;
+        }
+        
+        canvas {
+            top: 0;
+            left: 0;
+            position: absolute;
+        }
+    </style>
+    <link href="editor.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="robotDisplay" class="vResizeable">
+            <div id="roboSpace">
+                <canvas id="backgroundCanvas"></canvas>
+            </div>
+            <div id="simControls">
+                <div id="nextLevel" class="button">Next</div>
+                <div id="start" class="button">Initialize</div>
+                <div id="stop" class="button">SpawnRobot</div>
+                <div id="speed" class="button">►►</div>
+            </div>
+        </div>
+        <div id="ProgrammDisplay" class="vResizeable">
+            <div id="helpDisplay" class="hResizeable"></div>
+            <div id="ProgrammContainer" class="hResizeable">
+                <div id="ProgrammEditor">
+
+                </div>
+            </div>
+            <div id="ProgrammConsole" class="hResizeable"></div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/matter-js/0.12.0/matter.min.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var initialStr = "\/*the startup function will get executed. Methods to move the robot are:\nrobot.rotate(radians) and robot.move(distance) which can't be used at the same time*\/ \nfunction startup(robot) \n{ robot.move();/*moves until collision*/ } \n\/*will get executed on collision. A collision aborts the current action*\/\nfunction collision() \n{ robot.rotate(robot.startup,Math.random()*Math.PI); }";
+        document.getElementById("ProgrammEditor").innerHTML = initialStr;
+        var editor = ace.edit("ProgrammEditor");
+        // editor.setTheme("https://cdn.jsdelivr.net/ace/1.2.6/min/theme-chaos.js");
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/javascript");
+    </script>
+    <script>
+        let engine;
+        let collisionMethod;
+        let startupMethod;
+        let render;
+        let currentLevel = 0;
+
+        var canvas = document.getElementById("backgroundCanvas");
+        canvas.setAttribute("width", screen.width);
+        canvas.setAttribute("height",screen.height);
+        var context = canvas.getContext("2d");
+        //context.fillRect("")
+        var Levels = [
+            {
+                Rectangles: [
+                    { x: 0, y: 0, h: 60, w: 300 },
+                    { x: 0, y: 60, h: 300, w: 60 },
+                    { x: 300, y: 0, h: 300, w: 60 },
+                    { x: 60, y: 300, h: 60, w: 300 }],
+                Start: { x: 150, y: 150 },
+                InnerArea: {
+                    Areas: [{ type: 'Rectangle', x: 60, y: 60, h: 300, w: 300 }]
+                }
+            },
+            {
+                Rectangles: [
+                    { x: 0, y: 0, h: 60, w: 300 },
+                    { x: 0, y: 60, h: 300, w: 60 },
+                    { x: 300, y: 0, h: 300, w: 60 },
+                    { x: 60, y: 300, h: 60, w: 300 },
+                    { x: 150, y: 150, h: 60, w: 60 }],
+                Start: { x: 80, y: 80 }
+            },
+            {
+                Rectangles: [
+                    { x: 0, y: 0, h: 60, w: 600 },
+                    { x: 0, y: 60, h: 600, w: 60 },
+                    { x: 600, y: 0, h: 600, w: 60 },
+                    { x: 60, y: 600, h: 60, w: 600 },
+                    { x: 150, y: 150, h: 60, w: 60 }],
+                Start: { x: 80, y: 80 }
+            }
+        ];
+        document.getElementById("nextLevel").onclick = function () {
+            if (engine != undefined) {
+                Matter.World.clear(engine.world);
+                Matter.Engine.clear(engine);
+                currentLevel++;
+                createEngine();
+                RunSim();
+            }
+        };
+        document.getElementById("start").onclick = function () {
+            createEngine();
+        };
+        document.getElementById("stop").onclick = function () {
+            RunSim();
+        }
+
+        function RunSim() {
+            try {
+                eval(editor.getValue());
+                collisionMethod = collision;
+                startupMethod = startup;
+                var robot = createRobot(startupMethod, collisionMethod, Levels[currentLevel].Start);
+                robot.startup(robot);
+            } catch (error) {
+                var div = document.createElement("div");
+                div.className = "logEntry";
+                div.innerHTML = error;
+                document.getElementById("ProgrammConsole").appendChild(div);
+            }
+        }
+        function createEngine() {
+            // create an engine
+            engine = Matter.Engine.create();
+
+            // create a renderer
+            render = Matter.Render.create({
+                element: document.getElementById("roboSpace"),
+                engine: engine
+            });
+            render.options.wireframes = false;
+            render.options.background = "rgba(0,0,0,0)";
+            render.options.showAngleIndicator = true;
+
+            //render.options.wireframeBackground = "#020"
+            // create two boxes and a ground
+
+            engine.world.gravity.y = 0;
+
+            var level1 = Levels[currentLevel];
+            level1.Rectangles.forEach(function (element) {
+                createRectWall(element);
+            }, this);
+
+            // run the engine
+            Matter.Engine.run(engine);
+
+            Matter.Events.on(engine, 'collisionStart', function (event) {
+                for (var z = 0; z < event.pairs.length; z++) {
+                    var bodies = [];
+                    if (event.pairs[z].bodyA.label == "box") { bodies.push(event.pairs[z].bodyA); }
+                    if (event.pairs[z].bodyB.label == "box") { bodies.push(event.pairs[z].bodyB); }
+
+                    //treating robots stuck together
+                    if (bodies.length > 1) {
+                        for (var idx = 1; bodies.length > 1 && idx < bodies.length; idx++) {
+                            var pos1 = bodies[idx - 1].position;
+                            var pos2 = bodies[idx].position;
+                            var direction = { x: pos1.x - pos2.x, y: pos1.y - pos2.y };
+                            var absVal = Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+                            var relDirection = { x: direction.x / absVal, y: direction.y / absVal };
+                            Matter.Body.setPosition(bodies[idx - 1], { x: pos1.x + relDirection.x, y: pos1.y + relDirection.y });
+                            Matter.Body.setPosition(bodies[idx], { x: pos2.x - relDirection.x, y: pos2.y - relDirection.y });
+                        }
+                    }
+                    //treating wall collisions
+                    else if (bodies.length == 1) {
+                        bodies.forEach(function (element) {
+                            Matter.Body.setPosition(element, {
+                                x: element.position.x - 10 * Math.cos(element.angle),
+                                y: element.position.y - 10 * Math.sin(element.angle)
+                            });
+
+                        });
+                    }
+                    bodies.forEach(robotBody => {
+                        Matter.Body.setVelocity(robotBody, { x: 0, y: 0 });
+                        if (robotBody.robot.rotateFunctionFlag == true) { return; }
+                        robotBody.robot.functionToCall = undefined;
+                        Matter.Body.setAngularVelocity(robotBody, 0);
+                        robotBody.robot.collision();
+                    });
+                }
+
+            });
+            Matter.Events.on(engine, 'collisionActive', function (event) {
+                for (var z = 0; z < event.pairs.length; z++) {
+                    var bodies = [];
+                    if (event.pairs[z].bodyA.label == "box") { bodies.push(event.pairs[z].bodyA); }
+                    if (event.pairs[z].bodyB.label == "box") { bodies.push(event.pairs[z].bodyB); }
+
+
+
+                    //treating robots stuck together
+                    if (bodies.length > 1) {
+                        for (var idx = 1; bodies.length > 1 && idx < bodies.length; idx++) {
+                            var pos1 = bodies[idx - 1].position;
+                            var pos2 = bodies[idx].position;
+                            var direction = { x: pos1.x - pos2.x, y: pos1.y - pos2.y };
+                            var absVal = Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+                            var relDirection = { x: direction.x / absVal, y: direction.y / absVal };
+                            Matter.Body.setPosition(bodies[idx - 1], { x: pos1.x + relDirection.x, y: pos1.y + relDirection.y });
+                            Matter.Body.setPosition(bodies[idx], { x: pos2.x - relDirection.x, y: pos2.y - relDirection.y });
+                        }
+                    }
+                    else if (bodies.length == 1) {
+                        bodies.forEach(function (element) {
+                            Matter.Body.setPosition(element, {
+                                x: element.position.x - 2 * Math.cos(element.angle),
+                                y: element.position.y - 2 * Math.sin(element.angle)
+                            });
+
+                        });
+                    }
+                    bodies.forEach(robotBody => {
+                        Matter.Body.setVelocity(robotBody, { x: 0, y: 0 });
+                        if (robotBody.robot.rotateFunctionFlag == true) { return; }
+                        robotBody.robot.functionToCall = undefined;
+                        Matter.Body.setAngularVelocity(robotBody, 0);
+                        robotBody.robot.collision();
+                    });
+                }
+
+            });
+            // run the renderer
+            Matter.Render.run(render);
+
+        }
+        function createRobot(startupMethod, collisionMethod, position) {
+            var robot = {
+                rotate: function (callback, angle) {
+                    var thing = this.body;
+                    angle = thing.angle + angle;
+                    var rotateFunction = function () {
+                        let angleToMove = thing.angle - angle;
+                        if (Math.abs(angleToMove) < 0.05) {
+                            Matter.Body.setAngle(thing, angle);
+                            Matter.Body.setAngularVelocity(thing, 0);
+                            Matter.Body.setVelocity(thing, { x: 0, y: 0 });
+                            thing.robot.functionToCall = undefined;
+                            thing.robot.rotateFunctionFlag = false;
+                            callback(robot);
+                            return;
+                        }
+                        const angularSpeed = 0.1;
+                        Matter.Body.setAngularVelocity(thing, (angleToMove < 0) ? angularSpeed : -angularSpeed);
+                    };
+                    thing.robot.functionToCall = rotateFunction;
+                    thing.robot.rotateFunctionFlag = true;
+                },
+                move: function (callback, distance) {
+                    if (distance == undefined) {
+                        distance = 999999999;
+                    }
+                    var thing = this.body;
+                    var startPosition = thing.position;
+                    var targetPosition = {
+                        x: startPosition.x + Math.cos(thing.angle) * distance,
+                        y: startPosition.y + Math.sin(thing.angle) * distance
+                    };
+                    var moveFunction = function () {
+                        context.beginPath();
+                        context.fillStyle = 'green';
+                        context.fill();
+                        context.lineWidth = 5;
+                        context.arc(thing.position.x, thing.position.y, thing.circleRadius, 0, 2 * Math.PI, false);
+                        context.strokeStyle = '#003300';
+                        context.stroke();
+
+                        let distanceToMove = Math.sqrt((startPosition.x - targetPosition.x) * (startPosition.x - targetPosition.x) + (startPosition.y - targetPosition.y) * (startPosition.y - targetPosition.y));
+                        if (distanceToMove < 1) {
+                            Matter.Body.setVelocity(thing, { x: 0, y: 0 });
+                            Matter.Body.setPosition(thing, targetPosition);
+                            robot.functionToCall = undefined;
+                            robot.rotateFunctionFlag = false;
+                            callback(robot);
+                            return;
+                        }
+                    };
+                    const speed = 4;
+                    Matter.Body.setVelocity(thing,
+                        {
+                            x: speed * Math.cos((robot.body.angle)),
+                            y: speed * Math.sin((robot.body.angle))
+                        });
+                    robot.functionToCall = moveFunction;
+                    robot.rotateFunctionFlag = false;
+                },
+                startup: startupMethod,
+                collision: collisionMethod,
+                body: Matter.Bodies.circle(position.x, position.y, 20, {
+                    fillStyle: 'red',
+                    strokeStyle: 'blue',
+                    label: "box",
+                    mass: 0.1,
+                    lineWidth: 8,
+                    isSensor: true,
+                    frictionAir: 0.0, friction: 0
+                })
+            };
+            robot.body.robot = robot;
+            robot.robot = robot;
+
+            Matter.Events.on(engine, "beforeUpdate", function (events) {
+                robot.functionToCall(robot);
+            });
+            Matter.World.add(engine.world, [robot.body]);
+            return robot;
+        }
+        function onlyUnique(value, index, self) {
+            return self.indexOf(value) === index;
+        }
+        function evaluate() {
+            var ctr = 0;
+            var offsetX = 60;
+            var offsetY = 60;
+            var totalCount = 0;
+            var hitsCount = 0;
+            for (var x = 0; x < 240; x += 4) {
+                for (var y = 0; y < 240; y += 4) {
+                    var imgData = context.getImageData(offsetX + x, offsetY + y, 1, 1);
+                    totalCount++;
+                    if (imgData.data[1] > 0) {
+                        hitsCount++;
+                    }
+                }
+            }
+        }
+        function createRectWall(rect) {
+            Matter.World.add(engine.world, [Matter.Bodies.rectangle(rect.x + rect.w * 0.5, rect.y + rect.h * 0.5, rect.w, rect.h, { isStatic: true, label: "wall", isSensor: true })]);
+        }
+
+        function toDegrees(angle) {
+            return angle * (180 / Math.PI);
+        }
+        function toRadians(angle) {
+            return angle * (Math.PI / 180);
+        }
+    </script>
+
+</body>
+
+</html>
