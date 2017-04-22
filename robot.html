@@ -126,7 +126,7 @@
 
         var canvas = document.getElementById("backgroundCanvas");
         canvas.setAttribute("width", screen.width);
-        canvas.setAttribute("height",screen.height);
+        canvas.setAttribute("height", screen.height);
         var context = canvas.getContext("2d");
         //context.fillRect("")
         var Levels = [
@@ -164,6 +164,7 @@
             if (engine != undefined) {
                 Matter.World.clear(engine.world);
                 Matter.Engine.clear(engine);
+                context.clearRect(0, 0, canvas.width, canvas.height)
                 currentLevel++;
                 createEngine();
                 RunSim();
@@ -237,9 +238,19 @@
                     //treating wall collisions
                     else if (bodies.length == 1) {
                         bodies.forEach(function (element) {
+                            const pushDistance = 10;
+                            const minPushDistance = 2;
+                            let x = Math.cos(element.angle) * pushDistance;
+                            let y = Math.sin(element.angle) * pushDistance;
+                            if (x < minPushDistance) {
+                                x = minPushDistance;
+                            }
+                            if (y < minPushDistance) {
+                                y = minPushDistance;
+                            }
                             Matter.Body.setPosition(element, {
-                                x: element.position.x - 10 * Math.cos(element.angle),
-                                y: element.position.y - 10 * Math.sin(element.angle)
+                                x: element.position.x - x,
+                                y: element.position.y - y
                             });
 
                         });
