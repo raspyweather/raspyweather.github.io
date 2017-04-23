@@ -62,6 +62,12 @@
             display: flex;
         }
         
+        .flexButtons {
+            display: flex;
+            width: 100%;
+            position: relative;
+        }
+        
         #roboSpace {
             height: 80%;
             width: 100%;
@@ -100,7 +106,12 @@
         <div id="ProgrammDisplay" class="vResizeable">
             <div id="helpDisplay" class="hResizeable">
                 <div id="status"></div>
-                <input id="calcPercentage" type="checkbox" checked="unchecked" >calculate Percentage</input>
+                <input id="calcPercentage" type="checkbox" checked>calculate Percentage</input>
+                <div id="codeManagement"></div>
+                <div id="codeTools" class="flexButtons">
+                    <div id="NewCode" class="button">New</div>
+                    <div id="SaveCode" class="button">Save</div>
+                </div>
             </div>
             <div id="ProgrammContainer" class="hResizeable">
                 <div id="ProgrammEditor">
@@ -111,14 +122,20 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/worker-javascript.js"></script>
+    <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ext-language_tools.js"></script>
     <script src="https://cdn.jsdelivr.net/matter-js/0.12.0/matter.min.js" type="text/javascript" charset="utf-8"></script>
     <script>
-        var initialStr = "\/*the startup function will get executed. Methods to move the robot are:\nrobot.rotate(radians) and robot.move(distance) which can't be used at the same time*\/ \nfunction startup(robot) \n{ robot.move();/*moves until collision*/ } \n\/*will get executed on collision. A collision aborts the current action*\/\nfunction collision() \n{ robot.rotate(robot.startup,Math.random()*Math.PI); }";
-        document.getElementById("ProgrammEditor").innerHTML = initialStr;
-        var editor = ace.edit("ProgrammEditor");
+        let initialStr = "\/*the startup function will get executed. Methods to move the robot are:\nrobot.rotate(radians) and robot.move(distance) which can't be used at the same time*\/ \nfunction startup(robot) \n{ robot.move();/*moves until collision*/ } \n\/*will get executed on collision. A collision aborts the current action*\/\nfunction collision() \n{ robot.rotate(robot.startup,Math.random()*Math.PI); }";
+        let editor = ace.edit("ProgrammEditor");
+        ace.require("ace/ext/language_tools");
+        editor.setOptions({
+            enableBasicAutocompletion: true
+        });
         // editor.setTheme("https://cdn.jsdelivr.net/ace/1.2.6/min/theme-chaos.js");
         editor.setTheme("ace/theme/monokai");
         editor.getSession().setMode("ace/mode/javascript");
+        editor.currentBranch = "default";
     </script>
     <script>
         let engine;
@@ -129,7 +146,7 @@
         let angularSpeed = 0.1;
         let Movespeed = 4;
         let pushDistance = 5;
-        let minPushDistance = 5;
+        let minPushDistance = 2;
         let robots = [];
         let colors = [
             "rgba(128,0,0,0.1)",
@@ -139,12 +156,14 @@
             "rgba(128,0,128,0.1)",
             "rgba(0,128,128,0.1)"
         ];// ["#003300", "#330000", "#000033", "#003333", "#330033", "#333300"];
-
-        var canvas = document.getElementById("backgroundCanvas");
+        let statusDiv = document.getElementById("status");
+        let checkBox = document.getElementById("calcPercentage");
+        let updateIntervalId;
+        let canvas = document.getElementById("backgroundCanvas");
         canvas.setAttribute("width", screen.width);
         canvas.setAttribute("height", screen.height);
-        var context = canvas.getContext("2d");
-        var Levels = [
+        let context = canvas.getContext("2d");
+        let Levels = [
             {
                 Rectangles: [
                     { x: 0, y: 0, h: 60, w: 300 },
@@ -163,7 +182,7 @@
                     { x: 300, y: 0, h: 300, w: 60 },
                     { x: 60, y: 300, h: 60, w: 300 },
                     { x: 150, y: 150, h: 60, w: 60 }],
-                Start: { x: 80, y: 80 },
+                Start: { x: 100, y: 100 },
                 InnerArea: {
                     Areas: [
                         { type: 'Rectangle', x: 60, y: 60, h: 90, w: 240 },
@@ -181,7 +200,7 @@
                     { x: 60, y: 450, h: 60, w: 450 },
                     { x: 150, y: 150, h: 30, w: 100 },
                     { x: 200, y: 180, h: 100, w: 30 }],
-                Start: { x: 80, y: 80 },
+                Start: { x: 100, y: 100 },
                 InnerArea: {
                     Areas: [
                         { type: 'Rectangle', x: 60, y: 60, h: 90, w: 300 },
@@ -195,6 +214,10 @@
 
 
         ];
+        let codeManagement = document.getElementById("codeManagement");
+
+        document.getElementById("SaveCode").onclick = saveCodeToLocalStorage;
+        document.getElementById("NewCode").onclick = newBranch;
         document.getElementById("nextLevel").onclick = function () {
             if (engine != undefined) {
                 robots.forEach(x => { x.isAlive = false; });
@@ -214,15 +237,12 @@
         document.getElementById("stop").onclick = function () {
             RunSim();
         }
-        let statusDiv = document.getElementById("status");
-        let checkBox = document.getElementById("calcPercentage");
-        let updateIntervalId;
         checkBox.onchange = function () {
             if (updateIntervalId == undefined) {
                 updateIntervalId = setInterval(function () {
-                    var areas = Levels[currentLevel].InnerArea.Areas;
-                    var percentages = [];
-                    for (var z of areas) {
+                    let areas = Levels[currentLevel].InnerArea.Areas;
+                    let percentages = [];
+                    for (let z of areas) {
                         percentages.push(evaluate(z));
                     }
                     statusDiv.innerHTML = percentages.reduce((x, y) => { return x + y; }) / percentages.length;
@@ -235,16 +255,55 @@
             }
 
         }
+        function loadLocalStorage() {
+            let keys = [];
+            for (var i = 0, len = window.localStorage.length; i < len; ++i) {
+                keys.push(localStorage.key(i));
+                console.log(window.localStorage.getItem(localStorage.key(i)));
+            }
+            if (keys.length > 0) {
+                let lb = document.createElement("label");
+                lb.innerHTML = "Select your current branch";
+                let sel = document.createElement("select");
+                lb.appendChild(sel);
+                keys.map(x => {
+                    let option = document.createElement("option");
+                    option.innerHTML = x;
+                    sel.appendChild(option);
+                });
+                if (keys.indexOf("default") != -1) {
+                    editor.setValue(localStorage.getItem("default"));
+                }
+            }
+
+        }
+        loadLocalStorage();
+        function newBranch() {
+            let newBranch = prompt("Enter a name for your code", "branchName");
+            if (newBranch == undefined || newBranch.length == 0) { return; }
+            editor.branchName = newBranch;
+            editor.setValue(initialStr);
+            saveCodeToLocalStorage();
+        }
+        function saveCodeToLocalStorage() {
+            console.log("code saved");
+            localStorage.setItem(editor.currentBranch, editor.getValue());
+        }
+        //autosave
+        setInterval(saveCodeToLocalStorage, 30000);
+
+
+
         function RunSim() {
             try {
                 eval(editor.getValue());
                 collisionMethod = collision;
                 startupMethod = startup;
-                var robot = createRobot(startupMethod, collisionMethod, Levels[currentLevel].Start);
+                let robot = createRobot(startupMethod, collisionMethod, Levels[currentLevel].Start);
                 robots.push(robot);
                 robot.startup(robot);
             } catch (error) {
-                var div = document.createElement("div");
+                let div = document.createElement("div");
                 div.className = "logEntry";
                 div.innerHTML = error;
                 document.getElementById("ProgrammConsole").appendChild(div);
@@ -268,7 +327,7 @@
 
             engine.world.gravity.y = 0;
 
-            var level1 = Levels[currentLevel];
+            let level1 = Levels[currentLevel];
             level1.Rectangles.forEach(function (element) {
                 createRectWall(element);
             }, this);
@@ -277,20 +336,20 @@
             Matter.Engine.run(engine);
 
 
-            var collisionHandling = function (event) {
-                for (var z = 0; z < event.pairs.length; z++) {
-                    var bodies = [];
+            let collisionHandling = function (event) {
+                for (let z = 0; z < event.pairs.length; z++) {
+                    let bodies = [];
                     if (event.pairs[z].bodyA.label == "box") { bodies.push(event.pairs[z].bodyA); }
                     if (event.pairs[z].bodyB.label == "box") { bodies.push(event.pairs[z].bodyB); }
 
                     //treating robots stuck together
                     if (bodies.length > 1) {
-                        for (var idx = 1; bodies.length > 1 && idx < bodies.length; idx++) {
-                            var pos1 = bodies[idx - 1].position;
-                            var pos2 = bodies[idx].position;
-                            var direction = { x: pos1.x - pos2.x, y: pos1.y - pos2.y };
-                            var absVal = Math.sqrt(direction.x * direction.x + direction.y * direction.y);
-                            var relDirection = { x: direction.x / absVal, y: direction.y / absVal };
+                        for (let idx = 1; bodies.length > 1 && idx < bodies.length; idx++) {
+                            let pos1 = bodies[idx - 1].position;
+                            let pos2 = bodies[idx].position;
+                            let direction = { x: pos1.x - pos2.x, y: pos1.y - pos2.y };
+                            let absVal = Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+                            let relDirection = { x: direction.x / absVal, y: direction.y / absVal };
                             Matter.Body.setPosition(bodies[idx - 1], { x: pos1.x + relDirection.x, y: pos1.y + relDirection.y });
                             Matter.Body.setPosition(bodies[idx], { x: pos2.x - relDirection.x, y: pos2.y - relDirection.y });
                         }
@@ -336,12 +395,12 @@
 
         }
         function createRobot(startupMethod, collisionMethod, position) {
-            var robot = {
+            let robot = {
                 rotate: function (callback, angle) {
                     if (!robot.isAlive) { return; }
-                    var thing = this.body;
+                    let thing = this.body;
                     angle = thing.angle + angle;
-                    var rotateFunction = function () {
+                    let rotateFunction = function () {
                         if (!robot.isAlive) { return; }
                         let angleToMove = thing.angle - angle;
                         if (Math.abs(angleToMove) < Movespeed) {
@@ -364,13 +423,13 @@
                     if (distance == undefined) {
                         distance = 999999999;
                     }
-                    var thing = this.body;
-                    var startPosition = thing.position;
-                    var targetPosition = {
+                    let thing = this.body;
+                    let startPosition = thing.position;
+                    let targetPosition = {
                         x: startPosition.x + Math.cos(thing.angle) * distance,
                         y: startPosition.y + Math.sin(thing.angle) * distance
                     };
-                    var moveFunction = function () {
+                    let moveFunction = function () {
                         if (!robot.isAlive) { return; }
                         context.beginPath();
 
@@ -380,9 +439,8 @@
                         context.fill();
                         /*context.strokeStyle = '#003300';
                         context.stroke();*/
-
                         let distanceToMove = Math.sqrt((startPosition.x - targetPosition.x) * (startPosition.x - targetPosition.x) + (startPosition.y - targetPosition.y) * (startPosition.y - targetPosition.y));
-                        if (distanceToMove < 1) {
+                        if (distanceToMove < Movespeed) {
                             Matter.Body.setVelocity(thing, { x: 0, y: 0 });
                             Matter.Body.setPosition(thing, targetPosition);
                             robot.functionToCall = undefined;
@@ -427,11 +485,12 @@
             return self.indexOf(value) === index;
         }
         function evaluate(area) {
+            let totalCount = 0;
+            let hitsCount = 0;
             //{ type: 'Rectangle', x: 60, y: 60, h: 60, w: 90 },
             if (area.type == 'Rectangle') {
-                var totalCount = 0;
-                var hitsCount = 0;
-                var imgData = context.getImageData(area.x, area.y, area.w, area.h);
+
+                let imgData = context.getImageData(area.x, area.y, area.w, area.h);
                 for (let i = 0; i < imgData.data.length; i += 4) {
                     totalCount++;
                     if (imgData.data[i] > 0) {
