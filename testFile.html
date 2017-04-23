@@ -9,10 +9,19 @@
         #msaImg {
             display: none;
         }
+        
+        body {
+            display: flex;
+        }
+        
+        canvas {
+            width: 49vw;
+        }
     </style>
 </head>
 
 <body onload="/*loadImageToCanvas('0B-HW4voEJgOgLVhYeWJKSXhHMEk',function(x){document.body.appendChild(x);})*/">
+
     <img id="thermImg" />
     <img id="msaImg" />
     <script>
@@ -21,6 +30,11 @@
         var msaImg = document.getElementById("msaImg");
         var results = [];
         var msaImgDataVal = [];
+        function userInput() {
+            workersCount = parseInt(prompt("Please enter the desired amount of workers (note workers*heightdivisor should be a divisor of 1400", "4"));
+            heightDivisor = parseInt(prompt("Please enter the desired amount heightdivisor (note workers*heightdivisor should be a divisor of 1400", "7"));
+            startWorkersContinous();
+        }
         function loadDataToCanvas(image, id) {
             var tempCanv = document.createElement("canvas");
             tempCanv.id = id;
@@ -31,8 +45,9 @@
             document.body.appendChild(tempCanv);
             image.canvas = tempCanv;
         }
-        thermImg.onload = function () { loadDataToCanvas(this, "thermCanv"); };
-        msaImg.onload = function () { loadDataToCanvas(this, "msaCanv"); };
+        var bothLoaded = 0;
+        thermImg.onload = function () { loadDataToCanvas(this, "thermCanv"); bothLoaded++; if (bothLoaded == 2) { userInput(); } };
+        msaImg.onload = function () { loadDataToCanvas(this, "msaCanv"); bothLoaded++; if (bothLoaded == 2) { userInput(); } };
         thermImg.src = "noaa-19-201605281253-therm.jpg";
         msaImg.src = "noaa-19-201605281253-hvct.jpg";
         var workersCount = 7;
@@ -42,28 +57,37 @@
         var startDate;
         var nDate;
         function receiveMessage(message) {
+
             if (message.data.messageType == "error") {
                 alert("ERROR:" + message.data.messageError);
                 document.workerError = message.data.messageError;
             }
             if (message.data.messageType == "return") {
-                console.log("data received after" + (new Date() - nDate) + " x:" + message.data.startX + " y:" + message.data.startY);
+                //     console.log("data received after" + (new Date() - nDate) + " x:" + message.data.startX + " y:" + message.data.startY);
                 msaImg.canvas.context.putImageData(message.data.msaImgData, message.data.startX, message.data.startY);
-                results.push(message.data.msaImgData);
+
+            } results.push("");
+            if (results.length == workersCount * heightDivisor) {
+                alert("it took:" + (new Date() - nDate) + "ms to finish editing the image");
             }
         }
         function receiveMessageContinous(message) {
-            console.log("message receivedE " + message.data.messageType);
+
+            //  console.log("message receivedE " + message.data.messageType);
             if (message.data.messageType == "error") {
                 alert("ERROR:" + message.data.messageError);
                 document.workerError = message.data.messageError;
             }
             if (message.data.messageType == "return") {
-                console.log("data received" + (new Date() - nDate) + " idx:" + message.data.index + "|" + workers[message.data.index].iteration + " y:" + message.data.startY);
+                //          console.log("data received" + (new Date() - nDate) + " idx:" + message.data.index + "|" + workers[message.data.index].iteration + " y:" + message.data.startY);
                 msaImg.canvas.context.putImageData(message.data.msaImgData, message.data.startX, message.data.startY);
                 if ((++workers[message.data.index].iteration) < (message.data.index + 1) * heightDivisor) {
                     postImgPartToWorker(workers[message.data.index]);
                 }
+            }
+            results.push("");
+            if (results.length == workersCount * heightDivisor) {
+                alert("it took:" + (new Date() - nDate) + "ms to finish editing the image");
             }
         }
         function postImgPartToWorker(worker) {
@@ -132,7 +156,7 @@
             getBase64Content(url, function (x) {
                 var canv = document.createElement("canvas");
                 var cont = canv.getContext("2d");
-                canv.setAttribute("moz-opaque","");
+                canv.setAttribute("moz-opaque", "");
                 var img = document.createElement("img");
                 img.style.display = "none";
                 document.body.appendChild(img);
@@ -170,4 +194,5 @@
     </script>
 
 </body>
+
 </html>

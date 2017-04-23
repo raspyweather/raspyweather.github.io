@@ -258,11 +258,6 @@ function createSearchGUI() {
     lb.innerHTML = "Start date:";
     queryForm.appendChild(lb);
     var startDateInput = createDatePicker(new Date());
-    document.addEventListener("click", function () {
-        if (datePickerInput!=undefined&&datePickerInput.isVisible) {
-            datePickerInput.hidePicker();
-        }
-    }, false);
     startDateInput.onblur = function () {
         var stDate = new Date(this.value);
         if (isNaN(stDate)) {
@@ -273,7 +268,6 @@ function createSearchGUI() {
         }
     };
     queryForm.appendChild(startDateInput);
-
     lb = createElement("div", "inputDescription");
     lb.innerHTML = "End date:";
     queryForm.appendChild(lb);
@@ -317,6 +311,7 @@ function createDropDownList(inputStuff, radioButton) {
     var checkBoxWrapper = createElement("div", "checkboxWrapper");
     checkBoxWrapper.classList.add("hidden");
     shownInput.onclick = function (ev) {
+        ev.stopImmediatePropagation();
         shownInput.value = elemWrapper.Values.map(function (x) {
             return (document.getElementById(x.CheckBox).checked) ? x.Value : "";
         }).filter(n => n
@@ -358,7 +353,8 @@ function createDropDownList(inputStuff, radioButton) {
             });
         label.appendChild(checkBox);
         if (radioButton) {
-            checkBox.parentElement.onclick = function () {
+            checkBox.parentElement.onclick = function (ev) {
+                ev.stopImmediatePropagation();
                 var radios = document.getElementsByName(this.getAttribute("name"));
                 for (var z of radios) {
                     if (this != z) {
@@ -366,6 +362,7 @@ function createDropDownList(inputStuff, radioButton) {
                     }
                 }
                 this.checked = true;
+                
             };
         }
 
@@ -545,6 +542,11 @@ function createDatePicker(initialDate) {
     datePickerWrapperBox.appendChild(datePickerInput);
     return datePickerWrapperBox;
 }
+function checkVisible(elm) {
+    var rect = elm.getBoundingClientRect();
+    var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+    return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+}
 function createThermalTemperatureView() {
     var box = createElement("div", "box");
     var queryForm = createElement("div", "inputWrapper fixedInputWrapper");
@@ -576,13 +578,12 @@ function createThermalTemperatureView() {
                 console.log("loaded");
                 box.appendChild(canv);
                 canv.onmousemove = function (mouseEvent) {
-
+                    if (!checkVisible(canv)) { return; }
                     var offset = canv.getBoundingClientRect();
                     var point = { x: mouseEvent.clientX - offset.left, y: mouseEvent.clientY - offset.top };
                     var rgbv = cont.getImageData(point.x, point.y, 1, 1);
                     outputTemp.innerHTML = "Temperature:\t" + getTemp((rgbv.data)) + "°C";
                 };
-                document.addEventListener("mousemove", canv.onmousemove);
             });
     };
     sel.onchange({ explicitOriginalTarget: sel.options[0] });
