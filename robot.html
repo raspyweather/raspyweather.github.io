@@ -87,7 +87,6 @@
             position: absolute;
         }
     </style>
-    <link href="editor.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -106,7 +105,7 @@
         <div id="ProgrammDisplay" class="vResizeable">
             <div id="helpDisplay" class="hResizeable">
                 <div id="status"></div>
-                <input id="calcPercentage" type="checkbox" checked>calculate Percentage</input>
+                <input id="calcPercentage" type="checkbox">calculate Percentage</input>
                 <div id="codeManagement"></div>
                 <div id="codeTools" class="flexButtons">
                     <div id="NewCode" class="button">New</div>
@@ -126,7 +125,6 @@
     <script src="https://cdn.jsdelivr.net/ace/1.2.6/min/ext-language_tools.js"></script>
     <script src="https://cdn.jsdelivr.net/matter-js/0.12.0/matter.min.js" type="text/javascript" charset="utf-8"></script>
     <script>
-        let initialStr = "\/*the startup function will get executed. Methods to move the robot are:\nrobot.rotate(radians) and robot.move(distance) which can't be used at the same time*\/ \nfunction startup(robot) \n{ robot.move();/*moves until collision*/ } \n\/*will get executed on collision. A collision aborts the current action*\/\nfunction collision() \n{ robot.rotate(robot.startup,Math.random()*Math.PI); }";
         let editor = ace.edit("ProgrammEditor");
         ace.require("ace/ext/language_tools");
         editor.setOptions({
@@ -139,8 +137,6 @@
     </script>
     <script>
         let engine;
-        let collisionMethod;
-        let startupMethod;
         let render;
         let currentLevel = 0;
         let angularSpeed = 0.1;
@@ -148,6 +144,8 @@
         let pushDistance = 5;
         let minPushDistance = 2;
         let robots = [];
+        let minWidth = Math.max(screen.width, 1000);
+        let minHeight = Math.max(screen.width, 1000);
         let colors = [
             "rgba(128,0,0,0.1)",
             "rgba(0,128,0,0.1)",
@@ -160,13 +158,25 @@
         let checkBox = document.getElementById("calcPercentage");
         let updateIntervalId;
         let canvas = document.getElementById("backgroundCanvas");
-        canvas.setAttribute("width", screen.width);
-        canvas.setAttribute("height", screen.height);
+        canvas.setAttribute("width", minWidth);
+        canvas.setAttribute("height", minHeight);
         let context = canvas.getContext("2d");
         let Levels = [
             {
                 Rectangles: [
+                    { x: 0, y: 0, h: 10, w: 950 },
+                    { x: 0, y: 10, h: 950, w: 10 },
+                    { x: 950, y: 0, h: 950, w: 10 },
+                    { x: 10, y: 950, h: 10, w: 950 }],
+                Start: { x: 170, y: 150 },
+                InnerArea: {
+                    Areas: [{ type: 'Rectangle', x: 10, y: 10, h: 940, w: 940 }]
+                }
+            },
+            {
+                Rectangles: [
                     { x: 0, y: 0, h: 60, w: 300 },
+                    { x: 180, y: 60, h: 60, w: 60 },
                     { x: 0, y: 60, h: 300, w: 60 },
                     { x: 300, y: 0, h: 300, w: 60 },
                     { x: 60, y: 300, h: 60, w: 300 }],
@@ -175,6 +185,7 @@
                     Areas: [{ type: 'Rectangle', x: 60, y: 60, h: 240, w: 240 }]
                 }
             },
+
             {
                 Rectangles: [
                     { x: 0, y: 0, h: 60, w: 300 },
@@ -251,12 +262,30 @@
             else {
                 clearInterval(updateIntervalId);
                 updateIntervalId = undefined;
-
             }
 
         }
         function loadLocalStorage() {
             let keys = [];
+            let examples = [
+                {
+                    Name: "Random example",
+                    Value: "function loop() \n{ \nreturn this.movePromise(500)\n.catch(()=>{this.rotatePromise(Math.random()*Math.PI*0.5);return;})\n.then(()=>this.sleep(1000))\n.then(()=>this.rotatePromise(Math.PI));\n}"
+                },
+                {
+                    Name: "Cowo example",
+                    Value: "function loop() \n{ \nreturn this.rotatePromise(Math.PI)\n.then(()=>this.groundColor='rgba(0,0,255,0.5)')\n\n.then(()=>arcs(this,3))\n.then(()=>this.rotatePromise((1/3)*Math.PI))\n\n.then(()=>this.groundColor='rgba(0,0,0,0)')\n.then(()=>this.movePromise(80))\n.then(()=>this.groundColor='rgba(255,0,0,0.5)')\n\n.then(()=>arcs(this,6))\n.then(()=>this.movePromise(80))\n\n.then(()=>this.groundColor='rgba(0,0,0,0)')\n.then(()=>this.movePromise(80))\n.then(()=>this.groundColor='rgba(0,255,0,0.5)')\n\n.then(()=>this.rotatePromise(Math.PI*(2/3)))\n.then(()=>this.movePromise(160))\n.then(()=>this.rotatePromise(-Math.PI*(2/3)))\n.then(()=>this.movePromise(80))\n.then(()=>this.rotatePromise(Math.PI*(2/3)))\n.then(()=>this.movePromise(80))\n.then(()=>this.rotatePromise(-Math.PI*(2/3)))\n.then(()=>this.movePromise(160))\n\n.then(()=>this.groundColor='rgba(0,0,0,0)')\n.then(()=>this.rotatePromise((1/3)*Math.PI))\n.then(()=>this.movePromise(80))\n.then(()=>this.rotatePromise((2/3)*Math.PI))\n.then(()=>this.groundColor='rgba(255,0,0,0.5)')\n.then(()=>arcs(this,6))\n.then(()=>this.groundColor='rgba(255,0,0,0)')\n.then(()=>this.movePromise(240))\n.then(()=>this.rotatePromise(Math.PI*(2/3)))\n.then(()=>this.sleep(5000))\n.catch(()=>{this.rotatePromise(Math.random()*Math.PI*0.5);return;});\n\n}\nfunction arcs(obj,amount)\n{\n    let prom=arc(obj);\n    for(let i=0;i<amount;i++)\n    {\n        prom=prom.then(()=>arc(obj));\n    }\n    return prom;\n}\nfunction arc(obj)\n{\n    return obj.movePromise(80).then(()=>obj.rotatePromise(-(1/3)*Math.PI));\n}"
+                },
+                {
+                    Name: "Edge tracking robot",
+                    Value: "function loop() \n{ \n    if(this.firstDistance==undefined)\n    {\n        this.firstDistance=5;\n    }\nreturn  this.movePromise(this.firstDistance)\n        .then(()=>{this.firstDistance=5}).then(()=>this.rotatePromise(-0.05*Math.PI))\n        .catch(()=>this.rotatePromise(0.1*Math.PI));\n}"
+                }
+            ];
+            for (var obj of examples) {
+                if (localStorage.getItem(obj) == null) {
+                    localStorage.setItem(obj.Name, obj.Value);
+                }
+            }
             for (var i = 0, len = window.localStorage.length; i < len; ++i) {
                 keys.push(localStorage.key(i));
                 console.log(window.localStorage.getItem(localStorage.key(i)));
@@ -266,6 +295,10 @@
                 lb.innerHTML = "Select your current branch";
                 let sel = document.createElement("select");
                 lb.appendChild(sel);
+                sel.onchange = () => {
+                    saveCodeToLocalStorage();
+                    editor.setValue(localStorage.getItem(sel.selectedOptions[0].innerHTML));
+                };
                 keys.map(x => {
                     let option = document.createElement("option");
                     option.innerHTML = x;
@@ -274,8 +307,8 @@
                 if (keys.indexOf("default") != -1) {
                     editor.setValue(localStorage.getItem("default"));
                 }
+                document.getElementById("codeTools").appendChild(lb);
             }
-
         }
         loadLocalStorage();
         function newBranch() {
@@ -291,23 +324,25 @@
         }
         //autosave
         setInterval(saveCodeToLocalStorage, 30000);
-
-
-
         function RunSim() {
             try {
                 eval(editor.getValue());
-                collisionMethod = collision;
-                startupMethod = startup;
-                let robot = createRobot(startupMethod, collisionMethod, Levels[currentLevel].Start);
+                startupMethod = loop;
+                var robot = createRobot(startupMethod, Levels[currentLevel].Start);
                 robots.push(robot);
-                robot.startup(robot);
+                executor(robot);
+
             } catch (error) {
                 let div = document.createElement("div");
                 div.className = "logEntry";
                 div.innerHTML = error;
                 document.getElementById("ProgrammConsole").appendChild(div);
             }
+        }
+        function executor(robot) {
+            robot.loop().then(() => executor(robot)).catch((error) => {
+                console.log("Error: " + error);
+            });
         }
         function createEngine() {
             // create an engine
@@ -316,7 +351,11 @@
             // create a renderer
             render = Matter.Render.create({
                 element: document.getElementById("roboSpace"),
-                engine: engine
+                engine: engine,
+                options: {
+                    width: minWidth,
+                    height: minHeight
+                }
             });
             render.options.wireframes = false;
             render.options.background = "rgba(0,0,0,0)";
@@ -356,35 +395,39 @@
                     }
                     //treating wall collisions
                     else if (bodies.length == 1) {
-                        bodies.forEach(function (element) {
+                        let contacts = event.pairs[z].activeContacts.map((x) => x.vertex);
+                        let contactsSum = contacts.reduce((x1, x2) => { return { x: x1.x + x2.x, y: x1.y + x2.y } });
 
-                            let x = Math.cos(element.angle) * pushDistance;
-                            let y = Math.sin(element.angle) * pushDistance;
-                            if (0 < x && x < minPushDistance) {
-                                x = minPushDistance;
-                            }
-                            else if (0 > x && x > -minPushDistance) {
-                                x = -minPushDistance;
-                            }
-                            if (0 < y && y < minPushDistance) {
-                                y = minPushDistance;
-                            }
-                            else if (0 > y && y > -minPushDistance) {
-                                y = -minPushDistance;
-                            }
-                            Matter.Body.setPosition(element, {
-                                x: element.position.x - x,
-                                y: element.position.y - y
-                            });
-
+                        let centeredContact = {
+                            x: contactsSum.x - contacts[0].x * (-1 + contacts.length),
+                            y: contactsSum.y - contacts[0].y * (-1 + contacts.length)
+                        };
+                        let x = pushDistance * ((bodies[0].position.x - centeredContact.x) / bodies[0].circleRadius);
+                        let y = pushDistance * ((bodies[0].position.y - centeredContact.y) / bodies[0].circleRadius);
+                        if (0 < x && x < minPushDistance) {
+                            x = minPushDistance;
+                        }
+                        else if (0 > x && x > -minPushDistance) {
+                            x = -minPushDistance;
+                        }
+                        if (0 < y && y < minPushDistance) {
+                            y = minPushDistance;
+                        }
+                        else if (0 > y && y > -minPushDistance) {
+                            y = -minPushDistance;
+                        }
+                        Matter.Body.setPosition(bodies[0], {
+                            x: bodies[0].position.x + x,
+                            y: bodies[0].position.y + y
                         });
                     }
                     bodies.forEach(robotBody => {
                         Matter.Body.setVelocity(robotBody, { x: 0, y: 0 });
-                        if (robotBody.robot.rotateFunctionFlag == true) { return; }
-                        robotBody.robot.functionToCall = undefined;
-                        Matter.Body.setAngularVelocity(robotBody, 0);
-                        robotBody.robot.collision();
+                        if (robotBody.robot.rejectFunction != undefined) {
+                            Matter.Body.setAngularVelocity(robotBody, 0);
+                            robotBody.robot.functionToCall = undefined;
+                            robotBody.robot.rejectFunction("collision");
+                        }
                     });
                 }
             };
@@ -394,73 +437,66 @@
             Matter.Render.run(render);
 
         }
-        function createRobot(startupMethod, collisionMethod, position) {
+        function createRobot(loopMethod, position) {
             let robot = {
-                rotate: function (callback, angle) {
-                    if (!robot.isAlive) { return; }
-                    let thing = this.body;
-                    angle = thing.angle + angle;
-                    let rotateFunction = function () {
-                        if (!robot.isAlive) { return; }
-                        let angleToMove = thing.angle - angle;
-                        if (Math.abs(angleToMove) < Movespeed) {
-                            Matter.Body.setAngle(thing, angle);
-                            Matter.Body.setAngularVelocity(thing, 0);
-                            Matter.Body.setVelocity(thing, { x: 0, y: 0 });
-                            thing.robot.functionToCall = undefined;
-                            thing.robot.rotateFunctionFlag = false;
-                            callback(robot);
-                            return;
-                        }
-
-                        Matter.Body.setAngularVelocity(thing, (angleToMove < 0) ? angularSpeed : -angularSpeed);
-                    };
-                    thing.robot.functionToCall = rotateFunction;
-                    thing.robot.rotateFunctionFlag = true;
+                rotatePromise: function (relAngle) {
+                    return new Promise((resolve, reject) => {
+                        if (!this.isAlive) { reject("robot not alive!"); return; }
+                        Matter.Body.setVelocity(this.body, { x: 0, y: 0 });
+                        let angle = this.body.angle + relAngle;
+                        //console.log("robot rotate");
+                        this.rejectFunction = null;
+                        this.functionToCall = () => {
+                            //console.log("robot rotate fct");
+                            if (!this.isAlive) { reject("robot not alive!"); return; }
+                            if (Math.abs(this.body.angle - angle) < angularSpeed) {
+                                Matter.Body.setAngle(this.body, angle);
+                                Matter.Body.setAngularVelocity(this.body, 0);
+                                Matter.Body.setVelocity(this.body, { x: 0, y: 0 });
+                                this.functionToCall = null;
+                                resolve();
+                            }
+                        };
+                        this.functionToCall();
+                        Matter.Body.setAngularVelocity(this.body, (relAngle > 0) ? angularSpeed : -angularSpeed);
+                    });
                 },
-                move: function (callback, distance) {
-                    if (!this.isAlive) { return; }
-                    if (distance == undefined) {
-                        distance = 999999999;
-                    }
-                    let thing = this.body;
-                    let startPosition = thing.position;
-                    let targetPosition = {
-                        x: startPosition.x + Math.cos(thing.angle) * distance,
-                        y: startPosition.y + Math.sin(thing.angle) * distance
-                    };
-                    let moveFunction = function () {
-                        if (!robot.isAlive) { return; }
-                        context.beginPath();
-
-                        context.lineWidth = 5;
-                        context.arc(thing.position.x, thing.position.y, thing.circleRadius, 0, 2 * Math.PI, false);
-                        context.fillStyle = robot.groundColor;
-                        context.fill();
-                        /*context.strokeStyle = '#003300';
-                        context.stroke();*/
-                        let distanceToMove = Math.sqrt((startPosition.x - targetPosition.x) * (startPosition.x - targetPosition.x) + (startPosition.y - targetPosition.y) * (startPosition.y - targetPosition.y));
-                        if (distanceToMove < Movespeed) {
-                            Matter.Body.setVelocity(thing, { x: 0, y: 0 });
-                            Matter.Body.setPosition(thing, targetPosition);
-                            robot.functionToCall = undefined;
-                            robot.rotateFunctionFlag = false;
-                            callback(robot);
-                            return;
-                        }
-                    };
-
-                    Matter.Body.setVelocity(thing,
-                        {
-                            x: Movespeed * Math.cos((robot.body.angle)),
-                            y: Movespeed * Math.sin((robot.body.angle))
-                        });
-                    robot.functionToCall = moveFunction;
-                    robot.rotateFunctionFlag = false;
+                sleep: function (time) { return new Promise((resolve) => setTimeout(resolve, time)); },
+                movePromise: function (distance) {
+                    return new Promise((resolve, reject) => {
+                        if (!this.isAlive) { reject("robot not alive!"); return; }
+                        let targetPosition = {
+                            x: this.body.position.x + Math.cos(this.body.angle) * distance,
+                            y: this.body.position.y + Math.sin(this.body.angle) * distance
+                        };
+                        this.rejectFunction = reject;
+                        //console.log("robot move");
+                        this.functionToCall = () => {
+                            if (!this.isAlive) { reject("robot not alive!"); }
+                            //console.log("robot move fct");
+                            context.beginPath();
+                            context.lineWidth = 0;
+                            context.arc(this.body.position.x, this.body.position.y, this.body.circleRadius, 0, 2 * Math.PI, false);
+                            context.fillStyle = this.groundColor;
+                            context.fill();
+                            if (Movespeed > Math.sqrt((this.body.position.x - targetPosition.x) * (this.body.position.x - targetPosition.x) + (this.body.position.y - targetPosition.y) * (this.body.position.y - targetPosition.y))) {
+                                Matter.Body.setVelocity(this.body, { x: 0, y: 0 });
+                                Matter.Body.setPosition(this.body, targetPosition);
+                                this.functionToCall = null;
+                                this.rejectFunction = null;
+                                resolve();
+                            }
+                        };
+                        this.functionToCall();
+                        Matter.Body.setVelocity(this.body,
+                            {
+                                x: Movespeed * Math.cos((this.body.angle)),
+                                y: Movespeed * Math.sin((this.body.angle))
+                            });
+                    });
                 },
                 groundColor: colors[robots.length % colors.length],
-                startup: startupMethod,
-                collision: collisionMethod,
+                loop: loopMethod,
                 isAlive: true,
                 body: Matter.Bodies.circle(position.x, position.y, 20, {
                     fillStyle: 'red',
@@ -475,8 +511,9 @@
             robot.body.robot = robot;
             robot.robot = robot;
 
-            Matter.Events.on(engine, "beforeUpdate", function (events) {
-                robot.functionToCall(robot);
+            Matter.Events.on(engine, "afterUpdate", function (events) {
+                if (robot.functionToCall != undefined)
+                    robot.functionToCall(robot);
             });
             Matter.World.add(engine.world, [robot.body]);
             return robot;
@@ -502,10 +539,11 @@
         }
         function createRectWall(rect) {
             Matter.World.add(engine.world, [Matter.Bodies.rectangle(rect.x + rect.w * 0.5, rect.y + rect.h * 0.5, rect.w, rect.h, {
-                isStatic: true, label: "wall", isSensor: true, render: {
+                isStatic: true, label: "wall", isSensor: false, render: {
                     fillStyle: 'blue',
                     lineWidth: 5,// = bump width
                     strokeStyle: 'blue'
+
                 }
             })]);
         }
