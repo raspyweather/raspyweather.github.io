@@ -106,6 +106,7 @@
             <div id="helpDisplay" class="hResizeable">
                 <div id="status"></div>
                 <input id="calcPercentage" type="checkbox">calculate Percentage</input>
+                <input id="collisionSpeech" type="checkbox">collision sound</input>
                 <div id="codeManagement"></div>
                 <div id="codeTools" class="flexButtons">
                     <div id="NewCode" class="button">New</div>
@@ -133,19 +134,19 @@
         // editor.setTheme("https://cdn.jsdelivr.net/ace/1.2.6/min/theme-chaos.js");
         editor.setTheme("ace/theme/monokai");
         editor.getSession().setMode("ace/mode/javascript");
-        editor.currentBranch = "default";
     </script>
     <script>
         let engine;
         let render;
         let currentLevel = 0;
-        let angularSpeed = 0.1;
-        let Movespeed = 4;
-        let pushDistance = 5;
-        let minPushDistance = 2;
+        let angularSpeed = 0.1 * Math.PI;
+        let Movespeed = 6;
+        let pushDistance = 4;
+        let minPushDistance = 3;
         let robots = [];
         let minWidth = Math.max(screen.width, 1000);
         let minHeight = Math.max(screen.width, 1000);
+        let speechOutput = false;
         let colors = [
             "rgba(128,0,0,0.1)",
             "rgba(0,128,0,0.1)",
@@ -242,11 +243,16 @@
                 RunSim();
             }
         };
+        document.getElementById("collisionSpeech").onchange = function () {
+            speechOutput = this.checked;
+        }
         document.getElementById("start").onclick = function () {
             createEngine();
+            talk("I am a robot", 0.7, 1);
         };
         document.getElementById("stop").onclick = function () {
             RunSim();
+            talk("I am a robot", 0.7, 1);
         }
         checkBox.onchange = function () {
             if (updateIntervalId == undefined) {
@@ -265,22 +271,41 @@
             }
 
         }
+        function talk(text, speed, pitch) {
+            window.speechSynthesis.cancel();
+            var utterThis = new SpeechSynthesisUtterance(text);
+            utterThis.speed = speed;
+            utterThis.pitch = pitch;
+            window.speechSynthesis.speak(utterThis);
+        }
         function loadLocalStorage() {
             let keys = [];
             let examples = [
                 {
                     Name: "Random example",
-                    Value: "function loop() \n{ \nreturn this.movePromise(500)\n.catch(()=>{this.rotatePromise(Math.random()*Math.PI*0.5);return;})\n.then(()=>this.sleep(1000))\n.then(()=>this.rotatePromise(Math.PI));\n}"
+                    Value: "function loop() \n{ \nreturn this.movePromise(500)\n.catch(()=>{this.rotatePromise(Math.random()*Math.PI*0.5);return;})\n.then(()=>this.rotatePromise(Math.PI*0.25));\n}"
                 },
                 {
-                    Name: "Cowo example",
+                    Name: "Cowo text drawing ",
                     Value: "function loop() \n{ \nreturn this.rotatePromise(Math.PI)\n.then(()=>this.groundColor='rgba(0,0,255,0.5)')\n\n.then(()=>arcs(this,3))\n.then(()=>this.rotatePromise((1/3)*Math.PI))\n\n.then(()=>this.groundColor='rgba(0,0,0,0)')\n.then(()=>this.movePromise(80))\n.then(()=>this.groundColor='rgba(255,0,0,0.5)')\n\n.then(()=>arcs(this,6))\n.then(()=>this.movePromise(80))\n\n.then(()=>this.groundColor='rgba(0,0,0,0)')\n.then(()=>this.movePromise(80))\n.then(()=>this.groundColor='rgba(0,255,0,0.5)')\n\n.then(()=>this.rotatePromise(Math.PI*(2/3)))\n.then(()=>this.movePromise(160))\n.then(()=>this.rotatePromise(-Math.PI*(2/3)))\n.then(()=>this.movePromise(80))\n.then(()=>this.rotatePromise(Math.PI*(2/3)))\n.then(()=>this.movePromise(80))\n.then(()=>this.rotatePromise(-Math.PI*(2/3)))\n.then(()=>this.movePromise(160))\n\n.then(()=>this.groundColor='rgba(0,0,0,0)')\n.then(()=>this.rotatePromise((1/3)*Math.PI))\n.then(()=>this.movePromise(80))\n.then(()=>this.rotatePromise((2/3)*Math.PI))\n.then(()=>this.groundColor='rgba(255,0,0,0.5)')\n.then(()=>arcs(this,6))\n.then(()=>this.groundColor='rgba(255,0,0,0)')\n.then(()=>this.movePromise(240))\n.then(()=>this.rotatePromise(Math.PI*(2/3)))\n.then(()=>this.sleep(5000))\n.catch(()=>{this.rotatePromise(Math.random()*Math.PI*0.5);return;});\n\n}\nfunction arcs(obj,amount)\n{\n    let prom=arc(obj);\n    for(let i=0;i<amount;i++)\n    {\n        prom=prom.then(()=>arc(obj));\n    }\n    return prom;\n}\nfunction arc(obj)\n{\n    return obj.movePromise(80).then(()=>obj.rotatePromise(-(1/3)*Math.PI));\n}"
                 },
                 {
                     Name: "Edge tracking robot",
-                    Value: "function loop() \n{ \n    if(this.firstDistance==undefined)\n    {\n        this.firstDistance=5;\n    }\nreturn  this.movePromise(this.firstDistance)\n        .then(()=>{this.firstDistance=5}).then(()=>this.rotatePromise(-0.05*Math.PI))\n        .catch(()=>this.rotatePromise(0.1*Math.PI));\n}"
+                    Value: "function loop() \n{ \nreturn  this.movePromise(this.firstDistance)\n        .then(()=>this.rotatePromise(-0.05*Math.PI))\n        .catch(()=>{this.firstDistance=10;return this.rotatePromise(0.1*Math.PI);});\n}"
+                },
+                {
+                    Name: "5-star drawing",
+                    Value: "function loop() \n{ \nreturn this.rotatePromise(0.2*Math.PI)\n        .then(()=>this.movePromise(200))\n        .then(()=>this.rotatePromise(Math.PI));\n}"
+                },
+                {
+                    Name: "12-star drawing",
+                    Value: "function loop() \n{ \nreturn this.rotatePromise((1/6)*Math.PI)\n        .then(()=>this.movePromise(200))\n        .then(()=>this.rotatePromise(Math.PI));\n}"
+                },
+                {
+                    Name: "7-star drawing",
+                    Value: "function loop() \n{ \nreturn this.rotatePromise((1/7)*Math.PI)\n        .then(()=>this.movePromise(200))\n        .then(()=>this.rotatePromise(Math.PI));\n}"
                 }
-            ];
+            ]; 1
             for (var obj of examples) {
                 if (localStorage.getItem(obj) == null) {
                     localStorage.setItem(obj.Name, obj.Value);
@@ -288,7 +313,6 @@
             }
             for (var i = 0, len = window.localStorage.length; i < len; ++i) {
                 keys.push(localStorage.key(i));
-                console.log(window.localStorage.getItem(localStorage.key(i)));
             }
             if (keys.length > 0) {
                 let lb = document.createElement("label");
@@ -297,6 +321,7 @@
                 lb.appendChild(sel);
                 sel.onchange = () => {
                     saveCodeToLocalStorage();
+                    editor.currentBranch = sel.selectedOptions[0].innerHTML;
                     editor.setValue(localStorage.getItem(sel.selectedOptions[0].innerHTML));
                 };
                 keys.map(x => {
@@ -304,9 +329,7 @@
                     option.innerHTML = x;
                     sel.appendChild(option);
                 });
-                if (keys.indexOf("default") != -1) {
-                    editor.setValue(localStorage.getItem("default"));
-                }
+                sel.onchange();
                 document.getElementById("codeTools").appendChild(lb);
             }
         }
@@ -376,6 +399,10 @@
 
 
             let collisionHandling = function (event) {
+                if (speechOutput) {
+
+                    talk("collision", 1, 2);
+                }
                 for (let z = 0; z < event.pairs.length; z++) {
                     let bodies = [];
                     if (event.pairs[z].bodyA.label == "box") { bodies.push(event.pairs[z].bodyA); }
