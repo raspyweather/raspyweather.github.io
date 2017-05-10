@@ -146,7 +146,7 @@
         let robots = [];
         let minWidth = Math.max(screen.width, 1000);
         let minHeight = Math.max(screen.width, 1000);
-        let speechOutput = false;
+        let speechOutput = document.getElementById("collisionSpeech").checked;
         let colors = [
             "rgba(128,0,0,0.1)",
             "rgba(0,128,0,0.1)",
@@ -245,7 +245,9 @@
         };
         document.getElementById("collisionSpeech").onchange = function () {
             speechOutput = this.checked;
-        }
+        };
+
+
         document.getElementById("start").onclick = function () {
             createEngine();
             talk("I am a robot", 0.7, 1);
@@ -272,7 +274,7 @@
 
         }
         function talk(text, speed, pitch) {
-            window.speechSynthesis.cancel();
+            if(window.speechSynthesis.pending){return;}
             var utterThis = new SpeechSynthesisUtterance(text);
             utterThis.speed = speed;
             utterThis.pitch = pitch;
@@ -400,7 +402,6 @@
 
             let collisionHandling = function (event) {
                 if (speechOutput) {
-
                     talk("collision", 1, 2);
                 }
                 for (let z = 0; z < event.pairs.length; z++) {
