@@ -1,0 +1,147 @@
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        canvas {
+            position: absolute;
+            height: 7650px;
+        }
+
+        input[type="number"] {
+            position: relative;
+            margin: 40% 20% 40% 20%;
+            width: 60%;
+            font-size: 3vmin;
+        }
+
+        wrapper {
+            position: relative;
+            display: flex;
+        }
+
+        .btWrap {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20vh;
+        }
+
+        .blackBt {
+            background: #000;
+        }
+
+        .redBt {
+            background: #800;
+        }
+
+        .greenBt {
+            background: #080;
+        }
+
+        .blueBt {
+            background: #008;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        const rowHeight = 30;
+        let totalWidth = screen.availWidth;
+        let canvas = document.createElement("canvas");
+        let sideBar = document.createElement("canvas");
+        sideBar.setAttribute("id", "sideBar");
+        let sdctx = sideBar.getContext("2d");
+        let ctx = canvas.getContext("2d");
+
+        ctx.strokeStyle = "transparent";
+        ctx.lineWidth = 0;
+        canvas.width = totalWidth;
+        sideBar.height = canvas.height = rowHeight * 255;
+
+        function drawSideBar() {
+            for (let y = 2; y < 257; y++) {
+                sdctx.font = "25px Arial";
+                sdctx.fillStyle = "#fff";
+                sdctx.strokeStyle = "#000";
+                sdctx.lineWidth = 4;
+                sdctx.textAlign = "right";
+                sdctx.strokeText(y, 90, (y - 1) * rowHeight);
+                sdctx.fillText(y, 90, (y - 1) * rowHeight);
+            }
+        }
+        function redraw() {
+            let rVal = redBt.nm.value;
+            let gVal = greenBt.nm.value;
+            let bVal = blueBt.nm.value;
+            for (let y = 2; y < 257; y++) {
+                let xWidth = (totalWidth / (y + 1));
+                for (let x = 0; x < y; x++) {
+                    let cl = (256 / y) * x;
+                    ctx.fillStyle = "rgb(" + rVal * cl + "," + gVal * cl + "," + bVal * cl + ")";
+                    ctx.fillRect((x * xWidth - 1), (y - 2) * rowHeight, 1 + (xWidth), rowHeight);
+                }
+            }
+        }
+        function createBt(clName) {
+            let bt = document.createElement("clButton");
+            bt.setAttribute("class", clName);
+            bt.nm = document.createElement("input");
+            bt.nm.setAttribute("type", "number");
+            bt.nm.setAttribute("step", "0.05");
+            bt.nm.setAttribute("min", "0");
+            bt.nm.setAttribute("max", "1");
+            bt.nm.setAttribute("value", "1");
+            bt.nm.addEventListener("change", () => redraw());
+            bt.nm.addEventListener("click", function (event) { event.preventDefault(); }, true);
+            bt.appendChild(bt.nm);
+            bt.onclick = function () {
+                if (this.nm.value == 0) {
+                    this.nm.value = 1;
+                    redraw();
+                }
+                else {
+                    this.nm.value = 0;
+                    redraw();
+
+                }
+            }
+            return bt;
+        }
+        window.onscroll = () => sideBar.style.left = window.scrollX;
+
+        let redBt = createBt("redBt");
+        let greenBt = createBt("greenBt");
+        let blueBt = createBt("blueBt");
+        let grayBt = createBt("blackBt");
+        grayBt.onchange = function () {
+            redBt.nm.value = greenBt.nm.value = blueBt.nm.value = grayBt.nm.value;
+            redraw();
+        }
+        let buttonWrapper = document.createElement("wrapper");
+        buttonWrapper.setAttribute("class", "btWrap");
+        let canvasWrapper = document.createElement("wrapper");
+
+        canvasWrapper.appendChild(canvas);
+        canvasWrapper.appendChild(sideBar);
+        canvasWrapper.style.height = Math.max(canvas.height, sideBar.height);
+        buttonWrapper.appendChild(grayBt);
+        buttonWrapper.appendChild(redBt);
+        buttonWrapper.appendChild(greenBt);
+        buttonWrapper.appendChild(blueBt);
+
+        drawSideBar();
+        redraw();
+        document.body.appendChild(canvasWrapper);
+        document.body.appendChild(buttonWrapper);
+    </script>
+</body>
+
+</html>
