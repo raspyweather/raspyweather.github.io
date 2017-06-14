@@ -1,0 +1,1248 @@
+<html>
+
+<head>
+    <meta charset="UTF-8"></meta>
+    <style>
+        html {
+            background: rgb(240, 240, 240);
+            font-family: sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        answer {
+            display: flex;
+            width: 400px;
+            max-width: 80vw;
+            border: 1px solid #000;
+            margin: 5px;
+            align-items: center;
+        }
+
+        answer.correct {
+            background: #8f8;
+            border-color: #0f0;
+        }
+
+        answer.wrong {
+            background: #f88;
+            border-color: #f00;
+        }
+
+        answer::before {
+            border: none;
+            margin: 0px;
+            margin-right: 2px;
+            padding: 4px;
+            border-right: 1px solid #000;
+            content: '\274c';
+
+            min-height: 100%;
+            min-width: 10px;
+        }
+
+        answer.checked::before {
+            border-right: 1px solid #000;
+            content: '✅';
+            min-width: 10px;
+            height: 100%;
+        }
+
+        #button {
+            border-radius: 4px;
+            font-size: 13pt;
+            padding: 4px;
+            background: #bbb;
+            border: 4px outset #000;
+            text-align: center;
+            width: 100px;
+        }
+
+        #button:active {
+            border: 4px inset #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content">
+        <h2 id="questionText"></h2>
+
+    </div>
+    <div id="button">Prüfen</div>
+    <script>
+        class question {
+            constructor(text, answers) {
+                this.text = text;
+                this.answers = answers;
+            }
+            getText() {
+                return this.text;
+            }
+            getAnswers() {
+                return this.answers;
+            }
+        }
+        class answer {
+            constructor(answerText, correct) {
+                this.correct = correct;
+                this.text = answerText;
+            }
+            getText() {
+                return this.text;
+            }
+            getCorrect() {
+                return this.correct;
+            }
+        }
+        let questions = [
+            {
+                "text": "1) Linux- Betriebssysteme werden (grob) unterteilt in",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) com und exe basierend"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) rpm und deb basierend"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) X und Y basierend"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) net und app basierend"
+                    }
+                ]
+            },
+            {
+                "text": "2) Eine Linux-Distribution besteht aus",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) Linux- Kernel"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) Computer"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) freien Programmen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) proprietären Programmen"
+                    },
+                    {
+                        "correct": true,
+                        "text": "e) distributions-spezifischen Programmen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "f) Tastatur/ Maus"
+                    },
+                    {
+                        "correct": false,
+                        "text": "g) Supportangebot"
+                    },
+                    {
+                        "correct": false,
+                        "text": "h) Handbuch"
+                    },
+                    {
+                        "correct": false,
+                        "text": "i)T-Shirt"
+                    }
+                ]
+            },
+            {
+                "text": "3) das OSI-Modell zur Rechner- Kommunkation beschreibt diese Schichten",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) Physik"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b)Verschlüsselung"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) Datenverbindung"
+                    },
+                    {
+                        "correct": true,
+                        "text": "d) Netzwerk"
+                    },
+                    {
+                        "correct": false,
+                        "text": "e) Mathematik"
+                    },
+                    {
+                        "correct": true,
+                        "text": "f) Transport"
+                    },
+                    {
+                        "correct": true,
+                        "text": "g) Sitzung"
+                    },
+                    {
+                        "correct": false,
+                        "text": "h) Telnet"
+                    },
+                    {
+                        "correct": true,
+                        "text": "i) Darstellung"
+                    },
+                    {
+                        "correct": true,
+                        "text": "j) Anwendung"
+                    },
+                    {
+                        "correct": false,
+                        "text": "k) Benutzer"
+                    }
+                ]
+            },
+            {
+                "text": "4) Die Installation eines Linux Systems erfordert…",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) einen Computer ohne Betriebssystem"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) ein CD/DVD/USB oder .iso-Image"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) eine aktive Firewall"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) einen leitungsfähigen Drucker"
+                    }
+                ]
+            },
+            {
+                "text": "5) Unix/Linux-Systeme…",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) sind grundsätzlich Mehrbenutzersysteme"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) unterscheiden zwischen privilegierten und „normalen“ Benutzern"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) haben immer eine grafische Oberfläche"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) haben nie eine grafische Oberfläche"
+                    }
+                ]
+            },
+            {
+                "text": "6) Server-Programme („Daemons“) unter Unix/Linux-Systemen ..",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) sind eigenständige Programme, die unabhängig voneinander laufen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) sind Programme, die nur voneinander abhängig funktionieren"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) sind eigenständige Programme, die (normalerweise) jeweils eine andere „Aufgabe“ abdecken"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) sind Programme, die sich dieselben „Aufgaben“ teilen"
+                    }
+                ]
+            },
+            {
+                "text": "7) auf Unix/Linux-Systemen..",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) kann immer nur ein Benutzer zur selben Zeit angemeldet sein"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) kann immer nur ein Benutzer zur selben Zeit angemeldet sein, der aber mehrere Programme ausführen kann"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) können mehrere Benutzer gleichzeitig angemeldet sein"
+                    },
+                    {
+                        "correct": true,
+                        "text": "d) können mehrere Benutzer gleichzeitig angemeldet sein und jeweils mehrere Programme ausführen"
+                    }
+                ]
+            },
+            {
+                "text": "8) „Daemons“, also Server-Programme, lauschen auf Ports („Nummern“). Ports …",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) sind für „gängige“ Services wie http/ ftp/ mail usw. grundsätzlich festgelegt, können aber geändert werden"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) können vom Programmierer eines Daemons grundsätzlich frei gewählt werden"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) müssen für jeden (neuen) Daemon angemeldet werden und werden dann zentral festgelegt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) sind fest vergeben und auf allen Systemen (z.B. Windows, Linux, Apple, Android,..) gleichzeitig"
+                    }
+                ]
+            },
+            {
+                "text": "9) der „root“-Benutzer hat nach einer Standard-Installation..",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) keinen Zugriff auf das gesamte Unix/Linux-System"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) keinen vollen Zugriff auf das gesamte Unix/Linux-System, kann dieses aber administrieren"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) vollen Zugriff auf das gesamte Unix/Linux-System, kann dieses aber nicht löschen"
+                    },
+                    {
+                        "correct": true,
+                        "text": "d) vollen Zugriff auf das gesamte Unix/Linux-System und kann dieses sogar löschen"
+                    }
+                ]
+            },
+            {
+                "text": "10) Unix/Linux-Systeme..",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) sind ausschließlich Server-Systeme"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) können entweder als Server- oder als Desktop- System genutzt werden"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) können nur als Desktop-System genutzt werden"
+                    },
+                    {
+                        "correct": true,
+                        "text": "d) können gleichzeitig als Server- und Desktop-System genutzt werden"
+                    }
+                ]
+            },
+            {
+                "text": "11) Es existieren, neben anderen Dateien, 2 Dateien (datei1.txt, datei2.txt) im selben Verzeichnis. Welcher Vorgang funktioniert?",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) cp datei1.txt datei2.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) cp datei1.txt + datei2.txt"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) cp -v datei1.txt datei2.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) cp +v datei1.txt datei2.txt"
+                    }
+                ]
+            },
+            {
+                "text": "12) Es existieren, neben anderen Dateien, 2 Dateien (datei1.txt, datei2.txt) im selben Verzeichnis. Was passiert bei diesem Befehl…",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "user@host> mv datei1.txt datei2.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) datei1.txt wird auf datei2.txt kopiert"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) datei1.txt wird auf datei.txt verschoben"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) die ursprüngliche datei1.txt ist danach weg"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) die ursprüngliche datei2.txt ist danach weg"
+                    }
+                ]
+            },
+            {
+                "text": "13) Es existieren, neben anderen Dateien, 2 Dateien (datei1.txt, datei2.txt) im selben Verzeichnis. Was passiert bei diesem Befehl..",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "user@host> ln datei.txt datei2.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) es wird eine Verknüpfung („link“) datei2.txt angelegt, die auf datei1.txt verweist"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) es wird eine Verknüpfung („link“) datei1.txt angelegt, die auf datei2.txt verweist"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) er erfolgt eine Fehlermeldung"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) datei2.txt wird mit dem Inhalt von datei1.txt überschrieben"
+                    }
+                ]
+            },
+            {
+                "text": "14)  Es existieren, neben anderen Dateien, 2 Dateien (datei1.txt, datei2.txt) im selben Verzeichnis. Was passiert bei diesem Befehl…",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "user@host> cat datei1.txt >> datei2.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) datei1.txt wird angezeigt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) beide Dateien werden nacheinander angezeigt"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) datei2.txt wird mit dem Inhalt von datei1.txt überschrieben"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) der Inhalt von datei1.txt wird an den Inhalt von datei2.txt angehängt"
+                    }
+                ]
+            },
+            {
+                "text": "15) Es existieren, neben anderen Dateien, 2 Dateien (datei1.txt, datei2.txt) im selben Verzeichnis. Was passiert bei diesem Befehl…",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "user@host> grep -iR „Hallo“ *"
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) „Hallo“ wird nur in datei1.txt und datei2.txt und nur im aktuellen Verzeichnis gesucht"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) „Hallo“ wird nur in datei1.txt und datei2.txt im aktuellen Verzeichnis und den darunter liegenden Verzeichnissen gesucht und nur exakt das Muster „Hallo“ wird gesucht"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) „Hallo“ wird in allen Dateien im aktuellen Verzeichnis und den darunter liegenden Verzeichnissen gesucht und nur exakt das Muster „Hallo“ wird gesucht"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) „Hallo“ wird in allen Dateien im aktuellen Verzeichnis und den darunter liegenden Verzeichnissen gesucht, nabhängig von Groß- oder klein-Schreibung, also z.B: auch „hallo“ „HALLO“ oder „HalLO“ wären Treffer"
+                    }
+                ]
+            },
+            {
+                "text": "16) Es existieren neben anderen Rechnern, 2 PCs (pc1, pc2) im selben Segment eines TCP/IP-Netzwerks. Wenn pc1 mit pc2 kommunizieren möchte, verschickt er, technisch gesehen…",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) Datenpakete an den Namen „pc2“"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) Datenpakete an die IP-Adresse von pc2"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) Datenpakete an die MAC-Adresse von pc2"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) Datenpakete an alle Rechner im selben Netzwerksegment"
+                    }
+                ]
+            },
+            {
+                "text": "17) Um zu einer IP-Adresse den Namen eines Rechners heraus zu finden befragt ein Rechner …",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) einen DNS-Server"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) die Datei etc/Hosts"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) den nächsten Router"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) eine Reverse-Engine"
+                    },
+                    {
+                        "correct": false,
+                        "text": "e) eine Suchmaschine, z.B: „yahoo“"
+                    }
+                ]
+            },
+            {
+                "text": "18) TCP und UDP unterscheiden sich darin, dass…",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) TCP rot ist"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) TCP blau ist"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) TCP grün ist"
+                    },
+                    {
+                        "correct": true,
+                        "text": "d) TCP(Netzwerk-)Pakete versendet und auf eine „Antwort“ des Empfängers wartet"
+                    }
+                ]
+            },
+            {
+                "text": "19) die „shell“ ist auf Unix/Linux-Systemen",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) die Benutzerumgebung nur für den „root“-Benutzer und nur zur Systemverwaltung"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) ein schwarzes Loch"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) eine Benutzerumgebung für jeden Benutzer, in der alle Kommandos, abhängig von er Berechtigung, ausgeführt werden können"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) eine Benutzerumgebung für jeden Benutzer, in der alle Kommandos ausgeführt werden können"
+                    }
+                ]
+            },
+            {
+                "text": "20) eine Datei hat folgende Rechte und Besitzer",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "rwxrwxrwx chantal marketing 4096 Dez 19 08:03 bierf1.txt"
+                    },
+                    {
+                        "correct": true,
+                        "text": "jaqueline aus der (Primär-)Gruppe „vertrieb“ darf die Datei…"
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) bearbeiten"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) anschauen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) keines von beiden"
+                    }
+                ]
+            },
+            {
+                "text": "21) eine Datei hat folgende Rechte und Besitzer",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "rwxrwxrwx chantal marketing 4096 Dez 19 08:03 bierf1.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "user@host> chmod 770 brief1.txt"
+                    },
+                    {
+                        "correct": true,
+                        "text": "jaqueline aus der (Primär-)Gruppe „vertrieb“ darf die Datei…"
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) bearbeiten"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) anschauen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) keines von beiden"
+                    }
+                ]
+            },
+            {
+                "text": "22) eine Datei hat urpsürnglich folgende Rechte und Besitzer",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "rwxrwxrwx chantal marketing 4096 Dez 19 08:03 brief1.txt"
+                    },
+                    {
+                        "correct": true,
+                        "text": "die Berechtigung wird geändert mit"
+                    },
+                    {
+                        "correct": false,
+                        "text": "user@host> chmod 774 brief1.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "jaqueline aus der (Primär-) Gruppe „vertrieb“ darf jetzt die Datei.."
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) bearbeiten"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) anschauen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) keines von beiden"
+                    }
+                ]
+            },
+            {
+                "text": "23) eine Datei hat urpsürnglich folgende Rechte und Besitzer",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "rwxrwxrwx chantal marketing 4096 Dez 19 08:03 brief1.txt"
+                    },
+                    {
+                        "correct": true,
+                        "text": "die Berechtigung wird geändert mit"
+                    },
+                    {
+                        "correct": false,
+                        "text": "user@host> chmod 775 brief1.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "jaqueline aus der (Primär-) Gruppe „vertrieb“ darf jetzt die Datei.."
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) bearbeiten"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) anschauen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) keines von beiden"
+                    }
+                ]
+            },
+            {
+                "text": "24) eine Datei hat urpsürnglich folgende Rechte und Besitzer",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "rwxrwx--- chantal vertrieb 4096 Dez 19 08:03 brief1.txt"
+                    },
+                    {
+                        "correct": true,
+                        "text": "die Berechtigung wird geändert mit"
+                    },
+                    {
+                        "correct": false,
+                        "text": "user@host> chown hugo:vertrieb brief1.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "jaqueline aus der (Primär-) Gruppe „vertrieb“ darf jetzt die Datei.."
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) löschen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) anschauen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) keines von beiden"
+                    }
+                ]
+            },
+            {
+                "text": "25) eine Datei hat urpsürnglich folgende Rechte und Besitzer",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "rwxrwx--- chantal vertrieb 4096 Dez 19 08:03 brief1.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "die Berechtigung wird geändert mit"
+                    },
+                    {
+                        "correct": true,
+                        "text": "user@host> chown anna:marketing brief1.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "jaqueline aus der (Primär-) Gruppe „vertrieb“ darf jetzt die Datei.."
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) löschen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) anschauen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) keines von beiden"
+                    }
+                ]
+            },
+            {
+                "text": "26) eine Datei hat urpsürnglich folgende Rechte und Besitzer",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "rwxrwx--- chantal vertrieb 4096 Dez 19 08:03 brief1.txt"
+                    },
+                    {
+                        "correct": true,
+                        "text": "die Berechtigung wird geändert mit"
+                    },
+                    {
+                        "correct": false,
+                        "text": "user@host> chown jaqueline:marketing brief1.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "jaqueline aus der (Primär-) Gruppe „vertrieb“ darf jetzt die Datei.."
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) löschen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) anschauen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) keines von beiden"
+                    }
+                ]
+            },
+            {
+                "text": "27) eine Datei hat urpsürnglich folgende Rechte und Besitzer",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "rwxrwx--- chantal vertrieb 4096 Dez 19 08:03 brief1.txt"
+                    },
+                    {
+                        "correct": true,
+                        "text": "die Berechtigung wird geändert mit"
+                    },
+                    {
+                        "correct": false,
+                        "text": "user@host> chown heidi:buchhaltung brief1.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "user@host> chmod 007 brief1.txt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "jaqueline aus der (Primär-) Gruppe „vertrieb“ darf jetzt die Datei.."
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) löschen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) anschauen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) keines von beiden"
+                    }
+                ]
+            },
+            {
+                "text": "28) Benutzer und Gruppen auf Unix/Linux-Systemen...",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) jeder Benutzer hat eine primäre Gruppe"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) ein Benutzer kann Mitglied in mehreren Gruppen sein"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) jede Gruppe hat mindestens einen Benutzer"
+                    }
+                ]
+            },
+            {
+                "text": "29) Linux-Systeme..",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) können nur NTFS-Dateisysteme lesen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) können keine NTFS-Dateisysteme lesen"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) können eine Vielzahl von Dateisystemen lesen und schreiben"
+                    }
+                ]
+            },
+            {
+                "text": "30) Dateisysteme unter Linux..",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) können max. 2600GB groß sein"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) können durch „exe“-Dateien schneller gemacht werden"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) können maximal 2³² Dateien beinhalten"
+                    },
+                    {
+                        "correct": true,
+                        "text": "d) können durch Journaling „sicherer“ gegen Beschädigungen gemacht werden"
+                    }
+                ]
+            },
+            {
+                "text": "31) Raid3-Systeme vertragen",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) den Ausfall von mehreren Festplatten, ohne Datenverlust"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) den Ausfall maximal einer Festplatte, ohne Datenverlust"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) den Ausfall von Festplatten nur mit Datenverlust"
+                    }
+                ]
+            },
+            {
+                "text": "32) Dateisysteme und/oder Netz“laufwerke“ werden bei Unix-Systemen..",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) ausschließlich vom user „root“ ge“mount“ed"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) über einen Laufwerksbuchstabend angesprochen"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) nur an vom Betriebssystem vorgegebenen Stellen ge“mountet“"
+                    },
+                    {
+                        "correct": true,
+                        "text": "d) an eine rbeliebigen Stelle „eingehängt“"
+                    }
+                ]
+            },
+            {
+                "text": "33) ein NFS-Server…",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) ..muss immer hinter einer Firewall platziert werden"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) .. kann keine .com Dateien speichern"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) .. kennt keine Berechtigungen auf Benutzerebene"
+                    }
+                ]
+            },
+            {
+                "text": "34) „Samba“-Server…",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) kann wie ein proprietärer ActiveDirectory-Server eingesetzt werden"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) ist eine Software zum Management von (Betriebssystem-)Benutzern/Gruppen"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) kann in eine proprietäre Umgebung (z.B. Windows) eingebunden werden"
+                    }
+                ]
+            },
+            {
+                "text": "35)„Samba“-Server...",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) bieten die Möglichkeit Verzeichnisse „frei“ zu geben, damit sie über das Netzwerk von Clients verbunden werden können"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) bieten die Möglichkeit Namen gegen IP-Adressen aufzulösen, damit diese über das Netzwerk von Clients verbunden werden können"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) bieten die Möglichkeit Drucker „frei“ zu geben, damit sie von besitmmten Benutzern/Gruppen über das Netzwerk von Clients verbunden werden können"
+                    }
+                ]
+            },
+            {
+                "text": "36) vi kann „sinnvoll“ genutzt werden als…",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) Editor für Musikdateien"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) Editor für Konfigurationsdateien"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) Editor für Textdateien"
+                    },
+                    {
+                        "correct": true,
+                        "text": "d) Editor für .xml Dateine"
+                    }
+                ]
+            },
+            {
+                "text": "37) eine „URL“ beschreibt",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) den Zugang zum Internet"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) den Inhalt einer Webseite"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) die Methode und den Weg zu einer Information/ Ressource"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) die Programmierschnittstelle einer Internet-Seite"
+                    }
+                ]
+            },
+            {
+                "text": "38) Verbindungen mit dem Browser zu einem Webserver via http sind",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) immer unverschlüsselt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) immer verschlüsselt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) immer langsam"
+                    }
+                ]
+            },
+            {
+                "text": "39) Verbindungen mit dem Browser zu einem Webserver via https…",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) benötigen immer ein Zertifikat"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) benötigen immer einen Benutzernamen und ein Passwort"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) sind immer langsam"
+                    }
+                ]
+            },
+            {
+                "text": "40) E-Mail..",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) wird nur über staatlich kontrollierte Server versendet"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) kann, sicherheitstechnisch, vergleichbar mit https konfiguriert/eingestellt werden"
+                    }
+                ]
+            },
+            {
+                "text": "41) eine TCP/IP- Adresse (IPv4, z.B. 10.123.45.67) enthält…",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "a) eine Netzwerk-Kennung"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) eine Empfänger-Kennung"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) eine Host-Kennung"
+                    },
+                    {
+                        "correct": false,
+                        "text": "d) eine Typ-Kennung"
+                    },
+                    {
+                        "correct": true,
+                        "text": "e) eine Netzwerk-Kennung und eine Host-Kennung"
+                    },
+                    {
+                        "correct": false,
+                        "text": "f) eine Sender-Kennung und eine Empfänger-Kennung"
+                    }
+                ]
+            },
+            {
+                "text": "42) auf Unix/Linux-Systemen…",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) sind (Benutzer-)Gruppen und Passwörter in derselben Datei gespeichert"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) sind Benutzer, (Benutzer-)Gruppen und Oasswörter in unterschiedlichen Dateien gespeichert"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) sind Benutzer, (Benutzer-) Gruppen und Passwörter in der „Registry“ gespeichert"
+                    }
+                ]
+            },
+            {
+                "text": "192.168.0.99        inn",
+                "answers": [
+                    {
+                        "correct": true,
+                        "text": "welche „ping“-Kommandos führen zu einer Antwort, vorausgesetzt, das Ziel ist tatsächlich korrekt vorhanden und es ist KEIN Übergang in ein weitere IP-Netz vorhanden"
+                    },
+                    {
+                        "correct": false,
+                        "text": "a) ping naab"
+                    },
+                    {
+                        "correct": true,
+                        "text": "b) ping neckar"
+                    },
+                    {
+                        "correct": true,
+                        "text": "c) ping 192.168.56.101"
+                    },
+                    {
+                        "correct": true,
+                        "text": "d) ping 127.0.0.1"
+                    },
+                    {
+                        "correct": false,
+                        "text": "e) ping 192.168.56.100"
+                    },
+                    {
+                        "correct": false,
+                        "text": "f) ping 19.20.30.100"
+                    },
+                    {
+                        "correct": false,
+                        "text": "g) ping 8.8.8.8"
+                    },
+                    {
+                        "correct": false,
+                        "text": "h) ping inn"
+                    }
+                ]
+            },
+            {
+                "text": "44) ssl-Zertifikate..",
+                "answers": [
+                    {
+                        "correct": false,
+                        "text": "a) werden immer in Papierform aus-/zugestellt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "b) werden nur durch staatliche Zertifizierungsstellen ausgestellt"
+                    },
+                    {
+                        "correct": false,
+                        "text": "c) werden nur für E-Mail-Server ausgestellt"
+                    }
+                ]
+            }
+        ];
+
+
+        let content = document.getElementById("content");
+        let questionText = document.getElementById("questionText");
+        let button = document.getElementById("button");
+        let currentQuestionIdx = 0;
+        let answers = [];
+        let answerd = false;
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key == 'Enter' || e.key == ' ') {
+                button.click();
+                return;
+            }
+            if (true) {
+                // if (e.keyCode.length <=2) {
+                let charCode = e.key.charCodeAt(0);
+                let resultingKey = -1;
+                if (charCode >= 'a'.charCodeAt(0) && charCode <= 'z'.charCodeAt(0)) {
+                    console.log("good key.", e);
+                    resultingKey = charCode - 'a'.charCodeAt(0);
+                }
+                else if (charCode >= 'A'.charCodeAt(0) && charCode <= 'Z'.charCodeAt(0)) {
+                    console.log("good key.", e);
+                    resultingKey = charCode - 'A'.charCodeAt(0);
+                }
+                else if (charCode >= '0'.charCodeAt(0) && charCode <= '9'.charCodeAt(0)) {
+                    console.log("good key.", e);
+                    resultingKey = charCode - '0'.charCodeAt(0);
+                }
+                else {
+                    console.log("weird key.", e);
+                }
+                if (resultingKey >= 0 && answers.length > resultingKey) {
+                    answers[resultingKey].click();
+                }
+            }
+        });
+        function loadQuestion(question) {
+            questionText.innerHTML = "[" + (currentQuestionIdx + 1) + "] " + question.text;
+            answers = question.answers;
+            for (let i = 0; i < answers.length; i++) {
+                answers[i] = createAnswer(answers[i], '');// String.fromCharCode('a'.charCodeAt(0) + i) + ')');
+                content.appendChild(answers[i]);
+            }
+        }
+        button.onclick = function () {
+            if (!answerd) {
+                answers.forEach(x => x.check());
+                answerd = !answerd;
+            }
+            else {
+                answerd = !answerd;
+                let el = document.getElementsByTagName("answer");
+                answers.forEach(x => x.remove());
+                loadQuestion(questions[(currentQuestionIdx++) % questions.length]);
+            }
+        }
+        function createAnswer(answer, preFix, parent) {
+            let el = document.createElement("answer");
+            el.innerHTML = preFix + " " + answer.text;
+            el.answer = answer;
+            el.check = function () {
+                let answerstate = this.classList.contains("checked");
+                if (this.answer.correct == answerstate) {
+                    this.classList.add("correct");
+                }
+                else {
+                    this.classList.add("wrong");
+                }
+            }
+            el.onclick = function () {
+                if (this.classList.contains("checked")) {
+                    this.classList.remove("checked");
+                }
+                else {
+                    this.classList.add("checked");
+                }
+            }
+            return el;
+        }
+        loadQuestion(questions[currentQuestionIdx++]);
+    </script>
+</body>
+
+</html>
