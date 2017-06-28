@@ -71,7 +71,7 @@
         <h2 id="questionText"></h2>
 
     </div>
-    <div id="button">Prüfen</div>
+    <div id="button">Eingeben</div>
     <script>
         class question {
             constructor(text, answers) {
@@ -1159,8 +1159,6 @@
                 ]
             }
         ];
-
-
         let content = document.getElementById("content");
         let questionText = document.getElementById("questionText");
         let button = document.getElementById("button");
@@ -1201,20 +1199,43 @@
             questionText.innerHTML = question.text;
             answers = question.answers;
             for (let i = 0; i < answers.length; i++) {
-                answers[i] = createAnswer(answers[i], '');// String.fromCharCode('a'.charCodeAt(0) + i) + ')');
+                answers[i] = createAnswer(answers[i], '');
+                //check answers if correct
+                if (answers[i].answer.correct) {
+                    answers[i].click();
+                }
                 content.appendChild(answers[i]);
             }
         }
         button.onclick = function () {
-            if (!answerd) {
-                answers.forEach(x => x.check());
-                answerd = !answerd;
+            if (currentQuestionIdx < questions.length) {
+                questions[currentQuestionIdx].answers = answers.map(x => x.answer);
+                answers.forEach(x => x.remove());
+                loadQuestion(questions[(++currentQuestionIdx)]);
             }
             else {
-                answerd = !answerd;
-                let el = document.getElementsByTagName("answer");
-                answers.forEach(x => x.remove());
-                loadQuestion(questions[(currentQuestionIdx++) % questions.length]);
+                let str = JSON.stringify(questions);
+                download(str, "questions.JSON", "text");
+            }
+
+
+
+        }
+        function download(data, filename, type) {
+            let file = new Blob([data], { type: type });
+            if (window.navigator.msSaveOrOpenBlob) // IE10+
+                window.navigator.msSaveOrOpenBlob(file, filename);
+            else { // Others
+                let a = document.createElement("a"),
+                    url = URL.createObjectURL(file);
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(function () {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 0);
             }
         }
         function createAnswer(answer, preFix, parent) {
