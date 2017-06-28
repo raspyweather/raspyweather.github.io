@@ -162,7 +162,7 @@
                 answerd = !answerd;
                 let el = document.getElementsByTagName("answer");
                 answers.forEach(x => x.remove());
-                if (currentQuestionIdx++ == questions.length) {
+                if (++currentQuestionIdx == questions.length) {
                     alert("Du brauchtest: " + ((Date.now() - startTime) / 1000) + " Sekunden. Super.");
                 }
                 else {
