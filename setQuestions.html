@@ -103,7 +103,7 @@
         let content = document.getElementById("content");
         let questionText = document.getElementById("questionText");
         let button = document.getElementById("button");
-        let buttonS = document.getElementById("buttonS");
+        let buttonS = document.getElementById("button");
         let currentQuestionIdx = 0;
         let answers = [];
         let answerd = false;
@@ -156,12 +156,12 @@
                 loadQuestion(questions[(++currentQuestionIdx)]);
             }
             else {
-                let str = JSON.stringify(questions);
-                download(str, "crappyQuestions.json", "text");
-                alert("Diese Datei an mich schicken oder PULL stellen");
+                saveStuff();
             }
         }
-        buttonS.onclick = function () {
+        buttonS.onclick = saveStuff;
+        function saveStuff() {
+            let str = JSON.stringify(questions);
             download(str, "crappyQuestions.json", "text");
             alert("Diese Datei an mich schicken oder PULL stellen");
         }
