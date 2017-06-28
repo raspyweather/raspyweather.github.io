@@ -50,7 +50,8 @@
             min-width: 10px;
         }
 
-        #button,#buttonS {
+        #button,
+        #buttonS {
             border-radius: 4px;
             font-size: 13pt;
             padding: 4px;
@@ -203,6 +204,17 @@
                 }
             }
             return el;
+        }
+        function httpGetPromised(theUrl) {
+            return new Promise((resolve, reject) => {
+                let xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                        resolve(xmlHttp.responseText);
+                }
+                xmlHttp.open("GET", theUrl, true); // true for asynchronous
+                xmlHttp.send(null);
+            });
         }
         httpGetPromised("./crappyQuestions.json").then((x) => {
             questions = JSON.parse(x);
