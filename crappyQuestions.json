@@ -4,39 +4,39 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)ChromeOS"
+                "text": "a) ChromeOS"
             },
             {
                 "correct": false,
-                "text": "b)Centos"
+                "text": "b) Centos"
             },
             {
                 "correct": false,
-                "text": "c)Debian"
+                "text": "c) Debian"
             },
             {
                 "correct": false,
-                "text": "d)Fedora"
+                "text": "d) Fedora"
             },
             {
                 "correct": false,
-                "text": "e)Knoppix"
+                "text": "e) Knoppix"
             },
             {
                 "correct": false,
-                "text": "f)Lubuntu"
+                "text": "f) Lubuntu"
             },
             {
                 "correct": false,
-                "text": "g)Mandriva"
+                "text": "g) Mandriva"
             },
             {
                 "correct": false,
-                "text": "h)Millenium"
+                "text": "h) Millenium"
             },
             {
                 "correct": false,
-                "text": "i)Mint"
+                "text": "i) Mint"
             },
             {
                 "correct": false,
@@ -89,35 +89,35 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Linux-Kernel"
+                "text": "a) Linux-Kernel"
             },
             {
                 "correct": false,
-                "text": "b)Linux-Keypad"
+                "text": "b) Linux-Keypad"
             },
             {
                 "correct": false,
-                "text": "c)Freien Programmen"
+                "text": "c) Freien Programmen"
             },
             {
                 "correct": false,
-                "text": "d)Properitären Programme"
+                "text": "d) Properitären Programme"
             },
             {
                 "correct": false,
-                "text": "e)Distributions-spezifische Programme"
+                "text": "e) Distributions-spezifische Programme"
             },
             {
                 "correct": false,
-                "text": "f)Hardware"
+                "text": "f) Hardware"
             },
             {
                 "correct": false,
-                "text": "g)Supportangebot"
+                "text": "g) Supportangebot"
             },
             {
                 "correct": false,
-                "text": "h)Handbuch"
+                "text": "h) Handbuch"
             }
         ]
     },
@@ -126,19 +126,19 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Nur über das Internet"
+                "text": "a) Nur über das Internet"
             },
             {
                 "correct": false,
-                "text": "b)Von CD/DVD/USB oder .iso-Image"
+                "text": "b) Von CD/DVD/USB oder .iso-Image"
             },
             {
                 "correct": false,
-                "text": "c)Sinnvoll mit aktiver Internet-Verbindung"
+                "text": "c) Sinnvoll mit aktiver Internet-Verbindung"
             },
             {
                 "correct": false,
-                "text": "d)Nur durch den Fachhandel"
+                "text": "d) Nur durch den Fachhandel"
             }
         ]
     },
@@ -147,15 +147,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Haben nie eine grafische Oberfläche"
+                "text": "a) Haben nie eine grafische Oberfläche"
             },
             {
                 "correct": false,
-                "text": "b)Sind grundsätzlich Mehrbenutzersysteme"
+                "text": "b) Sind grundsätzlich Mehrbenutzersysteme"
             },
             {
                 "correct": false,
-                "text": "c)Unterscheiden zwischen privilegierten und \"normalen\" Benutzern"
+                "text": "c) Unterscheiden zwischen privilegierten und \"normalen\" Benutzern"
             }
         ]
     },
@@ -164,23 +164,23 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Nennt man \"Controller\""
+                "text": "a) Nennt man \"Controller\""
             },
             {
                 "correct": false,
-                "text": "b)Nennt man \"Caps\""
+                "text": "b) Nennt man \"Caps\""
             },
             {
                 "correct": false,
-                "text": "c)Nennt man \"Cops\""
+                "text": "c) Nennt man \"Cops\""
             },
             {
                 "correct": false,
-                "text": "d)Nennt man \"Cups\""
+                "text": "d) Nennt man \"Cups\""
             },
             {
                 "correct": false,
-                "text": "e)Nennt man \"Deamons\""
+                "text": "e) Nennt man \"Deamons\""
             }
         ]
     },
@@ -189,19 +189,19 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Kann immer nur ein Benutzer zur selben Zeit angemeldet sein"
+                "text": "a) Kann immer nur ein Benutzer zur selben Zeit angemeldet sein"
             },
             {
                 "correct": false,
-                "text": "b)Können mehrere Benutzer gleichzeitig angemeldet sein"
+                "text": "b) Können mehrere Benutzer gleichzeitig angemeldet sein"
             },
             {
                 "correct": false,
-                "text": "c)Können mehrer Benutzer aber nur ein Administrator(\"root\") gleichzeitig angemeldet sein"
+                "text": "c) Können mehrer Benutzer aber nur ein Administrator(\"root\") gleichzeitig angemeldet sein"
             },
             {
                 "correct": false,
-                "text": "d)Können mehrere Administratoren(\"root\"s) gleichzeitig angemeldet sein"
+                "text": "d) Können mehrere Administratoren(\"root\"s) gleichzeitig angemeldet sein"
             }
         ]
     },
@@ -210,19 +210,19 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Prozesse"
+                "text": "a) Prozesse"
             },
             {
                 "correct": false,
-                "text": "b)Dateien"
+                "text": "b) Dateien"
             },
             {
                 "correct": false,
-                "text": "c)Ports"
+                "text": "c) Ports"
             },
             {
                 "correct": false,
-                "text": "d)Speicher"
+                "text": "d) Speicher"
             }
         ]
     },
@@ -231,15 +231,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Vollen Zugriff auf das gesamte Unix/Linux-System und kann diese sogar löschen"
+                "text": "a) Vollen Zugriff auf das gesamte Unix/Linux-System und kann diese sogar löschen"
             },
             {
                 "correct": false,
-                "text": "b)Vollen Zugriff auf das gesamte Unix/Linux-System, kann dieses aber nicht löschen"
+                "text": "b) Vollen Zugriff auf das gesamte Unix/Linux-System, kann dieses aber nicht löschen"
             },
             {
                 "correct": false,
-                "text": "c)Keinen vollen Zugriff auf das gesamte Unix/Linux-System, kann dieses aber administrieren"
+                "text": "c) Keinen vollen Zugriff auf das gesamte Unix/Linux-System, kann dieses aber administrieren"
             }
         ]
     },
@@ -248,19 +248,19 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Sind ausschließlich Server-Systeme"
+                "text": "a) Sind ausschließlich Server-Systeme"
             },
             {
                 "correct": false,
-                "text": "b)Können als Server- und Desktop-System genutzt werden"
+                "text": "b) Können als Server- und Desktop-System genutzt werden"
             },
             {
                 "correct": false,
-                "text": "c)Können nur als Desktop-System genutzt werden"
+                "text": "c) Können nur als Desktop-System genutzt werden"
             },
             {
                 "correct": false,
-                "text": "d)Können gleichzeitg als Server- und Desktop-System genutzt werden"
+                "text": "d) Können gleichzeitg als Server- und Desktop-System genutzt werden"
             }
         ]
     },
@@ -269,136 +269,116 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)cp datei1.txt datei2.txt"
+                "text": "a) cp datei1.txt datei2.txt"
             },
             {
                 "correct": false,
-                "text": "b)cp -v datei.txt datei.txt"
+                "text": "b) cp -v datei.txt datei.txt"
             },
             {
                 "correct": false,
-                "text": "c)cp +m datei1.txt datei2.txt"
+                "text": "c) cp +m datei1.txt datei2.txt"
             }
         ]
     },
     {
-        "text": "11) Was passiert bei diesem Befehl…",
+        "text": "11) Was passiert bei diesem Befehl… mv datei1.txt datei2.txt",
         "answers": [
             {
                 "correct": false,
-                "text": "a)mv datei1.txt datei2.txt"
+                "text": "a) Datei1.txt wird auf datei2.txt kopiert"
             },
             {
                 "correct": false,
-                "text": "b)Datei1.txt wird auf datei2.txt kopiert"
+                "text": "b) Datei1.txt wird auf datei2.txt veschoben"
             },
             {
                 "correct": false,
-                "text": "c)Datei1.txt wird auf datei2.txt veschoben"
+                "text": "c) Datei1.txt ist danach weg"
             },
             {
                 "correct": false,
-                "text": "d)Datei1.txt ist danach weg"
-            },
-            {
-                "correct": false,
-                "text": "e)Datei2.txt ist danach weg"
+                "text": "d) Datei2.txt ist danach weg"
             }
         ]
     },
     {
-        "text": "12) Was passiert bei diesem Befehl…",
+        "text": "12) Was passiert bei diesem Befehl…cat datei1.txt datei2.txt",
         "answers": [
             {
                 "correct": false,
-                "text": "a)cat datei1.txt datei2.txt"
+                "text": "a) Datei1.txt wird angezeigt"
             },
             {
                 "correct": false,
-                "text": "b)Datei1.txt wird angezeigt"
+                "text": "b) Datei1.txt wird angezeigt"
             },
             {
                 "correct": false,
-                "text": "c)Datei1.txt wird angezeigt"
+                "text": "c) Beide Dateien werden nacheinander angezeigt"
             },
             {
                 "correct": false,
-                "text": "d)Beide Dateien werden nacheinander angezeigt"
-            },
-            {
-                "correct": false,
-                "text": "e)Datei2.txt wird mit dem Inhalt von datei1.txt überschrieben"
+                "text": "d) Datei2.txt wird mit dem Inhalt von datei1.txt überschrieben"
             }
         ]
     },
     {
-        "text": "13) Was passiert bei diesem Befehl…",
+        "text": "13) Was passiert bei diesem Befehl… cat datei1.txt > datei2.txt",
         "answers": [
             {
                 "correct": false,
-                "text": "a)cat datei1.txt > datei2.txt"
+                "text": "a) Datei1.txt wird angezeigt"
             },
             {
                 "correct": false,
-                "text": "b)Datei1.txt wird angezeigt"
+                "text": "b) Datei1.txt wird angezeigt"
             },
             {
                 "correct": false,
-                "text": "c)Datei1.txt wird angezeigt"
+                "text": "c) Beide Dateien werden nacheinander angezeigt"
             },
             {
                 "correct": false,
-                "text": "d)Beide Dateien werden nacheinander angezeigt"
-            },
-            {
-                "correct": false,
-                "text": "e)datei2.txt wird mit dem Inhalt von datei1.txt überschrieben"
+                "text": "d) datei2.txt wird mit dem Inhalt von datei1.txt überschrieben"
             }
         ]
     },
     {
-        "text": "14) Was passiert bei diesem Befehl…",
+        "text": "14) Was passiert bei diesem Befehl…grep -iR \"suchtext\"",
         "answers": [
             {
                 "correct": false,
-                "text": "a)grep -iR \"suchtext\""
+                "text": "a) \"suchtext\" wird in allen Dateien nur im aktuellsten Verzeichnis gesucht"
             },
             {
                 "correct": false,
-                "text": "b)\"suchtext\" wird in allen Dateien nur im aktuellsten Verzeichnis gesucht"
+                "text": "b) \"suchtext\" wird in allen Dateien im aktuellen Verzeichnis und den darunter liegenden Verzeichnissen gesucht und nur exakt das Muster \"suchtext\" wird gesucht"
             },
             {
                 "correct": false,
-                "text": "c)\"suchtext\" wird in allen Dateien im aktuellen Verzeichnis und den darunter liegenden Verzeichnissen gesucht und nur exakt das Muster \"suchtext\" wird gesucht"
-            },
-            {
-                "correct": false,
-                "text": "d)\"suchtext\" wird in allen Dateien im aktuellen Verzeichnis und den darunter liegenden Verzeichnissen gesucht, unabhängig von Groß- und Kleinschreibung"
+                "text": "c) \"suchtext\" wird in allen Dateien im aktuellen Verzeichnis und den darunter liegenden Verzeichnissen gesucht, unabhängig von Groß- und Kleinschreibung"
             }
         ]
     },
     {
-        "text": "15) Was passiert bei diesem Befehl…",
+        "text": "15) Was passiert bei diesem Befehl…ln datei1.txt datei2.txt",
         "answers": [
             {
                 "correct": false,
-                "text": "a)ln datei1.txt datei2.txt"
+                "text": "a) Es wird eine Verknüpfung datei1.txt angelegt, die auf datei2.txt verweist"
             },
             {
                 "correct": false,
-                "text": "b)Es wird eine Verknüpfung datei1.txt angelegt, die auf datei2.txt verweist"
+                "text": "b) Es wird eine Verknüpfung datei2.txt angelegt, die auf datei1.txt verweist"
             },
             {
                 "correct": false,
-                "text": "c)Es wird eine Verknüpfung datei2.txt angelegt, die auf datei1.txt verweist"
+                "text": "c) Es wird eine Verknüpfung datei1.txt angelegt und datei2.txt wird gelöscht"
             },
             {
                 "correct": false,
-                "text": "d)Es wird eine Verknüpfung datei1.txt angelegt und datei2.txt wird gelöscht"
-            },
-            {
-                "correct": false,
-                "text": "e)Es wird eine Verknüpfung datei2.txt angelegt und datei1.txt wird gelöscht"
+                "text": "d) Es wird eine Verknüpfung datei2.txt angelegt und datei1.txt wird gelöscht"
             }
         ]
     },
@@ -407,15 +387,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Direkt durch Namen miteinander"
+                "text": "a) Direkt durch Namen miteinander"
             },
             {
                 "correct": false,
-                "text": "b)Direkt durch IP-Adressen miteinander"
+                "text": "b) Direkt durch IP-Adressen miteinander"
             },
             {
                 "correct": false,
-                "text": "c)Direkt durch Mac-Adressen miteinander"
+                "text": "c) Direkt durch Mac-Adressen miteinander"
             }
         ]
     },
@@ -424,23 +404,23 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Den Namen des anderen Rechners in eine IP-Adresse aufzulösen"
+                "text": "a) Den Namen des anderen Rechners in eine IP-Adresse aufzulösen"
             },
             {
                 "correct": false,
-                "text": "b)Heraus zu finden, welches Betriebssystem der andere Rechner hat"
+                "text": "b) Heraus zu finden, welches Betriebssystem der andere Rechner hat"
             },
             {
                 "correct": false,
-                "text": "c)Heraus zu finden, ob er den anderen Rechner direkt oder über einen Router erreichen kann"
+                "text": "c) Heraus zu finden, ob er den anderen Rechner direkt oder über einen Router erreichen kann"
             },
             {
                 "correct": false,
-                "text": "d)Heraus zu finden, an welche MAC Adresse er seine \"Daten\" Schicken muss"
+                "text": "d) Heraus zu finden, an welche MAC Adresse er seine \"Daten\" Schicken muss"
             },
             {
                 "correct": false,
-                "text": "e)Das Internet zu erreichen"
+                "text": "e) Das Internet zu erreichen"
             }
         ]
     },
@@ -449,19 +429,19 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Einen DNS Server"
+                "text": "a) Einen DNS Server"
             },
             {
                 "correct": false,
-                "text": "b)Die Datei /etc/hosts"
+                "text": "b) Die Datei /etc/hosts"
             },
             {
                 "correct": false,
-                "text": "c)Den nächsten Router"
+                "text": "c) Den nächsten Router"
             },
             {
                 "correct": false,
-                "text": "d)Eine Suchmaschine wie z.B. \"google\""
+                "text": "d) Eine Suchmaschine wie z.B. \"google\""
             }
         ]
     },
@@ -470,15 +450,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Ports auf einem Server"
+                "text": "a) Ports auf einem Server"
             },
             {
                 "correct": false,
-                "text": "b)Programme um Daten zu kopieren"
+                "text": "b) Programme um Daten zu kopieren"
             },
             {
                 "correct": false,
-                "text": "c)Transport-Protokolle des OSI-Layers 4"
+                "text": "c) Transport-Protokolle des OSI-Layers 4"
             }
         ]
     },
@@ -487,15 +467,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)TCP (Netzwerk-) Pakete versendet und auf eine \"Antwort\" des Empfängers wartet und UDP (Netzwerk-)Pakete versendet ohne auf eine \"Antwort\" zu warten"
+                "text": "a) TCP (Netzwerk-) Pakete versendet und auf eine \"Antwort\" des Empfängers wartet und UDP (Netzwerk-)Pakete versendet ohne auf eine \"Antwort\" zu warten"
             },
             {
                 "correct": false,
-                "text": "b)UDP (Netzwerk-) Pakete versendet und auf eine \"Antwort\" des Empfängers wartet und TCP (Netzwerk-)Pakete versendet ohne auf eine \"Antwort\" zu warten"
+                "text": "b) UDP (Netzwerk-) Pakete versendet und auf eine \"Antwort\" des Empfängers wartet und TCP (Netzwerk-)Pakete versendet ohne auf eine \"Antwort\" zu warten"
             },
             {
                 "correct": false,
-                "text": "c)TCP (Netzwerk-)Pakete versendet und auf eine \"Antwort\" des Empfängers wartet und UDP (Netzwerk-) Pakete verwendet und auf eine \"Antwort\" eines Gateways wartet"
+                "text": "c) TCP (Netzwerk-)Pakete versendet und auf eine \"Antwort\" des Empfängers wartet und UDP (Netzwerk-) Pakete verwendet und auf eine \"Antwort\" eines Gateways wartet"
             }
         ]
     },
@@ -504,15 +484,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Gehen immer Daten verloren"
+                "text": "a) Gehen immer Daten verloren"
             },
             {
                 "correct": false,
-                "text": "b)Gehen Daten abhängig vom verwendeten Dateisystem verloren"
+                "text": "b) Gehen Daten abhängig vom verwendeten Dateisystem verloren"
             },
             {
                 "correct": false,
-                "text": "c)Gehen nie Daten verloren"
+                "text": "c) Gehen nie Daten verloren"
             }
         ]
     },
@@ -521,44 +501,32 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Eine Benutzerumgebung nur für den \"root\"-Benutzer zur Systemverwaltung"
+                "text": "a) Eine Benutzerumgebung nur für den \"root\"-Benutzer zur Systemverwaltung"
             },
             {
                 "correct": false,
-                "text": "b)Eine Benutzerumgebung für jeden Benutzer, in der nur von \"root\" festgelegte Kommandos er[?] sind"
+                "text": "b) Eine Benutzerumgebung für jeden Benutzer, in der nur von \"root\" festgelegte Kommandos er[?] sind"
             },
             {
                 "correct": false,
-                "text": "c)Eine Benutzerumgebung für jeden Benutzer, in der alle Kommandos, abhängig von der Berechtigung, ausgeführt werden können."
+                "text": "c) Eine Benutzerumgebung für jeden Benutzer, in der alle Kommandos, abhängig von der Berechtigung, ausgeführt werden können."
             }
         ]
     },
     {
-        "text": "23)",
+        "text": "23) a) eine Datei hat folgende Rechte und Besitzer rwxrwxrwxmax⁡〖verkauf 4096 Dez 19 08:03 datei1.txt〗Moritz aus der (Primär-) Gruppe \"vertrieb\" darf die Datei…",
         "answers": [
             {
                 "correct": false,
-                "text": "a)a)   eine Datei hat folgende Rechte und Besitzer"
+                "text": "a) Löschen"
             },
             {
                 "correct": false,
-                "text": "b)rwxrwxrwxmax⁡〖verkauf 4096 Dez 19 08:03 datei1.txt〗"
+                "text": "b) Bearbeiten"
             },
             {
                 "correct": false,
-                "text": "c)Moritz aus der (Primär-) Gruppe \"vertrieb\" darf die Datei…"
-            },
-            {
-                "correct": false,
-                "text": "d)Löschen"
-            },
-            {
-                "correct": false,
-                "text": "e)Bearbeiten"
-            },
-            {
-                "correct": false,
-                "text": "f)Anschauen"
+                "text": "c) Anschauen"
             }
         ]
     },
@@ -567,19 +535,19 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Ein Benutzer kann nur Mitglied in EINER Gruppe sein"
+                "text": "a) Ein Benutzer kann nur Mitglied in EINER Gruppe sein"
             },
             {
                 "correct": false,
-                "text": "b)Jeder Benutzer hat eine primäre Gruppe"
+                "text": "b) Jeder Benutzer hat eine primäre Gruppe"
             },
             {
                 "correct": false,
-                "text": "c)Eine Gruppe kann Mitglied in einer Gruppe sein"
+                "text": "c) Eine Gruppe kann Mitglied in einer Gruppe sein"
             },
             {
                 "correct": false,
-                "text": "d)Bevor ein Benutzer Mitglied einer  Gruppe werden kann muss er aus allen anderen Gruppen entfernt werden"
+                "text": "d) Bevor ein Benutzer Mitglied einer Gruppe werden kann muss er aus allen anderen Gruppen entfernt werden"
             }
         ]
     },
@@ -588,15 +556,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Kennen nur NTFS-Dateisysteme"
+                "text": "a) Kennen nur NTFS-Dateisysteme"
             },
             {
                 "correct": false,
-                "text": "b)Kennen eine Vielzahl von Dateisystemen"
+                "text": "b) Kennen eine Vielzahl von Dateisystemen"
             },
             {
                 "correct": false,
-                "text": "c)Können keine FAT16 Dateisysteme lesen"
+                "text": "c) Können keine FAT16 Dateisysteme lesen"
             }
         ]
     },
@@ -605,15 +573,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Können max. 27TB groß sein"
+                "text": "a) Können max. 27TB groß sein"
             },
             {
                 "correct": false,
-                "text": "b)Können durch Journaling \"sicherer\" gegen Beschädigungen gemacht werden"
+                "text": "b) Können durch Journaling \"sicherer\" gegen Beschädigungen gemacht werden"
             },
             {
                 "correct": false,
-                "text": "c)Können durch \"exe\"-Dateien schneller gemacht werden"
+                "text": "c) Können durch \"exe\"-Dateien schneller gemacht werden"
             }
         ]
     },
@@ -622,15 +590,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Den Ausfall von mehreren Festplatten, ohne Datenverlust"
+                "text": "a) Den Ausfall von mehreren Festplatten, ohne Datenverlust"
             },
             {
                 "correct": false,
-                "text": "b)Den Ausfall maximal einer Festplatte, ohne Datenverlust"
+                "text": "b) Den Ausfall maximal einer Festplatte, ohne Datenverlust"
             },
             {
                 "correct": false,
-                "text": "c)Den Ausfall von Festplatten nur mit Datenverlust"
+                "text": "c) Den Ausfall von Festplatten nur mit Datenverlust"
             }
         ]
     },
@@ -639,19 +607,19 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)An einer beliebigen Stelle \"eingehängt\""
+                "text": "a) An einer beliebigen Stelle \"eingehängt\""
             },
             {
                 "correct": false,
-                "text": "b)Behandelt wie lokale (Unter-) Verzeichnisse"
+                "text": "b) Behandelt wie lokale (Unter-) Verzeichnisse"
             },
             {
                 "correct": false,
-                "text": "c)Über einen Laufwerksbuchstaben angesprochen"
+                "text": "c) Über einen Laufwerksbuchstaben angesprochen"
             },
             {
                 "correct": false,
-                "text": "d)Nur an vom Betriebssystem vorgegebenen Stellen ge\"mountet\""
+                "text": "d) Nur an vom Betriebssystem vorgegebenen Stellen ge\"mountet\""
             }
         ]
     },
@@ -660,19 +628,19 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Bieten die Möglichkeit Verzeichnisse \"frei\" zu geben, damit sie über das Netzwerk von Client […] verbunden werden können"
+                "text": "a) Bieten die Möglichkeit Verzeichnisse \"frei\" zu geben, damit sie über das Netzwerk von Client […] verbunden werden können"
             },
             {
                 "correct": false,
-                "text": "b)Bieten die Möglichkeit Namen gegen IP-Adressen aufzulösen, damit diese über das Netzwerk […] Clients verbunden werden können"
+                "text": "b) Bieten die Möglichkeit Namen gegen IP-Adressen aufzulösen, damit diese über das Netzwerk […] Clients verbunden werden können"
             },
             {
                 "correct": false,
-                "text": "c)Bieten die Möglichkeit Verzeichnisse \"frei\" zu geben, damit sie von bestimmten Benutzern/Gruppen über das Netzwerk von Clients verbunden werden können"
+                "text": "c) Bieten die Möglichkeit Verzeichnisse \"frei\" zu geben, damit sie von bestimmten Benutzern/Gruppen über das Netzwerk von Clients verbunden werden können"
             },
             {
                 "correct": false,
-                "text": "d)Bieten die Möglichkeit Drucker \"frei\" zu geben, damit sie von bestimmten Benutzern/Gruppen über das Netzwerk von Clients verbunden werden können"
+                "text": "d) Bieten die Möglichkeit Drucker \"frei\" zu geben, damit sie von bestimmten Benutzern/Gruppen über das Netzwerk von Clients verbunden werden können"
             }
         ]
     },
@@ -681,15 +649,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)… muss immer hinter einer Firewall plaziert werden"
+                "text": "a) … muss immer hinter einer Firewall plaziert werden"
             },
             {
                 "correct": false,
-                "text": "b)… kann keine .exe Dateien speichern"
+                "text": "b) … kann keine .exe Dateien speichern"
             },
             {
                 "correct": false,
-                "text": "c)… kann keine Berechtigungen auf Benutzerebene"
+                "text": "c) … kann keine Berechtigungen auf Benutzerebene"
             }
         ]
     },
@@ -698,27 +666,27 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Ist eine freie Alternative zu proprietären Fileservern"
+                "text": "a) Ist eine freie Alternative zu proprietären Fileservern"
             },
             {
                 "correct": false,
-                "text": "b)Kann \"problemlos\" auch von proprietären Clients (z.B. Windows) genutzt werden"
+                "text": "b) Kann \"problemlos\" auch von proprietären Clients (z.B. Windows) genutzt werden"
             },
             {
                 "correct": false,
-                "text": "c)Kann wie ein proprietärer ActiveDirectory-Server eingesetzt werden"
+                "text": "c) Kann wie ein proprietärer ActiveDirectory-Server eingesetzt werden"
             },
             {
                 "correct": false,
-                "text": "d)Ist eine Software zum Management von (Betriebssystem-) Benutzern/Gruppen"
+                "text": "d) Ist eine Software zum Management von (Betriebssystem-) Benutzern/Gruppen"
             },
             {
                 "correct": false,
-                "text": "e)Kann in eine proprietäre Umgebung (z.B. Windows) eingebunden werden"
+                "text": "e) Kann in eine proprietäre Umgebung (z.B. Windows) eingebunden werden"
             },
             {
                 "correct": false,
-                "text": "f)Ist eine Software zum Verwalten von IP-Adressen"
+                "text": "f) Ist eine Software zum Verwalten von IP-Adressen"
             }
         ]
     },
@@ -727,19 +695,19 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Bieten die Möglichkeit Verzeichnisse \"frei\" zu geben, damit sie über das Netzwerk von Clients […] verbunden werden"
+                "text": "a) Bieten die Möglichkeit Verzeichnisse \"frei\" zu geben, damit sie über das Netzwerk von Clients […] verbunden werden"
             },
             {
                 "correct": false,
-                "text": "b)Bieten die Möglichkeit Namen gegen IP-Adressen aufzulösen, damit diese über das Netzwerk […] Clients verbunden werden können"
+                "text": "b) Bieten die Möglichkeit Namen gegen IP-Adressen aufzulösen, damit diese über das Netzwerk […] Clients verbunden werden können"
             },
             {
                 "correct": false,
-                "text": "c)Bieten die Möglichkeit Verzeichnisse \"frei\" zu geben, damit sie von Bestimmten Benutzern/Gruppen über das Netzwerk von Clients verbunden werden können"
+                "text": "c) Bieten die Möglichkeit Verzeichnisse \"frei\" zu geben, damit sie von Bestimmten Benutzern/Gruppen über das Netzwerk von Clients verbunden werden können"
             },
             {
                 "correct": false,
-                "text": "d)Bieten die Möglichkeit Drucker \"frei\" zu geben, damit sie von bestimmten Benutzern/Gruppen über das Netzwerk von Clients verbunden werden können"
+                "text": "d) Bieten die Möglichkeit Drucker \"frei\" zu geben, damit sie von bestimmten Benutzern/Gruppen über das Netzwerk von Clients verbunden werden können"
             }
         ]
     },
@@ -748,15 +716,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Keine eigene Benutzerverwaltung"
+                "text": "a) Keine eigene Benutzerverwaltung"
             },
             {
                 "correct": false,
-                "text": "b)Eine eigene Benutzerverwaltung"
+                "text": "b) Eine eigene Benutzerverwaltung"
             },
             {
                 "correct": false,
-                "text": "c)Nur eine Berechtigungsverwaltung auf Netzwerk/IP Ebene"
+                "text": "c) Nur eine Berechtigungsverwaltung auf Netzwerk/IP Ebene"
             }
         ]
     },
@@ -765,19 +733,19 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Übernehmen Authentifizierung gegenüber Diensten, die sonst jeweils separat erfolgen müssen"
+                "text": "a) Übernehmen Authentifizierung gegenüber Diensten, die sonst jeweils separat erfolgen müssen"
             },
             {
                 "correct": false,
-                "text": "b)Sorgen dafür, dass auch proprietäre Clients(Z.B. Windows) mit Linux Servern kommunizieren können"
+                "text": "b) Sorgen dafür, dass auch proprietäre Clients(Z.B. Windows) mit Linux Servern kommunizieren können"
             },
             {
                 "correct": false,
-                "text": "c)Können so konfiguriert werden, dass z.B.  Netzlaufwerke beim Login verbunden werden"
+                "text": "c) Können so konfiguriert werden, dass z.B. Netzlaufwerke beim Login verbunden werden"
             },
             {
                 "correct": false,
-                "text": "d)Sorgen dafür, dass ein Login erfolgt"
+                "text": "d) Sorgen dafür, dass ein Login erfolgt"
             }
         ]
     },
@@ -786,15 +754,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Auf jedem Unix-System vorhanden"
+                "text": "a) Auf jedem Unix-System vorhanden"
             },
             {
                 "correct": false,
-                "text": "b)Eine Software zur Programmierung"
+                "text": "b) Eine Software zur Programmierung"
             },
             {
                 "correct": false,
-                "text": "c)Eine Alternative zum nano-Editor"
+                "text": "c) Eine Alternative zum nano-Editor"
             }
         ]
     },
@@ -803,11 +771,11 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Editor für Musikdateien"
+                "text": "a) Editor für Musikdateien"
             },
             {
                 "correct": false,
-                "text": "b)Editor für Konfigurationsdateien"
+                "text": "b) Editor für Konfigurationsdateien"
             }
         ]
     },
@@ -816,15 +784,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Löschen"
+                "text": "a) Löschen"
             },
             {
                 "correct": false,
-                "text": "b)Bearbeiten"
+                "text": "b) Bearbeiten"
             },
             {
                 "correct": false,
-                "text": "c)Anschauen"
+                "text": "c) Anschauen"
             }
         ]
     },
@@ -833,15 +801,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Löschen"
+                "text": "a) Löschen"
             },
             {
                 "correct": false,
-                "text": "b)Bearbeiten"
+                "text": "b) Bearbeiten"
             },
             {
                 "correct": false,
-                "text": "c)Anschauen"
+                "text": "c) Anschauen"
             }
         ]
     },
@@ -850,15 +818,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Löschen"
+                "text": "a) Löschen"
             },
             {
                 "correct": false,
-                "text": "b)Bearbeiten"
+                "text": "b) Bearbeiten"
             },
             {
                 "correct": false,
-                "text": "c)Anschauen"
+                "text": "c) Anschauen"
             }
         ]
     },
@@ -867,15 +835,15 @@
         "answers": [
             {
                 "correct": false,
-                "text": "a)Löschen"
+                "text": "a) Löschen"
             },
             {
                 "correct": false,
-                "text": "b)Bearbeiten"
+                "text": "b) Bearbeiten"
             },
             {
                 "correct": false,
-                "text": "c)Anschauen"
+                "text": "c) Anschauen"
             }
         ]
     },
@@ -937,7 +905,7 @@
             },
             {
                 "correct": false,
-                "text": "i)T-Shirt"
+                "text": "i) T-Shirt"
             }
         ]
     },
@@ -950,7 +918,7 @@
             },
             {
                 "correct": false,
-                "text": "b)Verschlüsselung"
+                "text": "b) Verschlüsselung"
             },
             {
                 "correct": true,
@@ -1201,7 +1169,7 @@
         ]
     },
     {
-        "text": "14)  Es existieren, neben anderen Dateien, 2 Dateien (datei1.txt, datei2.txt) im selben Verzeichnis. Was passiert bei diesem Befehl…user@host> cat datei1.txt >> datei2.txt",
+        "text": "14) Es existieren, neben anderen Dateien, 2 Dateien (datei1.txt, datei2.txt) im selben Verzeichnis. Was passiert bei diesem Befehl…user@host> cat datei1.txt >> datei2.txt",
         "answers": [
             {
                 "correct": false,
@@ -1746,7 +1714,7 @@
         ]
     },
     {
-        "text": "192.168.0.99        innwelche „ping“-Kommandos führen zu einer Antwort, vorausgesetzt, das Ziel ist tatsächlich korrekt vorhanden und es ist KEIN Übergang in ein weitere IP-Netz vorhanden",
+        "text": "192.168.0.99 innwelche „ping“-Kommandos führen zu einer Antwort, vorausgesetzt, das Ziel ist tatsächlich korrekt vorhanden und es ist KEIN Übergang in ein weitere IP-Netz vorhanden",
         "answers": [
             {
                 "correct": true,

@@ -150,17 +150,21 @@
             }
         }
         button.onclick = function () {
-            if (currentQuestionIdx < questions.length) {
+            if (currentQuestionIdx + 1 == questions.length) {
+                saveStuff();
+            }
+            else {
                 questions[currentQuestionIdx].answers = answers.map(x => x.answer);
                 answers.forEach(x => x.remove());
                 loadQuestion(questions[(++currentQuestionIdx)]);
             }
-            else {
-                saveStuff();
-            }
         }
         buttonS.onclick = saveStuff;
         function saveStuff() {
+
+            questions[currentQuestionIdx].answers = answers.map(x => x.answer);
+            answers.forEach(x => x.remove());
+
             let str = JSON.stringify(questions);
             download(str, "crappyQuestions.json", "text");
             alert("Diese Datei an mich schicken oder PULL stellen");
@@ -198,9 +202,11 @@
             el.onclick = function () {
                 if (this.classList.contains("checked")) {
                     this.classList.remove("checked");
+                    this.answer.correct = false;
                 }
                 else {
                     this.classList.add("checked");
+                    this.answer.correct = true;
                 }
             }
             return el;
@@ -218,7 +224,7 @@
         }
         httpGetPromised("./crappyQuestions.json").then((x) => {
             questions = JSON.parse(x);
-            loadQuestion(questions[currentQuestionIdx++]);
+            loadQuestion(questions[currentQuestionIdx]);
         }).catch(() => alert("Couldn't load questions. LECKT MICH!"));
     </script>
 </body>
