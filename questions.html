@@ -97,7 +97,7 @@
                 return this.correct;
             }
         }
-
+        let startTime = Date.now();
         let content = document.getElementById("content");
         let questionText = document.getElementById("questionText");
         let button = document.getElementById("button");
@@ -162,7 +162,12 @@
                 answerd = !answerd;
                 let el = document.getElementsByTagName("answer");
                 answers.forEach(x => x.remove());
-                loadQuestion(questions[(currentQuestionIdx++) % questions.length]);
+                if (currentQuestionIdx++ == questions.length) {
+                    alert("Du brauchtest: " + ((Date.now() - startTime) / 1000) + " Sekunden. Super.");
+                }
+                else {
+                    loadQuestion(questions[(currentQuestionIdx)]);
+                }
             }
         }
         function createAnswer(answer, preFix, parent) {
