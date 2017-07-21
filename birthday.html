@@ -31,13 +31,13 @@
         #caption {
             word-break: keep-all;
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            max-width: 50vw;
             vertical-align: middle;
             justify-content: center;
             text-align: center;
-            font-size: calc(5vh + 10px);
+            font-size: calc(5vw + 10px);
             overflow: visible;
-            padding:10px;
+            padding: 10px;
+            display: block;
         }
 
         #heart {
@@ -48,7 +48,6 @@
             transform-origin: 50% 50%;
             font-size: 150%;
             transition: all 0.5s linear;
-
         }
 
         #heart:hover {
@@ -91,36 +90,11 @@
                 transform: scale(1);
             }
         }
-        /*
-        @keyframes pulse_animation {
-            0% {
-                font-size: 100%;
-            }
-            30% {
-                font-size: 100%;
-            }
-            40% {
-                font-size: 100%;
-            }
-            50% {
-                font-size: 150%;
-            }
-            60% {
-                font-size: 100%;
-            }
-            70% {
-                font-size: 100%;
-            }
-            80% {
-                font-size: 100%;
-            }
-            100% {
-                font-size: 100%;
-            }
-        }
-        /*-webkit-repeating-linear-gradient(red, yellow 10%, green 20%);*/
 
         @media (orientation:portrait) {
+            #caption {
+                width: 50vw;
+            }
             canvas {
                 position: absolute;
                 left: 0;
@@ -131,6 +105,9 @@
         }
 
         @media (orientation:landscape) {
+            #caption {
+                height: 50vh;
+            }
             canvas {
                 position: absolute;
                 left: 0;
@@ -149,11 +126,12 @@
         let red = "#c00";
         let transparent = "rgba(0,0,0,0)";
         let context = canvas.getContext('2d');
+        context.strokeStyle = red;
         function draw() {
-            let min = 5 + Math.min(window.innerHeight, window.innerWidth)
-            let max = 5 + Math.max(window.innerHeight, window.innerWidth)
+            let min = Math.min(window.innerHeight, window.innerWidth) + 2;
+            let max = Math.max(window.innerHeight, window.innerWidth) + 2;
             if (min < 600) {
-                dotSize = (min * 0.5) / 25;
+                dotSize = (min * 0.5) / 30;
             }
             canvas.width = max;
             canvas.height = min;
@@ -163,9 +141,9 @@
             context.fillRect(0, currentX, canvas.width, dotSize);
             currentX = dotSize;
 
-            drawDottedLine(0, currentX, canvas.width, red, transparent);
+            drawDottedLine(0, currentX - 0.5, dotSize + 1, canvas.width, red, transparent);
             currentX += dotSize;
-
+            context.fillStyle = red;
             context.fillRect(0, currentX, canvas.width, dotSize);
             currentX += 2 * dotSize;
 
@@ -202,11 +180,11 @@
 
             symmetry(canvas.height);
         }
-        function drawDottedLine(x, y, w, cl1, cl2) {
+        function drawDottedLine(x, y, h, w, cl1, cl2) {
             let bl = false;
             for (let i = x; i < w; i += dotSize) {
                 context.fillStyle = (bl = !bl) ? cl1 : cl2;
-                context.fillRect(i, y, dotSize, dotSize);
+                context.fillRect(i, y, dotSize, h);
             }
         }
         function drawDottedLine2(x, y, w, cl1, cl2, dt1, dt2) {
