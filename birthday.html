@@ -14,6 +14,7 @@
             vertical-align: baseline;
             background: transparent;
             overflow: hidden;
+            scroll-behavior: smooth;
         }
 
         #parent {
@@ -36,6 +37,7 @@
             text-align: center;
             font-size: calc(5vh + 10px);
             overflow: visible;
+            padding:10px;
         }
 
         #heart {
@@ -46,6 +48,7 @@
             transform-origin: 50% 50%;
             font-size: 150%;
             transition: all 0.5s linear;
+
         }
 
         #heart:hover {
@@ -142,7 +145,7 @@
     <script>
         let canvas = document.createElement("canvas");
 
-        let dotSize = 20;
+        let dotSize = 25;
         let red = "#c00";
         let transparent = "rgba(0,0,0,0)";
         let context = canvas.getContext('2d');
@@ -150,7 +153,7 @@
             let min = 5 + Math.min(window.innerHeight, window.innerWidth)
             let max = 5 + Math.max(window.innerHeight, window.innerWidth)
             if (min < 600) {
-                dotSize = (min * 0.5) / 20;
+                dotSize = (min * 0.5) / 25;
             }
             canvas.width = max;
             canvas.height = min;
@@ -183,6 +186,20 @@
             currentX += dotSize;
             drawDottedLine2(-1 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
             drawDottedLine2(-3 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            currentX += 1 * dotSize;
+            drawDottedLine2(-2 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            currentX += 1 * dotSize;
+
+            drawDottedLine2(-5 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+
+            currentX += dotSize;
+            drawDottedLine2(-6 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            drawDottedLine2(-4 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+
+            currentX += dotSize;
+            drawDottedLine2(-5 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+
+
             symmetry(canvas.height);
         }
         function drawDottedLine(x, y, w, cl1, cl2) {
