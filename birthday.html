@@ -1,0 +1,152 @@
+<html>
+<meta charset="utf8">
+
+</meta>
+
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            font-size: 100%;
+            vertical-align: baseline;
+            background: transparent;
+        }
+
+        #parent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #caption {
+            word-break: keep-all;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            max-width: 50vw;
+            vertical-align: middle;
+            justify-content: center;
+            text-align: center;
+            font-size: calc(5vh + 10px);
+        }
+
+        @media (orientation:portrait) {
+            canvas {
+                position: absolute;
+                left: 0;
+                top: 0;
+                transform-origin: 0 100%;
+                transform: translateY(-100%) rotate(90deg);
+            }
+        }
+
+        @media (orientation:landscape) {
+            canvas {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <script>
+        let canvas = document.createElement("canvas");
+
+        let dotSize = 20;
+        let red = "#c00";
+        let transparent = "rgba(0,0,0,0)";
+        let context = canvas.getContext('2d');
+        function draw() {
+            let min = 5 + Math.min(window.innerHeight, window.innerWidth)
+            let max = 5 + Math.max(window.innerHeight, window.innerWidth)
+            if (min < 600) {
+                dotSize = (min * 0.5) / 20;
+            }
+            canvas.width = max;
+            canvas.height = min;
+            context.fillStyle = red;
+
+            let currentX = 0;
+            context.fillRect(0, currentX, canvas.width, dotSize);
+            currentX = dotSize;
+
+            drawDottedLine(0, currentX, canvas.width, red, transparent);
+            currentX += dotSize;
+
+            context.fillRect(0, currentX, canvas.width, dotSize);
+            currentX += 2 * dotSize;
+
+            drawDottedLine2(-2 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+
+            currentX += dotSize;
+            drawDottedLine2(-3 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            drawDottedLine2(-1 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+
+            currentX += dotSize;
+            drawDottedLine2(-2 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            currentX += dotSize;
+            drawDottedLine2(-5 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+
+            currentX += dotSize;
+            drawDottedLine2(-6 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            drawDottedLine2(-4 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            currentX += dotSize;
+            drawDottedLine2(-1 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            drawDottedLine2(-3 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            symmetry(canvas.height);
+        }
+        function drawDottedLine(x, y, w, cl1, cl2) {
+            let bl = false;
+            for (let i = x; i < w; i += dotSize) {
+                context.fillStyle = (bl = !bl) ? cl1 : cl2;
+                context.fillRect(i, y, dotSize, dotSize);
+            }
+        }
+        function drawDottedLine2(x, y, w, cl1, cl2, dt1, dt2) {
+            let bl = false;
+            for (let i = x; i < w; bl = !bl) {
+                context.fillStyle = (bl) ? cl1 : cl2;
+                let w = (bl) ? dt1 : dt2;
+                i += w;
+                context.fillRect(i, y, w, dotSize);
+            }
+        }
+        draw();
+
+        document.body.appendChild(canvas);
+        function symmetry(yaxis) {
+            for (let y = 0; y < yaxis; y++) {
+                let imgDat = context.getImageData(0, y, canvas.width, 1);
+                context.putImageData(imgDat, 0, yaxis - y);
+            }
+        }
+        let resizing = false;
+        window.onresize = () => {
+            if (!resizing) {
+                setTimeout(() => {
+                    console.log("redraw");
+                    draw(); resizing = false;
+                }, 100);
+            }
+            resizing = true;
+        };
+      //  setTimeout(() => { window.history.go(0); }, 30000);
+    </script>
+    <div id="parent">
+        <div id="caption">
+            Alles gute zum Geburtstag <br><b style="font-size:130%"><i>   meine Alina!<i><b>
+        </div>
+    </div>
+
+</body>
+
+</html>
