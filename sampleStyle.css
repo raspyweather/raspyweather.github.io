@@ -68,6 +68,7 @@ body {
     top:0;
     left: 0;
     right: 0;
+    width:100vw;
     height: 10vh;
     transition: all linear 1s;
     background-color: #05104d;
@@ -389,12 +390,85 @@ min-width: 200px;
         .centerFlexBox {
             align-content: center;
             justify-content: center;
-            ;
             align-self: center;
             position: relative;
             display: flex;
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         }
+        .contentBox{
+            align-content: center;
+            justify-content: space-between;
+            flex-flow: row nowrap;
+            display: flex;
+        }
+        .sideBar{
+            display: flex;
+            align-items: center;
+            margin:5px; 
+     /*       overflow: hidden;
+            animation-duration: 1s;
+            animation-name: fromLeft;
+            animation-delay: 0s;
+            animation-timing-function:cubic-bezier(0.075, 0.82, 0.165, 1);*/
+        }
+        .sideBarWrapper {
+            margin: 0;
+            padding:0;
+            display: inline-grid;
+            position: relative;
+            vertical-align:middle;
+            justify-content: center;
+            text-align: center;
+}
+.sideBarEntry {
+    background: #004;
+    max-height: 2.8vh;
+    font-size: 2vh;
+    display: table;
+    justify-content: center;
+    text-align: center;
+}
+.sideBarEntry.notExisting {
+    color:#444;
+}
+
+.sideBarEntry.current {
+    font-size: 3vh;
+    padding: 4px;
+    width: 3vw;
+    color: #0f0;
+}
+.scrollbox {
+    display: flex;
+    justify-content:start;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow-y:auto;
+    width:100%;
+}
+.row{
+    min-height: 33vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+}
+.secondTopBar{
+    display: flex;
+    background: #003;
+}
+.item{
+    padding: 2px;
+    background: #003;
+}
+.cell{
+    display: flex;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100%;
+    min-width: 50%;
+}
 
 @keyframes dialog_down {
     from {
@@ -415,13 +489,23 @@ min-width: 200px;
         top: -50%;
     }
 }
+@keyframes fromLeft{
+    0%{
+       right:-20vw;
+    }
+    100%{
+       right:0vw;
+    }
+}
 
 @keyframes topBar_moveRight {
     from {
         right: 100vw;
+        left:-100vw;
     }
 
     to {
         right: 0vw;
+        left:0vw;
     }
 }
