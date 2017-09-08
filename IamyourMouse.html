@@ -11,14 +11,6 @@
         }
 
 
-        #EarthFlare {
-            animation-name: planet_hide;
-            animation-delay: 3s;
-            animation-duration: 3s;
-            animation-iteration-count: 1;
-            animation-fill-mode: forwards;
-        }
-
         #BackGroundBox {
             left: 0;
             top: 0;
@@ -47,6 +39,7 @@
             border-radius: 60vmin 0 0 0;
             box-shadow: #45F -2vmin -1vmin 2vmin;
             z-index: 1;
+            animation-name: planet_hide;
         }
 
         #redSun {
@@ -134,13 +127,16 @@
             animation-name: mouseContainerAnimations;
         }
 
+
         #mouseContainer,
-        #mouse {
+        #mouse,
+        #EarthFlare {
             animation-duration: 40s;
             animation-iteration-count: 1;
             animation-fill-mode: forwards;
             animation-timing-function: ease;
         }
+
 
         #mouse {
             width: 80vw;
@@ -156,10 +152,13 @@
         }
 
         @keyframes planet_hide {
-            from {
+            0% {
                 z-index: 1;
             }
-            to {
+            30% {
+                z-index: 0;
+            }
+            100%{
                 z-index: 0;
             }
         }
@@ -167,30 +166,31 @@
         @keyframes mouseContainerAnimations {
             0% {
                 transform: translate(90vw, 80vh);
+                z-index: 0;
             }
             30% {
                 transform: translate( 10vw, 10vh);
+                z-index: 0;
             }
             60% {
+                z-index: 1;
                 transform: translate( 20vw, 20vh);
             }
 
             100% {
+                z-index: 1;
                 transform: translate(10vw, 10vh);
             }
         }
 
         @keyframes mouseAnimation {
             0% {
-                z-index: 0;
                 transform: scale(0.1);
             }
             30% {
-                z-index: 0;
                 transform: scale(0.1);
             }
             31% {
-                z-index: 1;
                 transform: scale(0.1);
             }
             100% {
