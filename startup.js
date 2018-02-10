@@ -11,7 +11,9 @@ const gdriveRestURL = "https://www.googleapis.com/drive/v3/files/";
 const gdriveFileURL = "https://docs.google.com/uc?id=";
 let gdriveApiKeys = [
     { key: "AIzaSyDcPAYckM8eq3NkntNijLzq_pI2p-n_-SA", folder: "0B-HW4voEJgOgamFpanhnVlVwRzA" },
-    { key: "AIzaSyCaC82KAUysQ2FBgAo_Ks1kEg43SKv-3uE", folder: "0B3v6z-kU8mPpYVVoczI2NEhfMnM" }];
+    { key: "AIzaSyCaC82KAUysQ2FBgAo_Ks1kEg43SKv-3uE", folder: "0B3v6z-kU8mPpYVVoczI2NEhfMnM" },
+    { key:"AIzaSyAUHZpJ1T6aA6zoPDjG_aFi--Wg53E7W0U",  folder:"13520qN2YL4htMpdZ5sJKHjJYgf0PlPeM" }
+];
 
 createEventHandler('onLoadStart', document);
 createEventHandler('onLogLoad', document);
