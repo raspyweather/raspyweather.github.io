@@ -194,13 +194,31 @@ function processData() {
             continue;
         }
         let id = file.id;
-        let sat = parseInt(name.substring(5, 7));
-        let mode = name.substring(21, name.length - 4);
-        let dat = new Date(name.substring(8, 12) + "/" +
-            name.substring(12, 14) + "/" +
-            name.substring(14, 16) + "/" +
-            name.substring(16, 18) + ":" +
-            name.substring(18, 20));
+        let sat = "";
+        let mode ="";
+        let dat=null;
+
+        if(/noaa-\d{12}-.*.jpg/g.test(name)){
+         sat = 0;
+         mode = name.substring(21, name.length - 4);
+         dat = new Date(name.substring(5, 4) + "/" +
+            name.substr(9, 2) + "/" +
+            name.substr(11, 2) + "/" +
+            name.substr(13, 2) + ":" +
+            name.substr(15, 2));
+        }
+       else if(/noaa-\d{2}-\d{12}-.*.jpg/g.test(name)){
+            sat =  name.substr(5,2);
+            mode = name.substring(21, name.length - 4);
+            dat = new Date(name.substr(8, 4) + "/" +
+               name.substr(12, 2) + "/" +
+               name.substr(14, 2) + "/" +
+               name.substr(16, 2) + ":" +
+               name.substr(18, 2));
+        }
+        else{
+            console.log("cannot parse "+name);
+        }
         if (dat == undefined || mode == undefined || sat == undefined || isNaN(sat) || isNaN(dat)) { console.log(file); console.log({ dat: dat, nam: name, id: id, mode: mode }); continue; }
         Imagery.ImageModes.pushIfNotExist(mode);
         Imagery.Satellites.pushIfNotExist(sat);
