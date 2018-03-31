@@ -26,7 +26,7 @@ document.onLoadStart.addEventListener(() => {
     })).then(y => console.log(y)).catch(y => console.log(y));
 });
 Array.prototype.pushIfNotExist = function (element) {
-    if (this.indexOf(element) == -1) {
+    if (this.indexOf(element) === -1) {
         this.push(element);
     }
 };
@@ -46,6 +46,43 @@ function createEventHandler(name, element) {
         }
     };
 }
+
+function processData2(input) {
+    console.log(input, input.data);
+    Imagery = {
+        Dates: Object.keys(input.data).map(value => new Date(parseInt(value))).sort((a, b) => a - b),
+        ImageModes: input.imageModes,
+        Satellites: input.Satellites,
+        Data: {},
+        ImagesCount: 0,
+        LogFileId: "",
+        DateToString: (dat) => {
+            return dat.getUTCFullYear().toString().padLeft(4, "0")
+                + (dat.getUTCMonth() + 1).toString().padLeft(2, "0")
+                + dat.getUTCDate().toString().padLeft(2, "0")
+                + dat.getUTCHours().toString().padLeft(2, "0")
+                + dat.getUTCMinutes().toString().padLeft(2, "0");
+        }
+    };
+
+    for (let i of Imagery.Dates) {
+        const data = input.data[i.valueOf()];
+        Imagery.Data[i] = {
+            Sat: data[0].satelliteIdx,
+            ModeIds: [data[0].modeIdx],
+            IDs: {},
+            APIKey: data[0].apiKeyIndex
+        }
+
+
+        for (let dat of data) {
+            Imagery.Data[i].IDs[dat.modeIdx] = dat.id;
+            Imagery.Data[i].ModeIds.push(dat.modeIdx);
+        }
+    }
+    addFunctionsToImagery();
+}
+
 function getBase64ContentPromised(url) {
     return new Promise((resolve, reject) => {
         var xhr = new XMLHttpRequest();
@@ -791,8 +828,8 @@ function createStartBox() {
                 value: x,
                 current: x == sideBarDate.getUTCDate(),
                 exists: usedDays.indexOf(x) > -1,
-                visible: Imagery.DateUtility.GetLastDayOfMonth(sideBarDate.getUTCFullYear(), 1 + sideBarDate.getUTCMonth()) > x,
-                date: Imagery.DateUtility.GetDateFromHumanNotation(sideBarDate.getUTCFullYear(), 1 + sideBarDate.getUTCMonth(), x)
+                visible: Imagery.DateUtility.GetLastDayOfMonth(sideBarDate.getUTCFullYear(),  sideBarDate.getUTCMonth()) > x,
+                date: Imagery.DateUtility.GetDateFromHumanNotation(sideBarDate.getUTCFullYear(),  sideBarDate.getUTCMonth(), x)
             }
         });
 
