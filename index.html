@@ -4,6 +4,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-messaging.js"></script>
     <style>
         #ForeGroundBox {
             z-index: 2;
@@ -118,6 +121,8 @@
         }
 
         .star {
+            min-width:1px;
+            min-height: 1px;
             position: absolute;
             border-radius: 100%;
         }
@@ -203,22 +208,14 @@
 <script src="startup.js" type="text/javascript"></script>
 <script defer type="text/javascript">
     document.parent = document.getElementById("ForeGroundBox");
-    ;
-    httpGetPromised("https://lateral-scion-194815.firebaseio.com/raspy.json").then((z) => {
-        console.log("got it");
-        document.body.value = z;
-        processData2((JSON.parse(z)))
-    })
-        .then(() => addFunctionsToImagery())
-        .then(() => document.onDataProcessed.dispatchEvent());
     createMainPageEvents();
-    document.onLoadStart.dispatchEvent()
-    //faster debug
-    //var Imagery;
-    /*        httpGetPromised("http://raspyweather.ru/wxtoimg/wxotimg/raspyweather.github.io/imagery.js").then((z) => Imagery = JSON.parse(z))
-                .then(() => Imagery.Dates = Imagery.Dates.map(y => new Date(y)))
-                .then(() => addFunctionsToImagery())
-                .then(() => document.onDataProcessed.dispatchEvent());*/
+     document.onLoadStart.dispatchEvent();
+     function gotData(data){
+         console.log("got it");
+         processData2(data.raspy);
+         addFunctionsToImagery();
+         document.onDataProcessed.dispatchEvent();
+     }
 </script>
 </body>
 
