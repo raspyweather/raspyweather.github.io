@@ -995,65 +995,6 @@ function createStartBox() {
     mainCBox.preLoadImagesCount = 5;
     mainCBox.loadImages = function () {
         return;
-        this.newestDates = Imagery.GetImagesFromMode("therm");
-        let links = [];
-        if (this.startIdx === undefined) {
-            this.startIdx = 0;
-        }
-        for (let idx = this.startIdx; idx < this.newestDates.length; idx++) {
-            let date = this.newestDates[idx];
-            console.log("Z:" + this.newestDates.indexOf(date));
-            let newData = Imagery.Data[(date)];
-            if (newData == undefined || date == undefined || date >= firstBox.oldestDate) {
-                continue;
-            }
-            let DataContainer = {
-                Date: date,
-                Links: []
-            };
-            firstBox.oldestDate = date;
-            for (let modeStr of preferedModes) {
-                let idx = Imagery.ImageModes.indexOf(modeStr);
-                if (newData.ModeIds.indexOf(idx) > -1) {
-                    DataContainer.Links.push({
-                        Link: Imagery.GetImageURLByDate(date, modeStr),
-                        Mode: modeStr
-                    });
-
-                }
-            }
-            if (DataContainer.Links.length > 0) {
-                links.push(DataContainer);
-            }
-            if (links.length === this.preLoadImagesCount) {
-                if (this.preLoadImagesCount > 1) {
-                    this.preLoadImagesCount = 1;
-                }
-                this.startIdx = idx;
-                break;
-            }
-        }
-        console.log(links.length);
-        for (let link of links) {
-
-            let imageContainer = createElement("div", "ImgContainer");
-            if (link.Links === undefined || link.Links.length == 0) {
-                continue;
-            }
-            for (let lnk of link.Links) {
-                let thermImg = createElement("div", "Img");
-                thermImg.style.backgroundImage = "url('" + lnk.Link + "')";
-                thermImg.innerHTML = lnk.Mode + " " + ('0' + link.Date.getHours()).slice(-2) + ":" + ('0' + link.Date.getMinutes()).slice(-2) + " " + ('0' + link.Date.getUTCDate()).slice(-2) + "-" + ('0' + (link.Date.getUTCMonth() + 1)).slice(-2) + "-" + link.Date.getUTCFullYear();
-                imageContainer.appendChild(thermImg);
-            }
-            if (firstBox.childElementCount > 10) {
-                firstBox.removeChild(firstBox.children[0]);
-            }
-            if (imageContainer.childElementCount > 0) {
-                firstBox.appendChild(imageContainer);
-            }
-        }
-        document.isLoading = false;
     };
     //mainCBox.loadImages();
 
