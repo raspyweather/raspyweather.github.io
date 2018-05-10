@@ -10,19 +10,19 @@
     <script>
         onDataProcessed = function () { };
         getFileList();
-        var chunksCount = 8;
-        var workersCount = 4;
-        var mainBox = document.getElementById("box");
+        let chunksCount = 8;
+        let workersCount = 4;
+        let mainBox = document.getElementById("box");
         function createElement(tag, className) {
-            var el = document.createElement(tag);
+            const el = document.createElement(tag);
             el.className = className;
             return el;
         }
 
         function createModal(title) {
-            var wrappingBox = createElement("div", "wrappingBox");
-            var titlelabel = createElement("div", "heading titleLabel");
-            var collapseBox = createElement("div", "collapseBox");
+            let wrappingBox = createElement("div", "wrappingBox");
+            let titlelabel = createElement("div", "heading titleLabel");
+            let collapseBox = createElement("div", "collapseBox");
             collapseBox.isCollapsed = false;
             collapseBox.toggle = function () {
                 if (!this.isCollapsed) {
@@ -45,51 +45,51 @@
             return wrappingBox;
         }
         function createModals() {
-            var containingBox = createElement("div", "modalsWrapper");
+            let containingBox = createElement("div", "modalsWrapper");
             createRenderSettingBox(containingBox);
             createThermalFilterBox(containingBox);
             createLayerControl(containingBox);
-            var saveImg = createModal("Save...");
+            let saveImg = createModal("Save...");
             containingBox.appendChild(saveImg);
             mainBox.appendChild(containingBox);
         }
         function createRenderSettingBox(parentBox) {
-            var renderSetting = createModal("Render settings");
+            let renderSetting = createModal("Render settings");
             createNumericUpDown(1, 20, 1, workersCount, "workersCountInput", "Workers:", renderSetting.collapseBox);
             createNumericUpDown(1, 20, 1, chunksCount, "BlocksCountInput", "Blocks:", renderSetting.collapseBox);
-            var okButton = createElement("div", "button");
+            let okButton = createElement("div", "button");
             okButton.innerHTML = "Apply";
             renderSetting.collapseBox.appendChild(okButton);
             parentBox.appendChild(renderSetting);
         }
         function createThermalFilterBox(parentBox) {
-            var thermalFilter = createModal("Thermal Filter");
+            let thermalFilter = createModal("Thermal Filter");
             createNumericUpDown(-100, 60, 1, -100, "thermalFilterMin", "Min. Temperature", thermalFilter.collapseBox).label.classList.add("inlineElement");
             createNumericUpDown(-100, 60, 1, -60, "thermalFilterax", "Max. Temperature", thermalFilter.collapseBox).label.classList.add("inlineElement");
-            var okButton = createElement("div", "button");
+            let okButton = createElement("div", "button");
             okButton.innerHTML = "Run Filter";
             thermalFilter.collapseBox.appendChild(okButton);
             parentBox.appendChild(thermalFilter);
         }
         function createLayerControl(parentBox) {
-            var layerControl = createModal("Layers");
+            let layerControl = createModal("Layers");
             layerControl.collapseBox.classList.add("scrollHidden");
             layerControl.collapseBox.isCollapsed = true;
             layerControl.collapseBox.style.height = "100px";
-            var okButton= createElement("div","button");
+            let okButton= createElement("div","button");
             okButton.innerHTML="Add Layer";
             okButton.onclick=createSelectImagePopup;
             layerControl.collapseBox.appendChild(okButton);
             parentBox.appendChild(layerControl);
         }
         function createLabelFor(title, forId) {
-            var lb = createElement("label", "heading");
+            let lb = createElement("label", "heading");
             lb.innerHTML = title;
             lb.setAttribute("for", forId);
             return lb;
         }
         function createNumericUpDown(min, max, step, value, id, title, parent) {
-            var input = createElement("input", "numericUpDown");
+            let input = createElement("input", "numericUpDown");
             input.setAttribute("step", step);
             input.setAttribute("min", min);
             input.setAttribute("max", max);
@@ -103,17 +103,17 @@
         }
         function createSelectImagePopup() {
             console.log("popup");
-            var wrapper = createElement("div", "popup");
-            var title = createElement("div", "heading inlineElement");
+            let wrapper = createElement("div", "popup");
+            let title = createElement("div", "heading inlineElement");
             title.innerHTML = "Select an Image for a new layer:";
             wrapper.appendChild(title);
-            var contentBox = createElement("div", "wrappingBox");
+            let contentBox = createElement("div", "wrappingBox");
 
-            var buttonSelectByDate = createElement("div", "button bigButton");
+            let buttonSelectByDate = createElement("div", "button bigButton");
             buttonSelectByDate.innerHTML = "Select by Date";
             contentBox.appendChild(buttonSelectByDate);
 
-            var buttonSelectByMode = createElement("div", "button bigButton");
+            let buttonSelectByMode = createElement("div", "button bigButton");
             buttonSelectByMode.innerHTML = "Select by Mode";
             contentBox.appendChild(buttonSelectByMode);
 
@@ -121,18 +121,18 @@
 
             buttonSelectByDate.onclick = function () {
                 clearChildren(this.parent);
-                var contentBox = this.parent;
+                let contentBox = this.parent;
                 //show DatePicker
             };
             buttonSelectByMode.onclick = function () {
                 clearChildren(this.parent);
-                var contentBox = this.parent;
+                let contentBox = this.parent;
                 // show all modes
             }
         }
         function clearChildren(parent) {
-            var children = parent.ChildNodes;
-            for (var i of children) {
+            let children = parent.ChildNodes;
+            for (let i of children) {
                 parent.removeChild(i);
             }
         }
