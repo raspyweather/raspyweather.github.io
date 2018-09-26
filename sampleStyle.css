@@ -449,7 +449,7 @@ min-width: 200px;
 .row{
     min-height: 33vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: wrap;
 
 }
@@ -466,8 +466,8 @@ min-width: 200px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    min-height: 100%;
-    min-width: 50%;
+    flex-grow: 1;
+    flex-direction: row;
 }
 
 @keyframes dialog_down {
