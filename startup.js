@@ -62,7 +62,7 @@ function createEventHandler(name, element) {
     };
 }
 
-getDatefromIdentifier(fileDateIdentifier) {
+function getDatefromIdentifier(fileDateIdentifier) {
         return new Date(
             Number.parseInt(fileDateIdentifier.substr(0, 4), 10),
             -1+Number.parseInt(fileDateIdentifier.substr(4, 2), 10),
