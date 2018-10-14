@@ -62,10 +62,19 @@ function createEventHandler(name, element) {
     };
 }
 
+getDatefromIdentifier(fileDateIdentifier) {
+        return new Date(
+            Number.parseInt(fileDateIdentifier.substr(0, 4), 10),
+            -1+Number.parseInt(fileDateIdentifier.substr(4, 2), 10),
+            Number.parseInt(fileDateIdentifier.substr(6, 2), 10),
+            Number.parseInt(fileDateIdentifier.substr(8, 2), 10),
+            Number.parseInt(fileDateIdentifier.substr(10, 2), 10));
+    }
+
 function processData2(input) {
     console.log(input, input.data);
     Imagery = {
-        Dates: Object.keys(input.data).map(value => new Date(parseInt(value))).sort((a, b) => a - b),
+        Dates: Object.keys(input.data).map(value => getDatefromIdentifier(value)),
         ImageModes: input.imageModes,
         Satellites: input.Satellites,
         Data: {},
