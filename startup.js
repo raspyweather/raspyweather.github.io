@@ -90,7 +90,7 @@ function processData2(input) {
     };
 
     for (let i of Imagery.Dates) {
-        const data = input.data[i.valueOf()];
+        const data = input.data[i];
         Imagery.Data[i] = {
             Sat: data[0].satelliteIdx,
             ModeIds: [data[0].modeIdx],
@@ -331,7 +331,7 @@ function addFunctionsToImagery() {
     Imagery.DateUtility = new DateUtility();
 
     Imagery.Dates.sort((x, y) => {
-        return y.valueOf() > x.valueOf();
+        return y > x;
     });
     Imagery.GetNewestDate = function (year, month, day) {
         if (day == undefined && month == undefined && year == undefined) {
@@ -751,8 +751,8 @@ function createThermalTemperatureView() {
     let sel = document.createElement("select");
     for (let k of Imagery.Dates) {
         let option = document.createElement("option");
-        option.innerHTML = k.toLocaleDateString() + " " + k.toLocaleTimeString();
-        option.setAttribute("date", k.valueOf());
+        option.innerHTML = k;
+        option.setAttribute("date", k);
         sel.appendChild(option);
     }
     label.appendChild(sel);
