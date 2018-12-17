@@ -31,6 +31,8 @@
     let results = [];
     let msaImgDataVal = [];
     function userInput() {
+        minTemp = workersCount = parseInt(prompt("Please enter the minimum value to filter for [60,-100]", "-100"));
+        maxTemp = workersCount = parseInt(prompt("Please enter the maximum value to filter for [60,-100]", "-80"));
         workersCount = parseInt(prompt("Please enter the desired amount of workers (note workers*heightdivisor should be a divisor of 1400", "4"));
         heightDivisor = parseInt(prompt("Please enter the desired amount heightdivisor (note workers*heightdivisor should be a divisor of 1400", "7"));
         startWorkersContinous();
