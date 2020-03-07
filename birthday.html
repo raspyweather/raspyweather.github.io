@@ -42,19 +42,11 @@
 
         #heart {
             position: absolute;
-            background: -webkit-linear-gradient( #44f 49%, #ff4 50%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             transform-origin: 50% 50%;
             font-size: 150%;
             transition: all 0.5s linear;
-        }
-
-        #heart:hover {
-            background: -webkit-linear-gradient( #000 40%, #f00 41%, #f00 55%, #ff4 56%);
-            /*background: -webkit-linear-gradient( #f00 49%, #f00 50%);*/
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color:#d00;
+            text-shadow: -5px 0 black, 0 5px black, 5px 0 black, 0 -5px black;
         }
 
         #heart {
@@ -68,24 +60,31 @@
             0% {
                 transform: scale(1);
             }
+
             30% {
                 transform: scale(1);
             }
+
             40% {
                 transform: scale(1.2);
             }
+
             55% {
                 transform: scale(1);
             }
+
             60% {
                 transform: scale(1);
             }
+
             70% {
                 transform: scale(1.05);
             }
+
             90% {
                 transform: scale(1);
             }
+
             100% {
                 transform: scale(1);
             }
@@ -95,6 +94,7 @@
             #caption {
                 width: 50vw;
             }
+
             canvas {
                 position: absolute;
                 left: 0;
@@ -116,15 +116,23 @@
 </head>
 
 <body>
+    <div id="parent">
+        <div id="caption">
+            Best Wishes <br><b style="font-size:130%"><i> for <span id="name"></span> </i></b><b id="heart">♥</b>
+        </div>
+    </div>
     <script>
-        let canvas = document.createElement("canvas");
+        console.log("Want to show your own message? Use btoa(escape('*name*')) and append it with a hash to the url")
 
-        let dotSize = 25;
+        let canvas = document.createElement("canvas");
+        document.getElementById("name").innerText = unescape(atob(window.location.hash.substr(1)));
+        let dotSize = 15;
         let red = "#c00";
         let transparent = "rgba(0,0,0,0)";
         let context = canvas.getContext('2d');
         context.strokeStyle = red;
-        function draw() {
+        function timeout() { return new Promise(res => setTimeout(res, 0)); }
+        async function draw() {
             let min = Math.min(window.innerHeight, window.innerWidth) + 2;
             let max = Math.max(window.innerHeight, window.innerWidth) + 2;
             if (min < 600) {
@@ -138,42 +146,41 @@
             context.fillRect(0, currentX, canvas.width, dotSize);
             currentX = dotSize;
 
-            drawDottedLine(0, currentX - 0.5, dotSize + 1, canvas.width, red, transparent);
+            await drawDottedLine(0, currentX - 0.5, dotSize + 1, canvas.width, red, transparent);
             currentX += dotSize;
             context.fillStyle = red;
             context.fillRect(0, currentX, canvas.width, dotSize);
             currentX += 2 * dotSize;
 
-            drawDottedLine2(-2 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-2 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
 
             currentX += dotSize;
-            drawDottedLine2(-3 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
-            drawDottedLine2(-1 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-3 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-1 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
 
             currentX += dotSize;
-            drawDottedLine2(-2 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-2 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
             currentX += dotSize;
-            drawDottedLine2(-5 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-5 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
 
             currentX += dotSize;
-            drawDottedLine2(-6 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
-            drawDottedLine2(-4 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-6 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-4 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
             currentX += dotSize;
-            drawDottedLine2(-1 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
-            drawDottedLine2(-3 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-1 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-3 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
             currentX += 1 * dotSize;
-            drawDottedLine2(-2 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-2 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
             currentX += 1 * dotSize;
 
-            drawDottedLine2(-5 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-5 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
 
             currentX += dotSize;
-            drawDottedLine2(-6 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
-            drawDottedLine2(-4 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-6 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
+            await drawDottedLine2(-4 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
 
             currentX += dotSize;
-            drawDottedLine2(-5 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
-
+            await drawDottedLine2(-5 * dotSize, currentX, canvas.width, red, transparent, dotSize, dotSize * 5);
 
             symmetry(canvas.height);
         }
@@ -183,6 +190,7 @@
                 context.fillStyle = (bl = !bl) ? cl1 : cl2;
                 context.fillRect(i, y, dotSize, h);
             }
+            return timeout();
         }
         function drawDottedLine2(x, y, w, cl1, cl2, dt1, dt2) {
             let bl = false;
@@ -192,33 +200,29 @@
                 i += w;
                 context.fillRect(i, y, w, dotSize);
             }
+            return timeout();
         }
-        draw();
-
-        document.body.appendChild(canvas);
+        draw().then(() => {
+            document.body.insertBefore(canvas, document.getElementById("parent"));
+        });
         function symmetry(yaxis) {
             for (let y = 0; y < yaxis; y++) {
                 let imgDat = context.getImageData(0, y, canvas.width, 1);
                 context.putImageData(imgDat, 0, yaxis - y);
             }
         }
+
         let resizing = false;
         window.onresize = () => {
             if (!resizing) {
                 setTimeout(() => {
-                    console.log("redraw");
                     draw(); resizing = false;
                 }, 100);
             }
             resizing = true;
         };
-      //  setTimeout(() => { window.history.go(0); }, 30000);
     </script>
-    <div id="parent">
-        <div id="caption">
-            Alles gute zum Geburtstag <br><b style="font-size:130%"><i>meine Alina </i></b><b id="heart">♥</b>
-        </div>
-    </div>
+
 
 </body>
 
